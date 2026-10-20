@@ -1,0 +1,205 @@
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+:root {
+  --qt-primary: #1193b0;
+  --qt-primary-dark: #08718a;
+  --qt-primary-bright: #4cc0da;
+  --qt-accent: #da7756;
+  --qt-accent-dark: #a9502f;
+  --qt-ink: #10242d;
+  --qt-muted: #55707a;
+  --qt-border: #d8e6e7;
+  --qt-canvas: #f6faf9;
+  --qt-surface: #ffffff;
+  --qt-dark: #0c2028;
+  --qt-dark-raised: #132c35;
+  --qt-dark-border: #284650;
+  --qt-radius: 12px;
+  --ifm-color-primary: #08718a;
+  --ifm-color-primary-dark: #07667c;
+  --ifm-color-primary-darker: #076075;
+  --ifm-color-primary-darkest: #064f60;
+  --ifm-color-primary-light: #097c98;
+  --ifm-color-primary-lighter: #09829f;
+  --ifm-color-primary-lightest: #0a93b4;
+  --ifm-background-color: var(--qt-surface);
+  --ifm-background-surface-color: var(--qt-canvas);
+  --ifm-font-family-base:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ifm-font-family-monospace:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --ifm-heading-font-family: var(--ifm-font-family-base);
+  --ifm-heading-color: var(--qt-ink);
+  --ifm-font-color-base: var(--qt-ink);
+  --ifm-navbar-height: 68px;
+  --ifm-navbar-shadow: 0 1px 0 var(--qt-border);
+  --ifm-code-font-size: 90%;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #4cc0da;
+  --ifm-color-primary-dark: #31b7d3;
+  --ifm-color-primary-darker: #25b2cf;
+  --ifm-color-primary-darkest: #1d93ab;
+  --ifm-color-primary-light: #67c9e1;
+  --ifm-color-primary-lighter: #73cde3;
+  --ifm-color-primary-lightest: #9bdbea;
+  --ifm-background-color: #0c2028;
+  --ifm-background-surface-color: #132c35;
+  --ifm-heading-color: #f3fbfc;
+  --ifm-font-color-base: #d7e7ea;
+  --ifm-navbar-shadow: 0 1px 0 #284650;
+  --ifm-toc-border-color: #284650;
+  --ifm-color-emphasis-300: #284650;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--ifm-navbar-height) + 18px);
+}
+
+body {
+  letter-spacing: -0.008em;
+}
+
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid var(--qt-primary-bright);
+  outline-offset: 3px;
+}
+
+.navbar {
+  background: color-mix(in srgb, var(--ifm-background-color) 94%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.navbar__brand {
+  gap: 0.35rem;
+}
+
+.navbar__logo {
+  height: 34px;
+}
+
+.navbar__title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.navbar__item,
+.menu__link {
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.navbar__cta {
+  align-items: center;
+  background: var(--qt-accent);
+  border-radius: 9px;
+  color: #1f1410 !important;
+  display: inline-flex;
+  margin-left: 0.4rem;
+  padding: 0.55rem 0.9rem !important;
+}
+
+.navbar__cta:hover {
+  background: #e28666;
+}
+
+.theme-doc-markdown,
+.markdown {
+  line-height: 1.75;
+}
+
+.theme-doc-markdown h1,
+.theme-doc-markdown h2,
+.theme-doc-markdown h3,
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  letter-spacing: -0.025em;
+}
+
+.theme-doc-markdown h1,
+.markdown h1 {
+  font-weight: 800;
+}
+
+.theme-doc-markdown img,
+.markdown img {
+  border: 1px solid var(--qt-border);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgb(16 36 45 / 10%);
+}
+
+[data-theme="dark"] .theme-doc-markdown img,
+[data-theme="dark"] .markdown img {
+  border-color: var(--qt-dark-border);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 32%);
+}
+
+.theme-doc-sidebar-container,
+.table-of-contents {
+  font-size: 0.9rem;
+}
+
+.pagination-nav__link {
+  border-color: var(--qt-border);
+  border-radius: var(--qt-radius);
+}
+
+[data-theme="dark"] .pagination-nav__link {
+  border-color: var(--qt-dark-border);
+}
+
+@media (max-width: 1120px) {
+  .navbar__item:not(.navbar__cta) {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+}
+
+@media (max-width: 996px) {
+  .navbar__cta {
+    display: flex;
+    margin: 0.5rem 0.75rem;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
