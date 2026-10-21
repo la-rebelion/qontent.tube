@@ -1,8 +1,0 @@
-node_modules/
-.docusaurus/
-build/
-.cache-loader/
-.DS_Store
-*.log
-
-.ignoreme.*

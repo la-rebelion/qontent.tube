@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkqontent_tube_website=self.webpackChunkqontent_tube_website||[]).push([["220"],{1912(e){e.exports=JSON.parse('{"blogBasePath":"/blog","blogTitle":"Qontent Tube Blog","authorsListPath":"/blog/authors"}')}}]);

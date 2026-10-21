@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="rss.xsl"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Qontent Tube Blog</title>
+        <link>https://qontent.tube/es/blog</link>
+        <description>Qontent Tube Blog</description>
+        <lastBuildDate>Tue, 13 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>es</language>
+        <item>
+            <title><![CDATA[Introducing Qontent Tube]]></title>
+            <link>https://qontent.tube/es/blog/introducing-qontent-tube</link>
+            <guid>https://qontent.tube/es/blog/introducing-qontent-tube</guid>
+            <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A Markdown-first voice studio for creators who want scripts, reusable voices, revisions, and playback to stay connected.]]></description>
+            <content:encoded><![CDATA[<p>Generating a voice is easy. Managing a complete voiceover is still surprisingly messy.</p>
+<p>The script lives in one place, voice choices somewhere else, and every paragraph becomes another file to name and place. Rewrite one sentence and the whole production starts to feel uncertain again.</p>
+<p><strong>Qontent Tube keeps the script at the center of that work.</strong></p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="faceless-videos-should-never-feel-voiceless">Faceless videos should never feel voiceless<a href="https://qontent.tube/es/blog/introducing-qontent-tube#faceless-videos-should-never-feel-voiceless" class="hash-link" aria-label="Enlace directo al Faceless videos should never feel voiceless" title="Enlace directo al Faceless videos should never feel voiceless" translate="no">​</a></h2>
+<p>Qontent Tube turns a structured Markdown script into an organized, multi-voice production. It recognizes scenes and speakers, connects those speakers to a reusable cast, estimates runtime, generates narration at the scope you choose, and plays the result as one continuous timeline.</p>
+<p>Write the story. Cast the voices. Press play.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-script-format-you-can-keep">A script format you can keep<a href="https://qontent.tube/es/blog/introducing-qontent-tube#a-script-format-you-can-keep" class="hash-link" aria-label="Enlace directo al A script format you can keep" title="Enlace directo al A script format you can keep" translate="no">​</a></h2>
+<p>The writing conventions are deliberately small:</p>
+<div class="language-markdown codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-markdown codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token title important punctuation" style="color:#393A34">#</span><span class="token title important"> Why Great Ideas Never Leave the Notes App</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token title important punctuation" style="color:#393A34">##</span><span class="token title important"> Scene 1 — The unfinished idea</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">[ON SCREEN: A phone filled with half-written notes.]</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token bold punctuation" style="color:#393A34">**</span><span class="token bold content">NARRATOR:</span><span class="token bold punctuation" style="color:#393A34">**</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">You probably do not need more ideas. You need a better way to finish the ones you already have.</span><br></div></code></pre></div></div>
+<p>Scene headings shape the outline. Bold speaker cues identify who talks. Bracketed directions guide the visuals without being spoken. The source remains ordinary Markdown that you can edit inside or outside Qontent Tube.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cast-once-then-keep-creating">Cast once, then keep creating<a href="https://qontent.tube/es/blog/introducing-qontent-tube#cast-once-then-keep-creating" class="hash-link" aria-label="Enlace directo al Cast once, then keep creating" title="Enlace directo al Cast once, then keep creating" translate="no">​</a></h2>
+<p>A reusable roster keeps the voice and speaking pace for every narrator or character together. A documentary narrator can remain recognizable from episode to episode. A fictional cast can stay consistent across an entire story.</p>
+<p>The roster also makes structural problems visible before generation. If a speaker in the script does not match a configured member, Qontent Tube points it out instead of guessing.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-the-production-before-generating-it">See the production before generating it<a href="https://qontent.tube/es/blog/introducing-qontent-tube#see-the-production-before-generating-it" class="hash-link" aria-label="Enlace directo al See the production before generating it" title="Enlace directo al See the production before generating it" translate="no">​</a></h2>
+<p>The workspace turns the script into a scene and speaker outline. You can jump to a scene, find every passage for one speaker, and use duration estimates to check pacing before creating audio.</p>
+<p><img decoding="async" loading="lazy" alt="Qontent Tube workspace with selected roster" src="https://qontent.tube/es/assets/images/workspace-selected-roster-linux-a84c4f94d0a9b206779a4c6ba71b64e1.png" width="1440" height="900" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="generate-what-changed">Generate what changed<a href="https://qontent.tube/es/blog/introducing-qontent-tube#generate-what-changed" class="hash-link" aria-label="Enlace directo al Generate what changed" title="Enlace directo al Generate what changed" translate="no">​</a></h2>
+<p>The first generated draft is useful. The fifth revision is where the workflow matters most.</p>
+<p>Qontent Tube tracks whether narration is ready, missing, failed, or outdated. If a sentence, voice, or pace changes, only the affected passage needs new audio. Unchanged clips remain ready and in sequence.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hear-one-continuous-story">Hear one continuous story<a href="https://qontent.tube/es/blog/introducing-qontent-tube#hear-one-continuous-story" class="hash-link" aria-label="Enlace directo al Hear one continuous story" title="Enlace directo al Hear one continuous story" translate="no">​</a></h2>
+<p>Generated passages become a single playback timeline. Play, pause, scrub, skip, or move between clips while the active scene and spoken source stay highlighted.</p>
+<p><img decoding="async" loading="lazy" alt="Qontent Tube preview following active narration" src="https://qontent.tube/es/assets/images/workspace-playback-preview-linux-f5d1526c84cab84a4bcdf5b044b2eb46.png" width="1440" height="900" class="img_ev3q"></p>
+<p>That context matters. A folder of clips tells you what was generated; a timeline tied to the script tells you how the story feels.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="built-for-change-without-chaos">Built for change without chaos<a href="https://qontent.tube/es/blog/introducing-qontent-tube#built-for-change-without-chaos" class="hash-link" aria-label="Enlace directo al Built for change without chaos" title="Enlace directo al Built for change without chaos" translate="no">​</a></h2>
+<p>Qontent Tube began with a practical frustration: creating faceless videos with several narrators and characters meant managing too many disconnected audio files. Every small improvement to the script caused another round of searching and rebuilding.</p>
+<p>We wanted the script to remain the heart of production, recurring voices to feel like a cast, and revision to feel safe enough that creators keep improving the story.</p>
+<p>That is the idea behind Qontent Tube:</p>
+<p><strong>One script. One cast. One continuous story.</strong></p>
+<p><a class="" href="https://qontent.tube/es/docs/getting-started">Create your first voiceover</a> or read the <a class="" href="https://qontent.tube/es/docs/writing-scripts">Markdown script guide</a>.</p>]]></content:encoded>
+            <category>Product</category>
+            <category>Voiceover</category>
+            <category>Markdown</category>
+        </item>
+    </channel>
+</rss>
