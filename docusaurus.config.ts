@@ -2,6 +2,11 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 import { themes as prismThemes } from "prism-react-renderer";
 
+// Hubspot account id
+const hubspot = {
+  accountId: "21339207",
+};
+const isDevelopment = process.env.NODE_ENV !== "production";
 const config: Config = {
   title: "Qontent Tube",
   tagline: "Turn Markdown scripts into multi-voice video narration",
@@ -63,9 +68,17 @@ const config: Config = {
         theme: {
           customCss: "./src/css/custom.css",
         },
+        gtag: {
+          trackingID: "G-8LXHQK6XEX",
+        },
+        googleTagManager: {
+          containerId: "GTM-582KKGFV",
+        },
         sitemap: {
           changefreq: "weekly",
           priority: 0.5,
+          ignorePatterns: ["/tags/**"],
+          filename: "sitemap.xml"
         },
       } satisfies Preset.Options,
     ],
