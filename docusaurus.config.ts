@@ -19,7 +19,7 @@ const config: Config = {
       process.env.QONTENT_TURNSTILE_SITE_KEY ?? "0x4AAAAAAFfNdTc-k72PeqX-",
   },
   organizationName: "la-rebelion",
-  projectName: "qontent-tube-website",
+  projectName: "qontent.tube",
   onBrokenLinks: "throw",
   onBrokenAnchors: "throw",
   markdown: {
