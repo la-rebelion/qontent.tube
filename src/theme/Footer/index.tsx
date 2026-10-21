@@ -20,8 +20,12 @@ export default function Footer(): React.ReactNode {
           <a href="/#pricing">Pricing</a>
           <Link to="/docs/getting-started">Docs</Link>
           <Link to="/blog">Blog</Link>
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
         </nav>
-        <span className={styles.copyright}>© 2026 Qontent Tube</span>
+        <span className={styles.copyright}>
+          © 2026 <a href="https://rebelion.la">La Rebelion Labs</a> · Qontent Tube
+        </span>
       </div>
     </footer>
   );

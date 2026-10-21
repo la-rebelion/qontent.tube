@@ -1,4 +1,6 @@
 import Link from "@docusaurus/Link";
+import type { CSSProperties } from "react";
+import CheckoutButton from "./CheckoutButton";
 import ProductGallery from "./ProductGallery";
 import styles from "./landing.module.css";
 
@@ -70,6 +72,25 @@ const uses = [
   "Multi-speaker experiments",
 ];
 
+const looseFiles = [
+  ["narration_final_v3.mp3", "teal", "6%", "10%", "-4deg", "0s"],
+  ["expert_take4_REAL.wav", "orange", "47%", "23%", "3deg", "-1.2s"],
+  ["scene2_line7 (1).mp3", "teal", "13%", "42%", "2deg", "-2.4s"],
+  ["which_voice_was_this.mp3", "red", "40%", "59%", "-2deg", "-3.1s"],
+  ["intro_OLD_dont_use.wav", "orange", "8%", "76%", "5deg", "-0.6s"],
+];
+
+const lifecycle = [
+  "Draft the idea",
+  "Organize into scenes",
+  "Assign the cast",
+  "Plan the runtime",
+  "Generate narration",
+  "Review the flow",
+  "Improve weak moments",
+  "Regenerate only what changed",
+];
+
 const faqs = [
   [
     "What is Qontent Tube?",
@@ -97,7 +118,7 @@ const faqs = [
   ],
   [
     "How much does it cost?",
-    "The private pre-launch early-adopter license is currently presented at $49 as a one-time purchase. Checkout is not yet available from this website.",
+    "Private pre-launch early-adopter access is $49 as a one-time purchase. It covers the private v0.x pre-launch period only; it does not include or guarantee a public-release license. Public-release features may be limited or require a separate purchase.",
   ],
 ];
 
@@ -126,40 +147,45 @@ export function AnswerSection() {
 export function ProblemSection() {
   return (
     <section className={styles.problemSection} aria-labelledby="problem-title">
-      <div className={styles.sectionHeading}>
-        <p className={styles.eyebrow}>THE PRODUCTION GAP</p>
+      <div className={styles.problemCopy}>
+        <p className={`${styles.eyebrow} ${styles.orange}`}>THE PROBLEM</p>
         <h2 id="problem-title">
           Generating a voice is easy. Managing a whole voiceover is not.
         </h2>
         <p>
-          A script, voice settings, downloads, and revisions quickly scatter
-          across tools. One rewritten sentence can send you searching through
-          the whole production.
+          You have the idea, the script, maybe even the visuals. Then comes the
+          slow part: naming files, matching clips to scenes, remembering every
+          voice—and doing it again when one sentence changes.
         </p>
+        <ul>
+          <li>The script lives in one document.</li>
+          <li>Voice settings live somewhere else.</li>
+          <li>Every paragraph becomes another download.</li>
+          <li>Scenes and clips lose their connection.</li>
+          <li>A small rewrite creates another round of manual work.</li>
+          <li>More narrators multiply the confusion.</li>
+        </ul>
       </div>
-      <div className={styles.problemGrid}>
-        <article>
-          <span>01</span>
-          <strong>Disconnected clips</strong>
-          <p>
-            Every paragraph becomes another file to name, place, and remember.
-          </p>
-        </article>
-        <article>
-          <span>02</span>
-          <strong>Lost casting choices</strong>
-          <p>
-            Voice and pacing decisions drift between scenes and future episodes.
-          </p>
-        </article>
-        <article>
-          <span>03</span>
-          <strong>Expensive revisions</strong>
-          <p>
-            A small script improvement triggers unnecessary regeneration and
-            reassembly.
-          </p>
-        </article>
+      <div className={styles.fileChaos} aria-hidden="true">
+        <span className={styles.fileChaosLabel}>
+          UNSORTED AUDIO / FINAL / FINAL-2
+        </span>
+        {looseFiles.map(([name, tone, left, top, rotation, delay]) => (
+          <span
+            className={`${styles.looseFile} ${styles[tone]}`}
+            key={name}
+            style={
+              {
+                left,
+                top,
+                "--file-rotation": rotation,
+                "--file-delay": delay,
+              } as CSSProperties
+            }
+          >
+            <i /> {name}
+          </span>
+        ))}
       </div>
     </section>
   );
@@ -172,32 +198,63 @@ export function WorkflowSection() {
       id="how-it-works"
       aria-labelledby="workflow-title"
     >
-      <div className={styles.sectionHeading}>
+      <div className={`${styles.sectionHeading} ${styles.workflowHeading}`}>
         <p className={styles.eyebrow}>HOW IT WORKS</p>
         <h2 id="workflow-title">
           From a blank page to a complete voiceover in five steps
         </h2>
       </div>
-      <div className={styles.workflowGrid}>
-        {workflow.map(([number, title, body]) => (
-          <article key={number}>
-            <span>{number}</span>
-            <h3>{title}</h3>
-            <p>{body}</p>
-          </article>
-        ))}
+      <div className={styles.workflowStage}>
+        <figure className={styles.markdownSpecimen}>
+          <figcaption>
+            <span>notes-app-ideas.md</span>
+            <b>plain Markdown</b>
+          </figcaption>
+          <pre>
+            <span># Why Great Ideas Never Leave the Notes App</span>
+            {"\n\n"}
+            <span>## Scene 1 — The unfinished idea</span>
+            {"\n\n"}
+            <i>[ON SCREEN: A phone filled with half-written notes.]</i>
+            {"\n\n"}
+            <strong>**NARRATOR:**</strong>
+            {"\n"}
+            You probably do not need more ideas. You need a better way to finish
+            the ones you already have.{"\n\n"}
+            <span>## Scene 2 — The hidden cost</span>
+            {"\n\n"}
+            <i>[ON SCREEN: Notes become unfinished project folders.]</i>
+            {"\n\n"}
+            <strong>**NARRATOR:**</strong>
+            {"\n"}
+            Every unfinished draft asks you to make the same decisions again.
+          </pre>
+          <div className={styles.markdownLegend}>
+            <span>
+              <i /> headings shape the outline
+            </span>
+            <span>
+              <i /> bold names set the speaker
+            </span>
+            <span>
+              <i /> brackets are never spoken
+            </span>
+          </div>
+        </figure>
+        <ol className={styles.workflowList}>
+          {workflow.map(([number, title, body], index) => (
+            <li key={number}>
+              <span className={index > 2 ? styles.stepAccent : undefined}>
+                {Number(number)}
+              </span>
+              <div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
-      <figure className={styles.wideScreenshot}>
-        <img
-          src="/img/product/create-project-modal-dark-linux.png"
-          alt="Create a project dialog in the Qontent Tube dark workspace"
-          loading="lazy"
-        />
-        <figcaption>
-          Start with a project for a channel, client, course, or recurring
-          series.
-        </figcaption>
-      </figure>
     </section>
   );
 }
@@ -229,7 +286,9 @@ export function RevisionSection() {
       aria-labelledby="revision-title"
     >
       <div className={styles.revisionCopy}>
-        <p className={styles.eyebrow}>REVISION WITHOUT CHAOS</p>
+        <p className={`${styles.eyebrow} ${styles.orange}`}>
+          REVISION WITHOUT CHAOS
+        </p>
         <h2 id="revision-title">Change one sentence. Regenerate one clip.</h2>
         <p>
           Freshness follows the words, voice, pace, and generation version.
@@ -242,20 +301,46 @@ export function RevisionSection() {
       </div>
       <div
         className={styles.revisionDemo}
-        aria-label="Illustration of one changed script passage"
+        role="img"
+        aria-label="One edited script passage cycles from ready to outdated, regenerating, and ready again while surrounding passages remain ready"
       >
-        <div>
-          <small>BEFORE</small>
-          <p>Our tools define what we can build.</p>
-          <span className={styles.ready}>READY</span>
+        <div className={styles.revisionHeader}>
+          <strong>SCENE 2 — THE HIDDEN COST</strong>
+          <span>3 passages</span>
         </div>
-        <div className={styles.revisionArrow}>→</div>
-        <div>
-          <small>AFTER</small>
-          <p>Our systems define what is possible.</p>
-          <span className={styles.outdated}>OUTDATED</span>
+        <div className={styles.revisionRow}>
+          <p>
+            <small>NARRATOR</small>Every unfinished draft asks you to decide
+            again.
+          </p>
+          <span className={styles.ready}>Ready</span>
         </div>
-        <div className={styles.regenerate}>↻ Regenerate this passage</div>
+        <div className={`${styles.revisionRow} ${styles.revisionChanging}`}>
+          <p>
+            <small>EXPERT</small>
+            <span className={styles.oldLine}>
+              The cost is not time. It is momentum.
+            </span>
+            <span className={styles.newLine}>
+              The real cost is lost momentum.<i>▍</i>
+            </span>
+          </p>
+          <span className={styles.revisionStates}>
+            <b className={styles.stateReady}>Ready</b>
+            <b className={styles.stateOutdated}>Outdated</b>
+            <b className={styles.stateGenerating}>↻ Regenerating</b>
+            <b className={styles.stateDone}>✓ Ready · new</b>
+          </span>
+        </div>
+        <div className={styles.revisionRow}>
+          <p>
+            <small>NARRATOR</small>So finish one idea before you chase the next.
+          </p>
+          <span className={styles.ready}>Ready</span>
+        </div>
+        <div className={styles.revisionFooter}>
+          2 clips kept · 1 regenerated · 0 files renamed
+        </div>
       </div>
     </section>
   );
@@ -267,9 +352,13 @@ export function BenefitsSection() {
       className={styles.benefitsSection}
       aria-labelledby="benefits-title"
     >
-      <div className={styles.sectionHeading}>
-        <p className={styles.eyebrow}>WHY IT FEELS DIFFERENT</p>
+      <div className={`${styles.sectionHeading} ${styles.benefitsHeading}`}>
+        <p className={styles.eyebrow}>WHY CREATORS FEEL THE DIFFERENCE</p>
         <h2 id="benefits-title">Not another “generate and download” button</h2>
+        <p>
+          Voice generation is useful. A dependable voiceover workflow is
+          transformative. Qontent Tube is designed around the life of a script.
+        </p>
       </div>
       <div className={styles.benefitsGrid}>
         {benefits.map(([title, body], index) => (
@@ -280,16 +369,116 @@ export function BenefitsSection() {
           </article>
         ))}
       </div>
-      <div className={styles.lifecycle} aria-label="Qontent Tube workflow">
-        {["Draft", "Structure", "Cast", "Generate", "Review", "Revise"].map(
-          (item, index) => (
-            <div key={item}>
-              <span>{index + 1}</span>
-              <strong>{item}</strong>
-            </div>
-          ),
-        )}
+      <ol
+        className={styles.lifecycle}
+        aria-label="The life of a script in Qontent Tube"
+      >
+        {lifecycle.map((item, index) => (
+          <li key={item}>
+            <span className={index > 3 ? styles.lifecycleWarm : undefined}>
+              {item}
+            </span>
+            {index < lifecycle.length - 1 && <i aria-hidden="true">→</i>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+export function RoadmapSection() {
+  return (
+    <section
+      className={styles.roadmapSection}
+      id="whats-next"
+      aria-labelledby="roadmap-title"
+    >
+      <div className={styles.roadmapHeading}>
+        <div>
+          <p className={styles.roadmapStatus}>
+            <span aria-hidden="true" /> IN DESIGN · V0.2
+          </p>
+          <p className={styles.eyebrow}>MARKDOWN → VOICE → ANIMATION</p>
+          <h2 id="roadmap-title">
+            Your script is about to step onto the stage.
+          </h2>
+        </div>
+        <p>
+          Today, Qontent Tube gives your Markdown a cast and a voice. Next, the
+          same script becomes editable scenes you can preview, style, and render
+          locally into a finished video.
+        </p>
       </div>
+
+      <div className={styles.roadmapGallery}>
+        <figure className={styles.roadmapFeature}>
+          <div className={styles.roadmapImageFrame}>
+            <img
+              src="/img/roadmap/studio-v020.png"
+              alt="Concept preview of the upcoming Qontent Tube Studio with a Markdown script, animated stage, mobile adaptation controls, and multi-track timeline"
+              loading="lazy"
+            />
+          </div>
+          <figcaption>
+            <span>01 · STUDIO + RENDER</span>
+            <h3>Hear it. See it. Ship it.</h3>
+            <p>
+              Voice-driven timing, a scene timeline, wide and vertical previews,
+              and local MP4 rendering from one workspace.
+            </p>
+          </figcaption>
+        </figure>
+
+        <div className={styles.roadmapCompanions}>
+          <figure>
+            <div className={styles.roadmapImageFrame}>
+              <img
+                src="/img/roadmap/themes-v020.png"
+                alt="Concept preview of the upcoming theme editor with color tokens, contrast checks, and live wide and mobile previews"
+                loading="lazy"
+              />
+            </div>
+            <figcaption>
+              <span>02 · THEMES</span>
+              <h3>Make every frame feel like yours.</h3>
+              <p>Reusable colors, accessible contrast, and live previews.</p>
+            </figcaption>
+          </figure>
+          <figure>
+            <div className={styles.roadmapImageFrame}>
+              <img
+                src="/img/roadmap/characters-v020.png"
+                alt="Concept preview of the upcoming character builder with generated variations, expressions, voice assignment, and animation rig controls"
+                loading="lazy"
+              />
+            </div>
+            <figcaption>
+              <span>03 · CHARACTERS</span>
+              <h3>Build a cast your audience remembers.</h3>
+              <p>Reusable characters with expressions, voices, and motion.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <ol className={styles.roadmapMilestones} aria-label="Planned milestones">
+        <li>
+          <span>M1</span>
+          <strong>Stage + local video render</strong>
+        </li>
+        <li>
+          <span>M2 · v0.2</span>
+          <strong>Storyboards, themes + characters</strong>
+        </li>
+        <li>
+          <span>M3 · v0.3</span>
+          <strong>Languages + mobile adaptation</strong>
+        </li>
+      </ol>
+      <p className={styles.roadmapNote}>
+        These are working product sketches. The details may evolve; the
+        direction will not.
+      </p>
     </section>
   );
 }
@@ -368,13 +557,22 @@ export function PricingSection() {
           An early-adopter license for creators who want to shape the workflow
         </h2>
         <p>
-          The current pre-launch offer is a one-time license for the Windows and
-          Linux desktop application. Checkout is not yet available on this
-          website.
+          The current $49 offer is a one-time purchase for early-adopter access
+          to the private Windows and Linux v0.x pre-launch releases. Pay
+          securely through Stripe and use the same email for access delivery.
+        </p>
+        <p>
+          This early-adopter license is valid only during the private pre-launch
+          program. It does not automatically convert into a public-release
+          license. When Qontent Tube launches publicly, some features may be
+          limited, repackaged, or require a separate purchase or license.
         </p>
       </div>
       <div className={styles.priceCard}>
-        <span className={styles.priceLabel}>Early-adopter license</span>
+        <div className={styles.priceCardTop}>
+          <span className={styles.priceLabel}>Pre-launch early access</span>
+          <span className={styles.priceBadge}>Private release</span>
+        </div>
         <div>
           <strong>$49</strong>
           <span>one-time</span>
@@ -384,10 +582,15 @@ export function PricingSection() {
           <li>No recurring subscription</li>
           <li>Markdown-first, local workflow</li>
           <li>Reusable multi-voice rosters</li>
+          <li>Private pre-launch v0.x access</li>
+          <li>Pre-launch updates while the program runs</li>
         </ul>
-        <Link className={styles.primaryButton} to="/docs/getting-started">
-          See how Qontent Tube works
-        </Link>
+        <p className={styles.licenseDisclosure}>
+          Public-release access is not included or guaranteed. Features and
+          licensing may change at launch.{" "}
+          <Link to="/terms">Read the terms.</Link>
+        </p>
+        <CheckoutButton />
       </div>
     </section>
   );
@@ -438,9 +641,7 @@ export function StorySection() {
           Spend less time organizing clips and more time making videos people
           want to finish.
         </p>
-        <Link className={styles.primaryButton} to="/docs/getting-started">
-          Get started with Qontent Tube
-        </Link>
+        <CheckoutButton />
         <small>Windows x64 · Linux x64 · local-first</small>
       </div>
     </section>

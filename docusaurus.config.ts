@@ -12,6 +12,12 @@ const config: Config = {
   favicon: "img/qontent-tube-logo.png",
   url: "https://qontent.tube",
   baseUrl: "/",
+  customFields: {
+    checkoutApiUrl:
+      process.env.QONTENT_CHECKOUT_API_URL ?? "https://api.qontent.tube",
+    turnstileSiteKey:
+      process.env.QONTENT_TURNSTILE_SITE_KEY ?? "0x4AAAAAAFfNdTc-k72PeqX-",
+  },
   organizationName: "la-rebelion",
   projectName: "qontent-tube-website",
   onBrokenLinks: "throw",
@@ -111,6 +117,13 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+  scripts: [
+    {
+      src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
+      async: true,
+      defer: true,
+    },
+  ],
 };
 
 export default config;

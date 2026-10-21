@@ -1,4 +1,3 @@
-import Link from "@docusaurus/Link";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import HeroStudio from "./HeroStudio";
 import {
@@ -9,6 +8,7 @@ import {
   PricingSection,
   ProblemSection,
   ProductSection,
+  RoadmapSection,
   RevisionSection,
   StorySection,
   UseCasesSection,
@@ -28,30 +28,33 @@ export default function LandingPage() {
         <div className={styles.heroGlow} />
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <p className={styles.heroEyebrow}>
-              <span /> MARKDOWN-FIRST VOICE STUDIO
+            <p className={styles.prelaunchPill}>
+              <span /> Private pre-launch · early-adopter access
             </p>
             <h1>
               Faceless videos should never feel <em>voiceless.</em>
             </h1>
             <p className={styles.heroLead}>
-              Write the story. Cast the voices. Press play. Qontent Tube turns
-              scene-based Markdown into an organized, multi-voice production you
-              can revise without rebuilding.
+              Qontent Tube turns your Markdown script into an organized,
+              multi-voice voiceover—ready to generate, review, revise, and play
+              from one focused desktop workspace.
+            </p>
+            <p className={styles.heroMantra}>
+              Write the story. Cast the voices. Press play.
             </p>
             <div className={styles.heroActions}>
-              <Link className={styles.primaryButton} to="/docs/getting-started">
-                Get started
-              </Link>
+              <a className={styles.primaryButton} href="#pricing">
+                Get early access — $49 <span aria-hidden="true">→</span>
+              </a>
               <a className={styles.ghostButton} href="#how-it-works">
-                See how it works <span>↓</span>
+                <span aria-hidden="true">▶</span> See how it works
               </a>
             </div>
-            <div className={styles.platforms} aria-label="Supported platforms">
-              <span>Windows x64</span>
-              <i /> <span>Linux x64</span>
-              <i /> <span>Local-first</span>
-            </div>
+            <ul className={styles.heroProof} aria-label="Product highlights">
+              <li>Runs locally on Windows and Linux</li>
+              <li>Plain Markdown scripts you own</li>
+              <li>One-time pre-launch purchase</li>
+            </ul>
           </div>
           <div className={styles.heroVisual}>
             <HeroStudio />
@@ -65,6 +68,7 @@ export default function LandingPage() {
         <ProductSection />
         <RevisionSection />
         <BenefitsSection />
+        <RoadmapSection />
         <UseCasesSection />
         <FirstWinSection />
         <PricingSection />
