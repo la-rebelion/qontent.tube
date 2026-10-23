@@ -9,3 +9,11 @@ voiceover:
 markdown:
   label: Markdown
   description: Script-writing workflows built around portable Markdown.
+
+animation:
+  label: Animation
+  description: Animated explainers, storyboards, characters, and rendering.
+
+release:
+  label: Release
+  description: What changed in each Qontent Tube version.

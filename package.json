@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "bun@1.4.2",
+  "author": {
+    "name": "Adrian Escutia"
+  },
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",

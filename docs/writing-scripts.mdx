@@ -37,13 +37,13 @@ It is not OR. It is AND.
 1. The first level-one heading (`#`) is the script title.
 2. Every level-two heading (`##`) begins a scene.
 3. A standalone bold name ending in a colon, such as `**NARRATOR:**`, begins that speaker's dialogue.
-4. A standalone bracketed line, such as `[ON SCREEN: …]`, is a visible production direction and is never synthesized.
+4. A standalone bracketed line, such as `[ON SCREEN: …]`, is a visible production direction and is never synthesized. `[ANIM: …]` lines describe animation intent; they appear on the timeline and guide [AI drafting](./ai-drafting).
 
 Dialogue continues until the next speaker cue, scene heading, or standalone direction. Bold or italic emphasis inside a dialogue paragraph remains part of the spoken text.
 
 ## Style, audience, and roster
 
-The optional front matter at the beginning of the file records organizational choices. Selecting a Style or Audience updates its slug without rewriting dialogue or changing the voice-generation settings. The Roster determines how speaker cues resolve to voices.
+The optional front matter at the beginning of the file records organizational choices. Since 0.2 it also accepts `theme` (a theme slug), `formats` (`16:9`, `9:16`), and `languages` (the first is the script's own language). Translations add `source`, `sourceRevision`, and `language`, and AI drafts carry `draft: true` until you accept them. Selecting a Style or Audience updates its slug without rewriting dialogue or changing the voice-generation settings. The Roster determines how speaker cues resolve to voices.
 
 ## Structural guidance
 
