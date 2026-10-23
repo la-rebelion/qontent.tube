@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkqontent_tube_website=self.webpackChunkqontent_tube_website||[]).push([["431"],{9328(t){t.exports=JSON.parse('{"metadata":{"permalink":"/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Notes on writing, casting, and producing multi-voice narration.","blogTitle":"Qontent Tube Blog"}}')}}]);

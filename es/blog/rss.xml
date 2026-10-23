@@ -4,10 +4,59 @@
         <title>Qontent Tube Blog</title>
         <link>https://qontent.tube/es/blog</link>
         <description>Qontent Tube Blog</description>
-        <lastBuildDate>Tue, 13 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 23 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>es</language>
+        <item>
+            <title><![CDATA[Qontent Tube 0.2: it's alive]]></title>
+            <link>https://qontent.tube/es/blog/qontent-tube-0-2</link>
+            <guid>https://qontent.tube/es/blog/qontent-tube-0-2</guid>
+            <pubDate>Fri, 23 Oct 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Your script now becomes an animated, talking, multilingual video — in 16:9 and 9:16 — rendered on your own computer.]]></description>
+            <content:encoded><![CDATA[<p>In 0.1, Qontent Tube gave your script a voice. In 0.2, it gives it a stage.</p>
+<p>Write the scenes. Hear the cast. Watch the cards slide in on the word that mentions them, the characters talk with the real voice, and the finished MP4 land in your folder — in English, in Spanish, and as Shorts.</p>
+<p><strong>The video below was made entirely with Qontent Tube 0.2.</strong> One Markdown script, one storyboard, two voices, a cast of two characters, three painted backgrounds, and three renders: this one, a Spanish version, and a vertical Short.</p>
+<video controls="" preload="metadata" poster="/img/v020/demo-poster.jpg" style="width:100%;border-radius:12px"><source src="/video/qontent-tube-0-2-demo.mp4" type="video/mp4"><track kind="captions" src="/video/qontent-tube-0-2-demo.en.vtt" srclang="en" label="English"></video>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="from-words-to-video">From words to video<a href="https://qontent.tube/es/blog/qontent-tube-0-2#from-words-to-video" class="hash-link" aria-label="Enlace directo al From words to video" title="Enlace directo al From words to video" translate="no">​</a></h2>
+<p>Studio now has three views over the same draft: <strong>Script</strong>, <strong>Script + Stage</strong>, and <strong>Storyboard</strong>. The stage is a 1920 × 1080 animated video whose timing comes from the voice. Every beat is anchored to a line — "line 2 at 50%" — never to a timestamp, so when you rewrite a sentence or regenerate a clip, the animation simply follows.</p>
+<p>No voice yet? Press <strong>Preview with estimated timing</strong> and watch the whole video play on word-count timing.</p>
+<p><img decoding="async" loading="lazy" alt="Script + Stage" src="https://qontent.tube/es/assets/images/studio-stage-5dc56f27d6249115647ceea26510e7bb.png" width="1600" height="960" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="storyboards-you-can-trust">Storyboards you can trust<a href="https://qontent.tube/es/blog/qontent-tube-0-2#storyboards-you-can-trust" class="hash-link" aria-label="Enlace directo al Storyboards you can trust" title="Enlace directo al Storyboards you can trust" translate="no">​</a></h2>
+<p>A storyboard is a JSON file next to your script — data, never generated code. Fourteen element kinds (cards, chips, flows, terminals, tables, bars, characters…) with form editors, wireframes at 50% and 90% of each scene, and a review flow: <strong>approve</strong>, <strong>lock</strong>, <strong>Approve all scenes</strong>. Edit the script, and the scenes whose lines moved are marked <em>Needs review</em>. Nothing silently disappears.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="draft-with-ai-stay-in-charge">Draft with AI, stay in charge<a href="https://qontent.tube/es/blog/qontent-tube-0-2#draft-with-ai-stay-in-charge" class="hash-link" aria-label="Enlace directo al Draft with AI, stay in charge" title="Enlace directo al Draft with AI, stay in charge" translate="no">​</a></h2>
+<p>The <strong>NEW</strong> tool turns a topic into a script and a full storyboard. Bring your own Anthropic or OpenAI key (or any OpenAI-compatible server, like Ollama), choose the model and the effort, and see what to expect: <em>Fast</em> for first drafts in under a minute, <em>Thorough</em> for long, careful scripts. Or skip keys entirely: <strong>manual mode</strong> shows the exact prompt for any chat product and validates the reply you paste back.</p>
+<p>Every result is a draft: validated against the schema and the script, repaired once automatically if needed, recorded with its provenance, and never written over your work.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="your-brand-on-stage">Your brand on stage<a href="https://qontent.tube/es/blog/qontent-tube-0-2#your-brand-on-stage" class="hash-link" aria-label="Enlace directo al Your brand on stage" title="Enlace directo al Your brand on stage" translate="no">​</a></h2>
+<p>Themes give the stage your colors and fonts, graded for WCAG readability with one-click fixes. Extract a palette from your logo, apply it per script, per project, or everywhere, and export it as Design Tokens.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-cast-that-talks">A cast that talks<a href="https://qontent.tube/es/blog/qontent-tube-0-2#a-cast-that-talks" class="hash-link" aria-label="Enlace directo al A cast that talks" title="Enlace directo al A cast that talks" translate="no">​</a></h2>
+<p>Build characters in the <strong>Character builder</strong>: describe them, pick a style (flat, soft 3D, line, pixel) and a personality, generate four variations, lock the ones you like, and refine them in words. Every character ships rigged — breathing, blinking, waving, expressions — and <strong>talks with the real voice</strong>: Qontent Tube reads each clip's loudness 30 times a second, and the mouth follows.</p>
+<p>Use <strong>CAST</strong> to give every speaker a face. In the demo, our Narrator is Hapi and the Expert is Nova, built in seconds from one sentence.</p>
+<p><img decoding="async" loading="lazy" alt="Character builder" src="https://qontent.tube/es/assets/images/characters-b4126f016697e204246bd0c6792b8cc9.png" width="1600" height="960" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="every-scene-its-own-world">Every scene its own world<a href="https://qontent.tube/es/blog/qontent-tube-0-2#every-scene-its-own-world" class="hash-link" aria-label="Enlace directo al Every scene its own world" title="Enlace directo al Every scene its own world" translate="no">​</a></h2>
+<p><strong>Generate background</strong> paints a picture for a scene from its story and your theme's colors, with the card areas kept calm and text kept out. A theme-colored veil keeps every word readable, and a slow zoom or pan adds life. Prefer another tool? Copy the prompt and upload your image.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="one-story-every-language">One story, every language<a href="https://qontent.tube/es/blog/qontent-tube-0-2#one-story-every-language" class="hash-link" aria-label="Enlace directo al One story, every language" title="Enlace directo al One story, every language" translate="no">​</a></h2>
+<p>The <strong>LANG</strong> tool translates a script into a linked draft (<code>intro.es-MX.md</code>) that keeps the same scenes, speakers, and storyboard, with its own on-screen texts. Give each speaker a voice per language, protect terms with a glossary, and let <strong>Timing</strong> fit the translation to the original pace. Change the source, and only the outdated lines are re-translated.</p>
+<p>The Spanish cut of the demo was translated, re-voiced, and rendered in a few minutes:</p>
+<video controls="" preload="metadata" style="width:100%;border-radius:12px"><source src="/video/qontent-tube-0-2-demo.es-MX.mp4" type="video/mp4"></video>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="and-every-screen">And every screen<a href="https://qontent.tube/es/blog/qontent-tube-0-2#and-every-screen" class="hash-link" aria-label="Enlace directo al And every screen" title="Enlace directo al And every screen" translate="no">​</a></h2>
+<p>The <strong>MOBILE</strong> tool adapts each scene to 9:16 — restack, split into beats, focus crop, or letterbox — with the platform safe zones of YouTube Shorts, Reels, and TikTok drawn on the preview. The voice stays the same. Render it as one vertical video or as parts under 60 seconds, each with a "Part n of N" card.</p>
+<p><img decoding="async" loading="lazy" alt="9:16 side by side" src="https://qontent.tube/es/assets/images/mobile-bc302c32ef30958073d4741acf199f56.png" width="1600" height="960" class="img_ev3q"></p>
+<p>Here is part 1 of the demo as a Short, rendered from the same storyboard and voice:</p>
+<video controls="" preload="metadata" style="width:100%;max-width:360px;border-radius:12px;display:block;margin:0 auto"><source src="/video/qontent-tube-0-2-short-part-1.mp4" type="video/mp4"></video>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rendered-on-your-computer">Rendered on your computer<a href="https://qontent.tube/es/blog/qontent-tube-0-2#rendered-on-your-computer" class="hash-link" aria-label="Enlace directo al Rendered on your computer" title="Enlace directo al Rendered on your computer" translate="no">​</a></h2>
+<p><strong>RENDER</strong> runs a pre-flight checklist, then exports an MP4 at 30 fps with captions (<code>.srt</code>), YouTube chapters, and QA frames, using the Chrome and ffmpeg you already have. Renders run in parallel chunks, can be cancelled and resumed, and audio can be re-mixed without rendering the picture again. Your scripts, voices, and videos stay on your machine.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="get-started">Get started<a href="https://qontent.tube/es/blog/qontent-tube-0-2#get-started" class="hash-link" aria-label="Enlace directo al Get started" title="Enlace directo al Get started" translate="no">​</a></h2>
+<ul>
+<li class="">Read the new guides, starting with <a class="" href="https://qontent.tube/es/docs/studio-and-stage">Studio and the animated stage</a>.</li>
+<li class="">Already using 0.1? Your scripts, rosters, and audio keep working; 0.2 only adds.</li>
+</ul>
+<p>Write it. Hear it. Ship it.</p>]]></content:encoded>
+            <category>Product</category>
+            <category>Release</category>
+            <category>Animation</category>
+        </item>
         <item>
             <title><![CDATA[Introducing Qontent Tube]]></title>
             <link>https://qontent.tube/es/blog/introducing-qontent-tube</link>
