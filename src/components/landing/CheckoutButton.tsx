@@ -8,6 +8,11 @@ interface CheckoutResponse {
   error?: string;
 }
 
+interface ReleaseStatusResponse {
+  available?: boolean;
+  version?: string;
+}
+
 interface TurnstileApi {
   render(
     container: HTMLElement,
@@ -38,6 +43,11 @@ export default function CheckoutButton() {
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [release, setRelease] = useState<
+    | { state: "checking" }
+    | { state: "unavailable" }
+    | { state: "available"; version: string }
+  >({ state: "checking" });
   const turnstileContainer = useRef<HTMLDivElement>(null);
   const turnstileWidgetId = useRef<string | null>(null);
   const turnstileSiteKey =
@@ -47,7 +57,38 @@ export default function CheckoutButton() {
   const hasTurnstileSiteKey = turnstileSiteKey.length > 0;
 
   useEffect(() => {
-    if (!hasTurnstileSiteKey || !turnstileContainer.current) return;
+    const controller = new AbortController();
+    const baseUrl = resolveCheckoutApiUrl(
+      siteConfig.customFields?.checkoutApiUrl,
+    );
+    fetch(`${baseUrl}/release/status`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Release status unavailable");
+        return (await response.json()) as ReleaseStatusResponse;
+      })
+      .then((status) => {
+        setRelease(
+          status.available && status.version
+            ? { state: "available", version: status.version }
+            : { state: "unavailable" },
+        );
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
+        setRelease({ state: "unavailable" });
+      });
+    return () => controller.abort();
+  }, [siteConfig.customFields?.checkoutApiUrl]);
+
+  useEffect(() => {
+    if (
+      !hasTurnstileSiteKey ||
+      release.state !== "available" ||
+      !turnstileContainer.current
+    ) {
+      return;
+    }
 
     let cancelled = false;
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -82,7 +123,12 @@ export default function CheckoutButton() {
         turnstileWidgetId.current = null;
       }
     };
-  }, [hasTurnstileSiteKey, i18n.currentLocale, turnstileSiteKey]);
+  }, [
+    hasTurnstileSiteKey,
+    i18n.currentLocale,
+    release.state,
+    turnstileSiteKey,
+  ]);
 
   async function startCheckout() {
     if (!turnstileToken) {
@@ -129,26 +175,42 @@ export default function CheckoutButton() {
     }
   }
 
+  function checkoutStatusMessage(): string {
+    if (release.state === "checking") {
+      return "Checking private-release availability…";
+    }
+    if (release.state === "unavailable") {
+      return "Checkout opens when the verified v0.2 release is ready.";
+    }
+    if (!hasTurnstileSiteKey) return "Checkout security is not configured.";
+    if (state === "error") return message;
+    return `Qontent Tube ${release.version} · secure checkout powered by Stripe`;
+  }
+
   return (
     <div className={styles.checkoutAction}>
-      {hasTurnstileSiteKey && (
+      {hasTurnstileSiteKey && release.state === "available" && (
         <div className={styles.turnstileSlot} ref={turnstileContainer} />
       )}
       <button
         className={styles.primaryButton}
-        disabled={state === "loading" || !hasTurnstileSiteKey}
+        disabled={
+          state === "loading" ||
+          !hasTurnstileSiteKey ||
+          release.state !== "available"
+        }
         onClick={startCheckout}
         type="button"
       >
-        {state === "loading" ? "Opening secure checkout…" : "Buy for $49"}
+        {state === "loading"
+          ? "Opening secure checkout…"
+          : release.state === "available"
+            ? "Buy for $49"
+            : "Private release coming soon"}
         {state !== "loading" && <span aria-hidden="true">→</span>}
       </button>
       <p aria-live="polite" className={styles.checkoutStatus}>
-        {!hasTurnstileSiteKey
-          ? "Checkout security is not configured."
-          : state === "error"
-            ? message
-            : "Secure checkout powered by Stripe"}
+        {checkoutStatusMessage()}
       </p>
     </div>
   );

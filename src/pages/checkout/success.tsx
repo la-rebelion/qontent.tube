@@ -49,13 +49,13 @@ export default function CheckoutSuccess() {
     },
     paid: {
       eyebrow: "PAYMENT CONFIRMED",
-      title: "Your Qontent Tube early access is next.",
-      body: "Your pre-launch order is recorded for fulfillment. Watch the inbox you used at checkout for access and download instructions.",
+      title: "Your private download links are on the way.",
+      body: "Watch the inbox you used at checkout for separate Windows and Linux links. Each link expires after 72 hours and permits three download attempts.",
     },
     processing: {
       eyebrow: "PAYMENT PROCESSING",
       title: "Stripe is still confirming your payment.",
-      body: "Some payment methods take longer to settle. You can close this page; fulfillment begins only after Stripe confirms payment.",
+      body: "Some payment methods take longer to settle. You can close this page; the private download email is sent only after Stripe confirms payment.",
     },
     error: {
       eyebrow: "CHECKOUT STATUS",

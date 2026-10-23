@@ -562,10 +562,10 @@ export function PricingSection() {
           securely through Stripe and use the same email for access delivery.
         </p>
         <p>
-          This early-adopter license is valid only during the private pre-launch
-          program. It does not automatically convert into a public-release
-          license. When Qontent Tube launches publicly, some features may be
-          limited, repackaged, or require a separate purchase or license.
+          You may keep using any v0.x build you legitimately obtain. Access to
+          new downloads and private-beta updates lasts only while the program is
+          active and does not automatically convert into a public-release
+          license.
         </p>
       </div>
       <div className={styles.priceCard}>
@@ -586,8 +586,9 @@ export function PricingSection() {
           <li>Pre-launch updates while the program runs</li>
         </ul>
         <p className={styles.licenseDisclosure}>
-          Public-release access is not included or guaranteed. Features and
-          licensing may change at launch.{" "}
+          Private-beta features may change or be restricted in the public
+          release. Your purchase covers private v0.x access and does not
+          automatically include the public release.{" "}
           <Link to="/terms">Read the terms.</Link>
         </p>
         <CheckoutButton />

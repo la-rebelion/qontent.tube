@@ -6,7 +6,7 @@ slug: /terms
 
 # Terms and Conditions
 
-**Last updated:** October 21, 2026
+**Last updated:** October 23, 2026
 
 These Terms and Conditions (“**Terms**”) govern your access to and use of Qontent Tube, including [qontent.tube](https://qontent.tube), the desktop application, documentation, pre-release software, licenses, and related support (the “**Services**”).
 
@@ -28,7 +28,9 @@ The product is evolving. Pre-release and roadmap features may change, arrive lat
 
 Your purchase grants a limited license to use the Qontent Tube builds made available under the offer and license terms displayed at checkout. The current $49 early-adopter offer is a one-time purchase for access to private v0.x pre-launch releases and pre-launch updates while that program remains active.
 
-**The early-adopter license is valid only for the private pre-launch program. It does not include, guarantee, or automatically convert into a license for the public release.** When Qontent Tube becomes publicly available, features may be limited, removed, repackaged, or offered under different pricing or license terms. Continued access to public-release versions or particular features may require a separate purchase, subscription, or license.
+You may continue using any v0.x build you legitimately obtain through the private program without a time limit, subject to these Terms. Access to new downloads and private-beta updates is available only while the private program remains active.
+
+**Private-beta features are experimental. They may be removed, restricted, usage-limited, repackaged, separately priced, or unavailable in the public release. The early-adopter purchase does not include, guarantee, or automatically convert into access to public-release versions or equivalent public-release features.** Continued access to public releases or particular features may require a separate purchase, subscription, or license. These changes do not retroactively disable a v0.x build you already obtained legitimately.
 
 Unless a separate license says otherwise, you may not:
 
@@ -67,7 +69,7 @@ Stripe processes payments. Prices and included rights are those displayed at che
 
 Taxes may be collected where required. Refunds, cancellation rights, and statutory guarantees are governed by the checkout terms and applicable consumer law. Nothing in these Terms removes rights that cannot legally be waived.
 
-License delivery and fulfillment depend on successful payment confirmation. We may pause fulfillment while investigating suspected fraud, chargebacks, duplicate transactions, or inaccurate purchase information.
+License delivery and fulfillment depend on successful payment confirmation. Private download links are time-limited, usage-limited bearer links and must not be shared. We may pause fulfillment or revoke unused links while investigating suspected fraud, refunds, disputes, chargeback abuse, duplicate transactions, or inaccurate purchase information.
 
 ## 7. Pre-release software
 
@@ -89,7 +91,7 @@ You agree not to attack, overload, scrape, disrupt, or attempt unauthorized acce
 
 ## 9. Updates, availability, and support
 
-We may update, replace, limit, or discontinue features and pre-release versions. The scope of included updates is determined by the offer associated with your license. Early-adopter access ends with the private pre-launch program and does not create an entitlement to public-release builds, features, updates, or support.
+We may update, replace, limit, or discontinue features and pre-release versions. The scope of included updates is determined by the offer associated with your license. Access to new early-adopter downloads and updates ends with the private pre-launch program and does not create an entitlement to public-release builds, features, updates, or support. This does not end your right to use a v0.x build you already obtained legitimately.
 
 Unless a separate support agreement says otherwise, support is provided on a reasonable-efforts basis without guaranteed response or resolution times. We do not guarantee that the Services will always be available, error-free, compatible with every environment, or suitable for every production workflow.
 
@@ -130,7 +132,7 @@ To the extent permitted by law, you agree to indemnify and hold harmless La Rebe
 
 ## 15. Changes to these Terms
 
-We may update these Terms as Qontent Tube evolves. We will update the date above and provide additional notice when required. Changes will not retroactively alter access already provided during the applicable pre-launch license period unless required by law or agreed with you.
+We may update these Terms as Qontent Tube evolves. We will update the date above and provide additional notice when required. Changes will not retroactively disable or remove the right to use a v0.x build legitimately obtained under the applicable early-adopter offer unless required by law or agreed with you.
 
 If you do not agree to updated Terms, stop using the affected Services.
 

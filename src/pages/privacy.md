@@ -6,7 +6,7 @@ slug: /privacy
 
 # Privacy Policy
 
-**Last updated:** October 21, 2026
+**Last updated:** October 23, 2026
 
 Qontent Tube is a product of **La Rebelion Labs** (“**LRL**,” “**we**,” “**us**,” or “**our**”). This policy explains how we handle information when you visit [qontent.tube](https://qontent.tube), purchase a Qontent Tube license, use the desktop application, read its documentation, or contact us. Together, these are the “**Services**.”
 
@@ -46,8 +46,11 @@ We may retain:
 - The email address associated with the purchase.
 - Amount, currency, payment status, license type, and fulfillment status.
 - Signed webhook event identifiers used to prevent duplicate processing.
+- Release version, download-link expiration, download-attempt counts, and delivery status.
 
-We use this information to confirm payment, deliver and support your license, prevent fraud, maintain business records, and comply with accounting, tax, and legal obligations.
+We use this information to confirm payment, deliver and support your license, prevent fraud, maintain business records, and comply with accounting, tax, and legal obligations. Private release files are stored in Cloudflare R2 and delivered through signed, time-limited links. The link itself contains an opaque identifier and expiration rather than your email address or payment details.
+
+We use Twilio to send transactional fulfillment messages to the email address associated with your purchase. Twilio processes that address and message-delivery metadata under [Twilio's Privacy Notice](https://www.twilio.com/en-us/legal/privacy).
 
 ## 4. Desktop application and local projects
 
@@ -90,6 +93,7 @@ We share information only as reasonably necessary with service providers such as
 
 - Cloudflare for website delivery, security, Turnstile, and checkout infrastructure.
 - Stripe for payment processing.
+- Twilio for transactional purchase and download email delivery.
 - Voice or AI providers you choose to connect.
 - Professional advisers or authorities when required by law.
 
