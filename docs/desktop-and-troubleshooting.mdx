@@ -8,7 +8,7 @@ sidebar_position: 6
 
 The packaged Qontent Tube desktop application combines the local API and web workspace in one executable. It binds to a private loopback address and opens the authenticated workspace in your default browser. It does not require a separately installed Bun or Node.js runtime.
 
-The verified release design covers Windows x64 portable/MSIX artifacts and a Linux x64 AppImage. This documentation does not link to downloads until those artifacts are published.
+The private release currently provides a Windows x64 executable and a Linux x64 executable. macOS and ARM builds are not included. Review the [requirements before you buy](./requirements) before purchasing.
 
 ## First launch and voice configuration
 
@@ -30,12 +30,13 @@ The app also shuts down after 30 minutes with no live browser tab and no protect
 
 Start the application with `--no-open` and open the one-time URL printed by the launcher. The short-lived bootstrap URL becomes a private browser session and cannot be reused after consumption.
 
-## AppImage will not mount
+## Linux says the file is not executable
 
-Linux AppImage normally uses the distribution's FUSE support. On a system where FUSE is unavailable, use the artifact's extract-and-run mode:
+Mark the downloaded Linux file as executable, then run it:
 
 ```bash
-./Qontent-Tube.AppImage --appimage-extract-and-run
+chmod +x qontent-tube-*-linux-x64
+./qontent-tube-*-linux-x64
 ```
 
 ## Generation is unavailable

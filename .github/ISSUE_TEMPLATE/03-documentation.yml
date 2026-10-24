@@ -1,0 +1,47 @@
+name: Documentation improvement
+description: Report missing, unclear, outdated, or incorrect Qontent Tube guidance.
+title: "[Docs]: "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or section
+      description: Paste the qontent.tube URL or repository path, if known.
+      placeholder: https://qontent.tube/docs/requirements
+    validations:
+      required: false
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Installation and system requirements
+        - Scripts, rosters, and voice generation
+        - Studio, storyboards, and animation
+        - AI, image, or voice providers
+        - Rendering and exports
+        - Privacy, terms, pricing, or checkout
+        - Troubleshooting
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is unclear or incorrect?
+      description: Explain what you expected to learn and where the page fell short.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested wording or example
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Relevant environment
+      description: Include your Qontent Tube version and operating system when they affect the documentation.
+    validations:
+      required: false

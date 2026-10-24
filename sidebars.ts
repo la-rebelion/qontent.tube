@@ -2,6 +2,7 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 const sidebars: SidebarsConfig = {
   guideSidebar: [
+    "requirements",
     "getting-started",
     "writing-scripts",
     "rosters-and-voices",

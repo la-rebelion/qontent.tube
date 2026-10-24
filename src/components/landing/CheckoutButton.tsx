@@ -1,4 +1,5 @@
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import Link from "@docusaurus/Link";
 import { useEffect, useRef, useState } from "react";
 import { resolveCheckoutApiUrl } from "@site/src/lib/checkout";
 import styles from "./landing.module.css";
@@ -43,6 +44,7 @@ export default function CheckoutButton() {
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [requirementsAccepted, setRequirementsAccepted] = useState(false);
   const [release, setRelease] = useState<
     | { state: "checking" }
     | { state: "unavailable" }
@@ -184,11 +186,28 @@ export default function CheckoutButton() {
     }
     if (!hasTurnstileSiteKey) return "Checkout security is not configured.";
     if (state === "error") return message;
+    if (!requirementsAccepted) {
+      return "Review and accept the requirements before checkout.";
+    }
     return `Qontent Tube ${release.version} · secure checkout powered by Stripe`;
   }
 
   return (
     <div className={styles.checkoutAction}>
+      <label className={styles.requirementsConsent}>
+        <input
+          checked={requirementsAccepted}
+          onChange={(event) => setRequirementsAccepted(event.target.checked)}
+          type="checkbox"
+        />
+        <span>
+          I reviewed the{" "}
+          <Link to="/docs/requirements">
+            system, provider, and API-key requirements
+          </Link>{" "}
+          and understand that third-party accounts and usage are not included.
+        </span>
+      </label>
       {hasTurnstileSiteKey && release.state === "available" && (
         <div className={styles.turnstileSlot} ref={turnstileContainer} />
       )}
@@ -196,6 +215,7 @@ export default function CheckoutButton() {
         className={styles.primaryButton}
         disabled={
           state === "loading" ||
+          !requirementsAccepted ||
           !hasTurnstileSiteKey ||
           release.state !== "available"
         }

@@ -87,6 +87,8 @@ You are responsible for:
 - Maintaining an environment compatible with the documented system requirements.
 - Paying third-party service charges arising from credentials you connect.
 
+The current desktop release requires a supported Windows x64 or Linux x64 system and your own Deepgram API key plus internet access to generate narration. Finished video rendering additionally requires a compatible Chromium-family browser and ffmpeg 5 or later with H.264 (`libx264`) and AAC support. Optional AI drafting and automatic image generation require compatible third-party API access unless you use the documented manual workflows. These tools, accounts, credits, subscriptions, and usage charges are not included in the Qontent Tube purchase. Current details are listed in [Requirements before you buy](/docs/requirements).
+
 You agree not to attack, overload, scrape, disrupt, or attempt unauthorized access to the website, checkout service, software, licensing systems, or related infrastructure.
 
 ## 9. Updates, availability, and support

@@ -117,6 +117,10 @@ const faqs = [
     "The packaged desktop release targets Windows x64 and Linux x64. The application runs locally and opens its workspace in your browser.",
   ],
   [
+    "What do I need before buying?",
+    "For voice generation you need your own Deepgram API key and internet access. Finished video rendering also needs ffmpeg 5+ with libx264 and AAC, plus Chrome, Chromium, or Edge. AI drafting and automatic scene images use optional third-party AI credentials; manual alternatives are available.",
+  ],
+  [
     "How much does it cost?",
     "Private pre-launch early-adopter access is $49 as a one-time purchase. It covers the private v0.x pre-launch period only; it does not include or guarantee a public-release license. Public-release features may be limited or require a separate purchase.",
   ],
@@ -585,6 +589,16 @@ export function PricingSection() {
           <li>Private pre-launch v0.x access</li>
           <li>Pre-launch updates while the program runs</li>
         </ul>
+        <aside className={styles.purchaseRequirements}>
+          <strong>Check before you buy</strong>
+          <p>
+            Voice generation requires your own Deepgram API key and internet
+            access. Video rendering also requires ffmpeg 5+ with H.264/AAC and
+            Chrome, Chromium, or Edge. Optional AI and image features use your
+            own provider access; provider fees are not included.
+          </p>
+          <Link to="/docs/requirements">Review every requirement →</Link>
+        </aside>
         <p className={styles.licenseDisclosure}>
           Private-beta features may change or be restricted in the public
           release. Your purchase covers private v0.x access and does not

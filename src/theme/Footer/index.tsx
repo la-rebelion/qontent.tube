@@ -24,7 +24,8 @@ export default function Footer(): React.ReactNode {
           <Link to="/terms">Terms</Link>
         </nav>
         <span className={styles.copyright}>
-          © 2026 <a href="https://rebelion.la">La Rebelion Labs</a> · Qontent Tube
+          © 2026 <a href="https://rebelion.la">La Rebelion Labs</a> · Qontent
+          Tube
         </span>
       </div>
     </footer>

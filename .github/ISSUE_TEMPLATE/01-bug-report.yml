@@ -1,0 +1,87 @@
+name: Qontent Tube bug report
+description: Report a reproducible problem in the desktop app, website, or documentation.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the private release. Search existing issues first. Never paste API keys, download links, private scripts, personal data, cookies, or complete credential files.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Desktop startup or local workspace
+        - Scripts, editor, or files
+        - Rosters, voices, or narration generation
+        - Studio, stage, or storyboards
+        - AI drafting or translations
+        - Scene images, themes, or characters
+        - Video rendering or exports
+        - Website, checkout, or download delivery
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Qontent Tube version
+      description: Find this in the app or downloaded filename.
+      placeholder: e.g. 0.2.1
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating system
+      options:
+        - Windows x64
+        - Linux x64
+        - Other or unsupported
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      description: Include OS version and browser. For render problems, include ffmpeg and Chrome/Chromium/Edge versions. Name connected providers, but never include keys.
+      placeholder: Windows 11 24H2; Edge 130; ffmpeg 7.1 with libx264/AAC; Deepgram voice generation
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Give the smallest repeatable example. Replace private content with a safe sample.
+      placeholder: "1. Open ...\n2. Select ...\n3. Observe ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the exact sanitized error text when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Paste only the relevant lines. Remove API keys, authorization headers, cookies, signed download URLs, email addresses, and private content.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add redacted screenshots or sample Markdown if useful.
+    validations:
+      required: false

@@ -1,0 +1,71 @@
+---
+title: Requirements before you buy
+description: Check the operating system, media tools, provider accounts, and API keys needed for each Qontent Tube workflow.
+sidebar_position: 1
+---
+
+# Requirements before you buy
+
+Qontent Tube is a local desktop application, but some of the work it coordinates depends on software installed on your computer and services billed by their providers. Check this page before purchasing private pre-launch access.
+
+## Required for the core voice workflow
+
+| Requirement                   | Why you need it                                                                                                                                            |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Windows x64 or Linux x64**  | These are the platforms included in the current private release. macOS and ARM builds are not included.                                                    |
+| **A modern browser**          | The desktop executable opens its private local workspace in your browser. Bun and Node.js are not required.                                                |
+| **Internet access**           | Voice generation and any connected AI or image service call that provider over HTTPS. Authoring, local files, and playback of existing clips remain local. |
+| **Your own Deepgram API key** | The current release uses Deepgram for text-to-speech. You can write scripts without a key, but you cannot generate new narration until one is configured.  |
+
+Qontent Tube and La Rebelion Labs are **not affiliated with Deepgram** and receive no commission for recommending it. We selected it because its free signup credit has been practical for testing: in our own test, generating about two hours of voice used roughly 5% of the available credit at that time. Allowances, prices, models, and availability belong to Deepgram and can change, so check its current terms before relying on that estimate. [Create and manage a Deepgram API key](https://developers.deepgram.com/docs/create-additional-api-keys?utm_source=qontent.tube).
+
+Your key is saved locally: Windows uses DPAPI for the current user; Linux uses an owner-only secret file. It is not returned to the browser.
+
+Want ElevenLabs, OpenAI, a local model, or another voice provider? [Request your preferred voice provider](https://github.com/la-rebelion/qontent.tube/issues/new?template=02-feature-request.yml&title=%5BProvider%5D%3A%20Support%20).
+
+## Required for finished video rendering
+
+Voice generation does not require these tools. The **RENDER** workflow does:
+
+- **ffmpeg 5 or later**, with the `libx264` H.264 encoder and AAC audio encoder. Qontent Tube uses it for media conversion, video encoding, narration and music mixing, and final muxing.
+- **Google Chrome, Chromium, or Microsoft Edge** installed on the computer. Qontent Tube drives it headlessly to capture the animated storyboard frames that ffmpeg encodes.
+- Enough free disk space for your projects, generated audio, temporary frames, and final renders. Video jobs can use substantially more space than script and voice-only projects.
+
+The app detects both tools and shows a setup checklist. Custom executable paths can be configured when automatic detection fails. See [Rendering videos](./rendering).
+
+## Optional AI and image services
+
+These credentials unlock convenience features; they are **not required** to write scripts, build rosters, generate Deepgram narration, or edit storyboards manually.
+
+### AI drafting, storyboards, and translations
+
+Choose one:
+
+- An **Anthropic API key** for Claude through the Anthropic API.
+- An **OpenAI API key**.
+- An **OpenAI-compatible endpoint** and its required key, including a local server such as Ollama.
+- **Manual mode**, with no AI key stored in Qontent Tube: copy the generated prompt into Claude Code or any other chat tool, then paste the reply back for validation.
+
+A Claude subscription or Claude Code login is not an Anthropic API key and is not used directly by Qontent Tube. Claude Code is usable through the manual copy-and-paste workflow.
+
+### Generated scene backgrounds
+
+Automatic background generation needs an **OpenAI-compatible image API**. By default Qontent Tube uses `gpt-image-1`; when an OpenAI AI-assist key is already configured, it can reuse that credential. Alternatively, copy the prompt into another image tool and upload the resulting PNG, JPEG, or WebP yourself.
+
+## Provider costs and data
+
+The $49 Qontent Tube purchase does not include Deepgram, Anthropic, OpenAI, or other third-party usage. You create those accounts, accept their terms, and pay any charges they impose. Qontent Tube shows provider configuration and usage where available, but third-party pricing and limits can change independently.
+
+Before connecting a provider, review what is sent in [AI drafting](./ai-drafting), [Storyboards](./storyboards), and the [Privacy Policy](/privacy).
+
+## Quick decision table
+
+| What you want to do                      | What you need                                               |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| Write and organize Markdown scripts      | Supported x64 computer and browser                          |
+| Generate narration                       | Deepgram API key and internet access                        |
+| Draft with built-in AI                   | Anthropic, OpenAI, or OpenAI-compatible API access          |
+| Draft with Claude Code or another chat   | Manual mode; no additional key in Qontent Tube              |
+| Generate scene backgrounds automatically | OpenAI-compatible image API access                          |
+| Upload your own backgrounds              | No image API key                                            |
+| Render MP4, captions, and chapters       | Chromium-family browser plus ffmpeg 5+ with libx264 and AAC |

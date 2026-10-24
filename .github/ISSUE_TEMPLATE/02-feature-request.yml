@@ -1,0 +1,74 @@
+name: Feature or provider request
+description: Suggest a workflow improvement, voice provider, AI service, format, or platform.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us about the outcome you need, not only the button you imagine. Search existing issues before filing. Provider requests are welcome—Qontent Tube currently uses Deepgram for voice, but La Rebelion Labs is not affiliated with it.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Voice provider integration
+        - AI or image provider integration
+        - Scripts and authoring
+        - Rosters and narration
+        - Studio, animation, or storyboards
+        - Characters, themes, or scene images
+        - Languages or translations
+        - Rendering, formats, or exports
+        - Desktop platform or installation
+        - Website, purchase, or documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or creative workflow
+      description: What are you trying to produce, and what slows or blocks you today?
+      placeholder: As a creator, I want ... so that ...
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Preferred provider or tool
+      description: For an integration request, name the service, local tool, model, or API and link its official developer documentation.
+      placeholder: e.g. ElevenLabs — https://...
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would a good result look like?
+      description: Describe the important behavior, inputs, output, and where it fits in your workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Current workaround or alternatives
+      description: What do you use now, including manual workflows?
+    validations:
+      required: false
+  - type: dropdown
+    id: testing
+    attributes:
+      label: Private-release testing
+      description: Would you be willing to test an early version and share non-sensitive feedback?
+      options:
+        - "Yes"
+        - "Maybe"
+        - "No"
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add safe examples, links, mockups, or screenshots.
+    validations:
+      required: false

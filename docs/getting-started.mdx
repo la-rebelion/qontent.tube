@@ -9,6 +9,8 @@ slug: /getting-started
 
 This walkthrough takes you from the empty workspace to a playable multi-voice draft. The packaged desktop app runs locally and opens the workspace in your default browser.
 
+Before starting, confirm that you have a supported Windows x64 or Linux x64 computer, internet access, and your own Deepgram API key for narration generation. Video rendering additionally needs a Chromium-family browser and ffmpeg 5+ with libx264 and AAC. See the complete [requirements before you buy](./requirements), including optional AI and image-provider credentials.
+
 ![Qontent Tube empty state in dark mode](/img/product/empty-state-dark-linux.png)
 
 ## 1. Create a project
@@ -26,6 +28,8 @@ Open **Rosters & presets**, add a roster, and add the speakers you expect to use
 3. Adjust the speaking pace when needed.
 
 Speaker matching ignores capitalization, so a roster member named `Narrator` matches `**NARRATOR:**` in the script.
+
+On first launch, add your Deepgram API key when prompted. You can skip it while authoring, but **Generate audio** remains unavailable until the key is configured.
 
 ## 3. Create a script
 
