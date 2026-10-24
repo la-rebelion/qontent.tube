@@ -54,6 +54,7 @@ export default function LandingPage() {
               <li>Runs locally on Windows and Linux</li>
               <li>Plain Markdown scripts you own</li>
               <li>One-time pre-launch purchase</li>
+              <li>Limited to 25 early-adopter licenses</li>
             </ul>
           </div>
           <div className={styles.heroVisual}>

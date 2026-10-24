@@ -124,6 +124,22 @@ const faqs = [
     "How much does it cost?",
     "Private pre-launch early-adopter access is $49 as a one-time purchase. It covers the private v0.x pre-launch period only; it does not include or guarantee a public-release license. Public-release features may be limited or require a separate purchase.",
   ],
+  [
+    "How many early-adopter licenses are available?",
+    "The private pre-launch offer is limited to 25 early-adopter licenses. Once these are sold, the offer may no longer be available.",
+  ],
+  [
+    "What happens if I miss the early-adopter window?",
+    "Once the 25 early-adopter licenses are sold, the private pre-launch offer may no longer be available. You may need to wait for the public release or any future offers.",
+  ],
+  [
+    "Is there a public release planned?",
+    "Yes. After the private pre-launch period, a public release is expected. Details and pricing for the public release will be announced separately.",
+  ],
+  [
+    "What happens to my early-adopter license once the private pre-launch period ends?",
+    "Early-adopter licenses remain valid, but won't grant access to features or updates that are exclusive to the public release.",
+  ]
 ];
 
 export function AnswerSection() {
@@ -570,6 +586,12 @@ export function PricingSection() {
           new downloads and private-beta updates lasts only while the program is
           active and does not automatically convert into a public-release
           license.
+        </p>
+        <p>
+          Please note that this offer is only valid for the duration of the private 
+          pre-launch program and is subject to change. Only 25 licenses are available
+          for early adopters. After the 25 licenses are sold, the offer may no longer
+          be available.
         </p>
       </div>
       <div className={styles.priceCard}>
