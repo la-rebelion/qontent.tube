@@ -1,0 +1,39 @@
+1
+00:00:00,600 --> 00:00:29,960
+Making one video can feel like managing five different jobs. Writing, voices, visuals, animation, captions, and translations each add another tool and another handoff. Qontent Tube brings those decisions into one visible path. You start with an idea, give it a home, shape the script, plan what appears on screen, choose the voices and characters, review the complete experience, and render the finished video. I’m Roby, and I’ll walk you through it. You do not need to be an animator or editor. You only need to know what you want to communicate.
+
+2
+00:00:32,060 --> 00:01:06,780
+Every production begins with a project: the home for a topic, campaign, course, or channel. It keeps related scripts and supporting work together. Inside it, create a script. Qontent Tube provides a simple structure for your title, scenes, spoken lines, and visual directions. Scripts are portable Markdown text files you can also edit outside the app. Qontent Tube detects those changes when you return, so your work never disappears into a hidden format. As the production grows, its storyboard, audio, translations, and final renders stay connected to that same home.
+
+3
+00:01:08,880 --> 00:01:36,080
+Write directly with complete control, or give New Draft a topic or outline and ask for a starting point. Choose the length, format, voice roster, theme, and language. Use a connected AI service, or copy the prepared prompt into an assistant you already prefer and paste the result back. The result is still yours. Rewrite a line, move a scene, add a visual direction, or replace the draft. Nothing is voiced or rendered automatically. Qontent Tube waits for your approval.
+
+4
+00:01:38,180 --> 00:02:15,780
+Once the words feel right, the storyboard decides what the audience will see while those words are spoken. Scenes can contain titles, cards, diagrams, images, captions, characters, and other visual building blocks. Start from a template or a generated suggestion, then edit every element. Timing follows the narration. Attach a visual moment to a spoken line instead of an exact second. If the line changes length, the visual moves with it. Approve a scene when it works. Lock a scene—or one element—when it should survive later revisions. You always know what is exploratory and what is decided.
+
+5
+00:02:17,880 --> 00:02:55,640
+Voice and cast are related, but they do different jobs. A roster decides who speaks and which voice they use. Choose one narrator or several roles, adjust their pace, and assign other voices for translated versions. The cast decides who appears. Assign built-in characters, upload an image character, or create someone new from a description. Characters arrive ready to enter, blink, react, wave, and talk. Their mouths follow the generated voice, including natural pauses. Reuse the same character across many videos, so your audience recognizes the personality without rebuilding it for every episode.
+
+6
+00:02:57,740 --> 00:03:28,860
+A theme gives the production one visual identity: colors, typography, light and dark surfaces, captions, and accents. Duplicate a built-in theme, change a few choices, and watch the preview update. Readability checks keep captions and labels clear. Apply it to one script, a project, or everything. Change the visual rules once instead of restyling every card, title, and caption by hand. That makes visual consistency a reusable choice, not a cleanup task at the end of every production.
+
+7
+00:03:30,960 --> 00:04:07,200
+Script plus Stage brings everything together. Edit the words while the stage shows the animation. One timeline aligns scenes, voices, visual moments, and captions. Click any scene, line, or timeline block to jump there. Preview with estimated timing before voice exists; then generate voices and review the real pace. During playback, the current line and scene highlight, captions appear, and the assigned character speaks. You are reviewing the actual ingredients and timing that will be rendered. If something feels wrong, return directly to the word, visual, voice, or theme that needs attention.
+
+8
+00:04:09,300 --> 00:04:42,980
+Once the main version works, reuse it for more audiences. Language creates a linked translation while preserving scenes, speakers, and visuals. It flags structural differences, tracks changed source lines, and supports voices for each language. Timing checks reveal when translated narration needs adjustment. Mobile adapts the scenes for vertical video. It can restack elements, divide a busy scene into two beats, enlarge captions, and display platform safe zones. Compare wide and vertical versions side by side, so a Short feels composed—not merely cropped.
+
+9
+00:04:45,080 --> 00:05:38,360
+Here is an important difference. Qontent Tube does not send every scene to a video model and hope the result stays consistent. The current video engine is deterministic: the same approved instructions produce the same result. Animation comes from your script, storyboard, reusable characters, theme, voice timing, and captions. Change one word or color without paying a video model to imagine everything again. AI can still help draft text, suggest visuals, create characters, translate content, or generate an optional background. Voice uses the service you configure. The animation timeline and final assembly remain controlled and repeatable. Rendering runs on your computer. Qontent Tube checks the pieces, creates the video, and can produce captions, chapters, vertical versions, and review frames. Your source files and renders remain local-first.
+
+10
+00:05:40,460 --> 00:06:04,540
+That is the path: create the project, shape the script, direct each scene, choose the voice and cast, apply your theme, review, adapt, and render locally. The real value is keeping every decision connected, so revisions stay manageable and one production can serve more formats and audiences. Start with one idea. Build one scene at a time. And let Qontent Tube turn the work you approve into every version you need.
