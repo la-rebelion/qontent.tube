@@ -27,6 +27,10 @@ Before rendering, a checklist confirms that the render tools are ready, every li
 
 Files are saved in `renders/<project>/` in your content folder; earlier files are kept with a timestamp.
 
+## Capture scenes
+
+Capture problems block a render with no override, and each render with captures also writes `<name>.render-metadata.json`. See [Validate and approve](./validate-and-approve). Render jobs copy the media they use, so replacing a file later can't change a job.
+
 ## Queue
 
 Renders run in parallel chunks with progress and time remaining. **Cancel** and **Retry** resume from finished chunks. **Re-mix audio** updates the voice or music without rendering the picture again. Play finished videos right in the app.

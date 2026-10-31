@@ -1,0 +1,49 @@
+---
+title: Validate and approve
+description: See every capture problem linked to its field, complete a privacy review, approve scenes, and prove what each render used.
+sidebar_position: 12
+---
+
+# Validate and approve
+
+Open **Storyboard → Validate & render** to see whether a video is ready. Each issue names its scene, asset, field, and where it was written. **Go to field** opens the editor on that control.
+
+Validation never changes anything. The page, the command line, and the render's pre-flight all read the same report.
+
+## Errors and warnings
+
+**Errors block the render, and there is no override.** They include missing media, invalid trims or regions, unknown references, too much zoom, forbidden transforms, an unfinished privacy review, and an adaptation that isn't approved. Nothing is generated in place of a broken capture.
+
+**Warnings** ask you to look, and rendering needs your confirmation.
+
+A fix button appears only when the correction is lossless: setting zoom to the limit, clamping a trim, using the closest region name, or pinning a file's hash. Anything that needs judgment is left to you.
+
+## Privacy review
+
+Each strict capture needs a person to confirm it shows no credentials, tokens, personal data, notifications, shell history, or machine paths. A scene's `privacy.failOn` can narrow the list.
+
+Qontent Tube doesn't detect or blur anything. If something shows, record it again cleanly. The sign-off is tied to that exact file, so replacing it asks for review again.
+
+## Approve a scene
+
+**Approve scene** works once the scene has no errors. The approval records hashes of what you approved, so changing the directive, source, selected output, or spatial contract undoes it. Unrelated script changes don't.
+
+## Project rules
+
+Scenes can declare `visualClass: product-ui` or `illustration`; nothing is guessed from your prose. With `policy.productUi.requireCapture: true`, a product UI scene with only generated visuals can't render. `assertions.exactEvidence: true` means only the original capture can satisfy that scene.
+
+## What each render proves
+
+Each capture render writes `<name>.render-metadata.json` beside the MP4. It lists hashes, trims, regions, camera, overlays, approvals, and which scenes are AI-adapted. It contains no paths, keys, or tokens, and no watermark is added to the video.
+
+## From the command line
+
+These commands use your content folder and don't start the app. With `--strict`, `validate` exits nonzero when anything blocks. `--json` prints the same report the app uses.
+
+```bash
+qontent-tube capture inspect ./captures/studio.png
+qontent-tube capture resolve --project my-project --script tour.md
+qontent-tube capture validate --project my-project --script tour.md --strict --json
+```
+
+If a project or script isn't found, open it in the app once so it is indexed.

@@ -1,0 +1,43 @@
+---
+title: AI adaptation
+description: Optionally let AI explain a capture as an animation or new media, with consent for every run and the original always kept.
+sidebar_position: 13
+---
+
+# AI adaptation
+
+Every capture scene starts as **Keep original**. If a capture would explain better as an animation, choose **Allow AI adaptation**, for one scene or all of them. That choice sends nothing and generates nothing.
+
+## Create a candidate
+
+Choose **Adapt with AI…**, then pick a result:
+
+- **Animate with Qontent Tube** returns a validated animation and needs no image model. This is the recommended choice.
+- **Generate media** creates a new picture with an image model.
+- **Best fit** uses animation when possible, otherwise media.
+
+The dialog shows what will happen to each scene, and exactly what will be sent to which provider. Cancelling sends nothing.
+
+A screenshot is sent as itself. A recording is sent only as stills you select, so the result doesn't transform its motion. Full recordings aren't sent to the currently supported providers.
+
+**No key?** Choose to copy the prompt into any chat product, then paste the reply. Nothing is sent from Qontent Tube, and the reply gets the same validation.
+
+## Review it
+
+Each result is a candidate:
+
+1. **Compare** previews it against the original.
+2. **Accept** selects it. It still can't render.
+3. **Approve scene** makes it the scene's output.
+
+**Regenerate** adds another candidate, **Reject** sets one aside, and **Use original** returns to the capture. A candidate goes stale if its original or directive changes.
+
+## Why it stays safe
+
+An animation is data, not code: text, cards, flows, particles, small trusted components, and simple 3D, moved by dialogue anchors and a fixed seed. Scripts, markup, stylesheets, shaders, and URLs are refused. Rendering uses the stored result and never calls a provider, so seeking, retrying, and re-mixing can't change it or cost anything.
+
+Adapted scenes are labeled `AI-adapted` in Studio and in render metadata. Exact-evidence scenes can't use them.
+
+## Suggest framing
+
+**Suggest framing…** drafts regions, camera, and overlays from one capture you agree to send. Nothing applies until you accept it. Its privacy hints don't count as a review.

@@ -23,6 +23,10 @@ The desktop and local Bun runtimes default to `<user-home>/.qontent-tube`:
 
 Choose another absolute directory under **Rosters & presets → Local content storage**. Qontent Tube validates and creates it immediately, but the local API must restart before the new location becomes active. Existing files are not moved automatically.
 
+## Capture files
+
+A script can have a `<script>.capture.yaml` sidecar beside it. If you use AI adaptation, `adaptations/` keeps the review history and `compositions/` keeps animations, inside the project. Imported media stays private in your content folder.
+
 ## Edit with another tool
 
 Add or update Markdown directly under `<content-directory>/documents/<project-slug>/`, then select the project or use its **Refresh** action.

@@ -22,6 +22,17 @@ const sidebars: SidebarsConfig = {
         "rendering",
       ],
     },
+    {
+      type: "category",
+      label: "Real captures (0.3)",
+      collapsed: false,
+      items: [
+        "product-demo-workflow",
+        "capture-scenes",
+        "validate-and-approve",
+        "ai-adaptation",
+      ],
+    },
     "files-and-storage",
     "desktop-and-troubleshooting",
   ],

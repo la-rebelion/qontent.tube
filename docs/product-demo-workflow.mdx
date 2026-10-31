@@ -1,0 +1,37 @@
+---
+title: Make a product demo
+description: A complete workflow for a product video built from real captures, and what it costs.
+sidebar_position: 14
+---
+
+# Make a product demo
+
+This is the workflow we used for the [0.3 launch video](/blog/qontent-tube-0-3).
+
+1. **Write the script.** One Markdown file, with one short idea per scene. Scene length follows the voice, or the word count until you have one.
+2. **Record the product.** Capture only what each scene needs, with clean test data. A recording of a few seconds per scene is enough.
+3. **Import** the files in [Assets](./capture-scenes#add-a-capture).
+4. **Write headlines.** Give each scene a title and a one-line subtitle in Storyboard. Headlines carry the story, so the capture can stay small.
+5. **Frame it.** Mark a region or two, then move the camera to what the line is about. Start wide, and return wide.
+6. **Decide on AI, scene by scene.** Use the real capture when it shows the point. Use [an animation](./ai-adaptation) for ideas no screen shows.
+7. **[Validate and approve](./validate-and-approve).** Fix what's listed, review privacy, approve.
+8. **[Render](./rendering)**, then watch it through with sound.
+
+## What you pay for
+
+Real captures use no AI provider. Rendering runs on your computer with the Chrome and ffmpeg you already have. Costs come only from services you choose:
+
+| Step | Without a provider | With a provider |
+| --- | --- | --- |
+| Captures, regions, camera | Included | Not needed |
+| Rendering and re-rendering | Included | Not needed |
+| Narration | Render silently with music | Your [voice service](./requirements) |
+| AI scenes | Paste a reply from a chat product | Your AI key |
+
+Generated results are stored, so once a scene is approved, later renders call no provider.
+
+## Tips
+
+- **Fix the recording, not the video.** If a screen shows the wrong thing, record it again.
+- **Keep zoom modest.** Record at a higher resolution than your video if you want to zoom. Validation blocks visible upscaling.
+- **Speed up before importing** if a take runs long. Qontent Tube plays recordings at their own speed.
