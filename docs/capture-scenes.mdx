@@ -16,6 +16,14 @@ A capture scene shows a real screenshot or recording of your product. The stage 
 
 You can also bring files in with your own tools. A `./path` in the sidecar points at a file inside the project.
 
+### Project files are read-only
+
+Media inside the project folder appears in **Assets** under **In the project folder · Read-only**, with a lock on each card. You can preview it and see which scenes use it, but you can't replace, rename, or delete it from the app.
+
+That's deliberate: scenes point at these files by path, and approvals are tied to their exact contents. To change one, edit it on disk and use **Refresh**. A changed file asks for a new privacy review and approval.
+
+Importing the same file into the library makes a separate copy. The scene keeps using its `./path` until you change the source.
+
 ## Mark regions
 
 A region is a named rectangle in source pixels. Camera moves and overlays refer to it by name.

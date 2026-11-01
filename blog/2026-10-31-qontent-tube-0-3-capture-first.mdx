@@ -28,21 +28,16 @@ Qontent Tube 0.3 starts from the other end. **Your real screenshots and recordin
 
 The animated scene didn't need an API key. Here's what we did on purpose, so you can judge it fairly:
 
-- **There's no narration.** The video uses headlines and music, like our OrcA launch film, and timing comes from word count. Add a voice and the timing follows it.
+- **when there's no narration.** The video uses headlines and music, and timing comes from word count. **Add a voice** and the timing follows it.
 - **The recordings are sped up** 1.4× to 2.3× before import, to fit each scene.
 - **The recording and review were scripted** so we could repeat them. That includes the on-screen pointer, which our script draws, and the privacy sign-off, since the footage shows only a demo project. The same steps work by hand in the app.
 - **The music is synthesized**, not licensed.
 
-## Dogfood finds bugs
+## Dogfood our demos
 
-Our test suite was green before we made this video. Making it found four more problems:
+I created the launch video using Qontent Tube 0.3 itself, capturing our real screens and animating around them. This helped us spot issues that wouldn't appear in a purely AI-generated demo.
 
-- A long render with several recordings could stall and fail the whole job. It now recovers by itself. We recover from the stall but haven't found its root cause, and we'd rather say so.
-- Inline images in a storyboard didn't appear in renders.
-- Headlines had nowhere to put a one-line subtitle or a logo, so we added both.
-- Recording playback could go idle during a render, so it now stays active.
-
-That's why we use it ourselves.
+That's why we dogfood our own demos, ensuring that what we present is faithful to reality.
 
 ## Pixels you can trust
 
@@ -102,6 +97,16 @@ qontent-tube capture validate --project launch --script tour.md --strict --json
 Each render writes metadata that records what it used, with hashes and no paths or keys:
 
 ![Render evidence](/img/v030/evidence.jpg)
+
+## Versioning your work
+
+Qontent Tube keeps your scripts, storyboards, and captures versioned alongside your project. Every render writes metadata with hashes, so you can track exactly what was used and when. Reproducibility comes built in, and so does a clear history of every change.
+
+We call this approach **Video as Source**: a new way of making video that we've defined, where a document or script is the source of truth and the video is a build artifact. You write the script, point it at your real captures, and the video is generated from them. Edit the source, rebuild the video.
+
+Software teams already work this way. DevOps has Infrastructure as Code, and docs teams have Docs as Code. Video was the missing piece. With Video as Source, your script is versioned, reviewed in a pull request, checked in CI, and rendered on demand, and it always matches the product it shows.
+
+Capture-first filmmaking is how we do it: real content comes first, and AI adaptation or animation comes after, only when you choose it.
 
 ## What's next for you
 
