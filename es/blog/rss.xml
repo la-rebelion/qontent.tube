@@ -4,10 +4,74 @@
         <title>Qontent Tube Blog</title>
         <link>https://qontent.tube/es/blog</link>
         <description>Qontent Tube Blog</description>
-        <lastBuildDate>Tue, 27 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 31 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>es</language>
+        <item>
+            <title><![CDATA[Qontent Tube 0.3: capture first, animate everything else]]></title>
+            <link>https://qontent.tube/es/blog/qontent-tube-0-3</link>
+            <guid>https://qontent.tube/es/blog/qontent-tube-0-3</guid>
+            <pubDate>Sat, 31 Oct 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Make product videos from your real screens. We made our launch video this way, with no AI calls from the app, and it exposed four problems we fixed before shipping.]]></description>
+            <content:encoded><![CDATA[<p>Ask AI for a product demo and you get a video of a product that doesn't exist. The screen looks plausible, but it isn't yours. You can't say which build it shows, and nobody can check it.</p>
+<p>Qontent Tube 0.3 starts from the other end. <strong>Your real screenshots and recordings stay exactly as captured, and animation does the explaining around them.</strong></p>
+<p><strong>We made our launch video this way.</strong> It's the app recording itself, on the project that produced the video. You can even see the film inside its own preview.</p>
+<video controls="" preload="metadata" poster="/img/v030/launch-poster.jpg" style="width:100%;border-radius:12px"><source src="/video/qontent-tube-v030.16x9.en.mp4" type="video/mp4"></video>
+<!-- -->
+<p>The animated scene didn't need an API key. Here's what we did on purpose, so you can judge it fairly:</p>
+<ul>
+<li class=""><strong>when there's no narration.</strong> The video uses headlines and music, and timing comes from word count. <strong>Add a voice</strong> and the timing follows it.</li>
+<li class=""><strong>The recordings are sped up</strong> 1.4× to 2.3× before import, to fit each scene.</li>
+<li class=""><strong>The recording and review were scripted</strong> so we could repeat them. That includes the on-screen pointer, which our script draws, and the privacy sign-off, since the footage shows only a demo project. The same steps work by hand in the app.</li>
+<li class=""><strong>The music is synthesized</strong>, not licensed.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="dogfood-our-demos">Dogfood our demos<a href="https://qontent.tube/es/blog/qontent-tube-0-3#dogfood-our-demos" class="hash-link" aria-label="Enlace directo al Dogfood our demos" title="Enlace directo al Dogfood our demos" translate="no">​</a></h2>
+<p>I created the launch video using Qontent Tube 0.3 itself, capturing our real screens and animating around them. This helped us spot issues that wouldn't appear in a purely AI-generated demo.</p>
+<p>That's why we dogfood our own demos, ensuring that what we present is faithful to reality.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pixels-you-can-trust">Pixels you can trust<a href="https://qontent.tube/es/blog/qontent-tube-0-3#pixels-you-can-trust" class="hash-link" aria-label="Enlace directo al Pixels you can trust" title="Enlace directo al Pixels you can trust" translate="no">​</a></h2>
+<p>Import a screenshot or recording, and it's verified from its bytes and hashed. Then direct it: draw named regions, move the camera, and add focus outlines and callouts on a layer above. The stage can only crop, scale, and pan with one uniform scale. It can't redraw your screen.</p>
+<p><img decoding="async" loading="lazy" alt="The capture editor" src="https://qontent.tube/es/assets/images/regions-03ba60b58cd5233120ca0bb4564fd3b1.jpg" width="1920" height="1080" class="img_ev3q"></p>
+<p>Each camera move is anchored to a line of dialogue, not a timestamp. Rewrite the line and the camera follows.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="it-would-rather-stop-than-fake-it">It would rather stop than fake it<a href="https://qontent.tube/es/blog/qontent-tube-0-3#it-would-rather-stop-than-fake-it" class="hash-link" aria-label="Enlace directo al It would rather stop than fake it" title="Enlace directo al It would rather stop than fake it" translate="no">​</a></h2>
+<p>A broken capture doesn't quietly become something else. <strong>Validate &amp; render</strong> links each problem to its field and offers a one-click fix only when the fix is lossless. Errors block the render, with no override.</p>
+<p>A person signs off privacy, because we won't pretend software can catch every secret on screen. Approval is tied to hashes, so changing the source undoes it.</p>
+<p><img decoding="async" loading="lazy" alt="Validate &amp;amp; render" src="https://qontent.tube/es/assets/images/validate-5a61c3071e5935725376355c3dee79f2.jpg" width="1920" height="1080" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ai-when-you-choose-it">AI when you choose it<a href="https://qontent.tube/es/blog/qontent-tube-0-3#ai-when-you-choose-it" class="hash-link" aria-label="Enlace directo al AI when you choose it" title="Enlace directo al AI when you choose it" translate="no">​</a></h2>
+<p>Some ideas have no screen to capture. <strong>Allow AI adaptation</strong> makes a scene eligible and sends nothing. You then choose what to send, for that run only, and get a candidate to compare with your original. It renders only after you accept and approve it.</p>
+<p>An animation is data drawn by trusted primitives, so no generated code runs, and the same seed gives the same frames. Generated results are stored, so re-rendering never calls a provider again.</p>
+<p><img decoding="async" loading="lazy" alt="An AI-adapted scene" src="https://qontent.tube/es/assets/images/composition-022493021568dc1a943481661b7c9f17.jpg" width="1920" height="1080" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="if-youre-new-to-making-videos">If you're new to making videos<a href="https://qontent.tube/es/blog/qontent-tube-0-3#if-youre-new-to-making-videos" class="hash-link" aria-label="Enlace directo al If you're new to making videos" title="Enlace directo al If you're new to making videos" translate="no">​</a></h2>
+<p>You don't need a timeline editor, a motion designer, or a sponsor's budget. You need a script and your product on screen:</p>
+<ol>
+<li class="">Write a short script in Markdown.</li>
+<li class="">Record your screen.</li>
+<li class="">Import it, mark what matters, and validate.</li>
+<li class="">Render on your own computer.</li>
+</ol>
+<p>Your video stays original because it's made from your work, and rendering costs nothing per minute. You pay only for the services you choose, such as a voice key. <a class="" href="https://qontent.tube/es/docs/product-demo-workflow">Follow the workflow</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="if-youre-already-an-expert">If you're already an expert<a href="https://qontent.tube/es/blog/qontent-tube-0-3#if-youre-already-an-expert" class="hash-link" aria-label="Enlace directo al If you're already an expert" title="Enlace directo al If you're already an expert" translate="no">​</a></h2>
+<p>Everything the editor does is a diffable file that keeps your comments and key order, so it can live in your repo beside the script:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">scenes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">scene-4</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">asset</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> regions</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">camera</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">maxZoom</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1.6</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">keyframes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> canvas</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">at</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">segment</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> segment</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">4</span><span class="token punctuation" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">0</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">f</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.4</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">region</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> canvas</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">zoom</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1.3</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><br></div></code></pre></div></div>
+<p>Check it in CI without starting the app. The command exits nonzero on blocking problems, and <code>--json</code> returns the app's own report:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">qontent-tube capture validate --project launch --script tour.md --strict --json</span><br></div></code></pre></div></div>
+<p>Each render writes metadata that records what it used, with hashes and no paths or keys:</p>
+<p><img decoding="async" loading="lazy" alt="Render evidence" src="https://qontent.tube/es/assets/images/evidence-37183a229fd77d4a612968f39e602064.jpg" width="1920" height="1080" class="img_ev3q"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="versioning-your-work">Versioning your work<a href="https://qontent.tube/es/blog/qontent-tube-0-3#versioning-your-work" class="hash-link" aria-label="Enlace directo al Versioning your work" title="Enlace directo al Versioning your work" translate="no">​</a></h2>
+<p>Qontent Tube keeps your scripts, storyboards, and captures versioned alongside your project. Every render writes metadata with hashes, so you can track exactly what was used and when. Reproducibility comes built in, and so does a clear history of every change.</p>
+<p>We call this approach <strong>Video as Source</strong>: a new way of making video that we've defined, where a document or script is the source of truth and the video is a build artifact. You write the script, point it at your real captures, and the video is generated from them. Edit the source, rebuild the video.</p>
+<p>Software teams already work this way. DevOps has Infrastructure as Code, and docs teams have Docs as Code. Video was the missing piece. With Video as Source, your script is versioned, reviewed in a pull request, checked in CI, and rendered on demand, and it always matches the product it shows.</p>
+<p>Capture-first filmmaking is how we do it: real content comes first, and AI adaptation or animation comes after, only when you choose it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="whats-next-for-you">What's next for you<a href="https://qontent.tube/es/blog/qontent-tube-0-3#whats-next-for-you" class="hash-link" aria-label="Enlace directo al What's next for you" title="Enlace directo al What's next for you" translate="no">​</a></h2>
+<ul>
+<li class="">Start with <a class="" href="https://qontent.tube/es/docs/product-demo-workflow">Make a product demo</a>, then <a class="" href="https://qontent.tube/es/docs/capture-scenes">Capture scenes</a>.</li>
+<li class="">Already on 0.2? Your scripts, storyboards, and audio keep working. Captures are optional.</li>
+</ul>
+<p>Capture first. Animate everything else.</p>]]></content:encoded>
+            <category>Product</category>
+            <category>Release</category>
+            <category>Animation</category>
+        </item>
         <item>
             <title><![CDATA[How QontentTube Turns One Idea Into a Complete Video]]></title>
             <link>https://qontent.tube/es/blog/how-qontent-tube-works</link>
@@ -93,9 +157,7 @@
 </ol>
 <p>The real value is not simply producing one video. It is keeping every creative decision connected, so revisions remain manageable and one well-structured production can serve more formats and audiences.</p>
 <p>Start with one idea. Build one scene at a time. Let QontentTube turn the work you approve into every version you need.</p>]]></content:encoded>
-            <category>qontent-tube</category>
-            <category>video-production</category>
-            <category>local-first</category>
+            <category>Product</category>
         </item>
         <item>
             <title><![CDATA[Qontent Tube 0.2: it's alive]]></title>
