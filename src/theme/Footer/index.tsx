@@ -17,7 +17,7 @@ export default function Footer(): React.ReactNode {
         <nav className={styles.links} aria-label="Footer navigation">
           <a href="/#how-it-works">How it works</a>
           <a href="/#product">Product</a>
-          <a href="/#pricing">Pricing</a>
+          <a href="/#download">Download</a>
           <Link to="/docs/getting-started">Docs</Link>
           <Link to="/blog">Blog</Link>
           <Link to="/privacy">Privacy</Link>

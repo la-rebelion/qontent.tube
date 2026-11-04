@@ -15,6 +15,13 @@ const structuredData = {
       operatingSystem: "Windows, Linux",
       description:
         "Qontent Tube turns scene-based Markdown scripts into organized, multi-voice narration with reusable voice rosters and continuous playback.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        description:
+          "Free verified-email private preview for Windows and Linux",
+      },
       featureList: [
         "Markdown scripts with scenes, speakers, and production notes",
         "Reusable voice rosters for narrators and characters",

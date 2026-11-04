@@ -6,13 +6,13 @@ slug: /terms
 
 # Terms and Conditions
 
-**Last updated:** October 23, 2026
+**Last updated:** November 3, 2026
 
 These Terms and Conditions (“**Terms**”) govern your access to and use of Qontent Tube, including [qontent.tube](https://qontent.tube), the desktop application, documentation, pre-release software, licenses, and related support (the “**Services**”).
 
 Qontent Tube is operated by **La Rebelion Labs** (“**LRL**,” “**we**,” “**us**,” or “**our**”) and is part of the La Rebelion Labs product family. By purchasing, downloading, or using Qontent Tube, you agree to these Terms and our [Privacy Policy](/privacy).
 
-If you do not agree, do not purchase or use the Services.
+If you do not agree, do not download or use the Services.
 
 ## 1. Eligibility
 
@@ -26,11 +26,13 @@ The product is evolving. Pre-release and roadmap features may change, arrive lat
 
 ## 3. License
 
-Your purchase grants a limited license to use the Qontent Tube builds made available under the offer and license terms displayed at checkout. The current $49 early-adopter offer is a one-time purchase for access to private v0.x pre-launch releases and pre-launch updates while that program remains active.
+The current private-preview offer grants a limited, non-transferable license to use the v0.x build that you legitimately obtain after email verification. The preview is currently available without payment. Availability of the current or any later download may be paused or ended at any time.
 
-You may continue using any v0.x build you legitimately obtain through the private program without a time limit, subject to these Terms. Access to new downloads and private-beta updates is available only while the private program remains active.
+You may continue using any v0.x build you legitimately obtain through the private program without a time limit, subject to these Terms. Access to new downloads, updates, support, and private-preview features is available only while the program remains active and is not guaranteed.
 
-**Private-beta features are experimental. They may be removed, restricted, usage-limited, repackaged, separately priced, or unavailable in the public release. The early-adopter purchase does not include, guarantee, or automatically convert into access to public-release versions or equivalent public-release features.** Continued access to public releases or particular features may require a separate purchase, subscription, or license. These changes do not retroactively disable a v0.x build you already obtained legitimately.
+**Private-preview features are experimental. They may be removed, restricted, usage-limited, repackaged, separately priced, or unavailable in the public release. Preview access does not include, guarantee, or automatically convert into access to later preview versions, public-release versions, or equivalent public-release features.** Continued access to later releases or particular features may require a separate purchase, subscription, or license. These changes do not retroactively disable a v0.x build you already obtained legitimately.
+
+If you previously purchased Qontent Tube under an early-adopter or other paid offer, the rights attached to that purchase remain governed by the offer and Terms that applied to it. The current free preview does not reduce those rights or convert a historical purchase into a free-download record.
 
 Unless a separate license says otherwise, you may not:
 
@@ -59,17 +61,17 @@ Do not use Qontent Tube to impersonate, deceive, defame, harass, or violate anot
 
 Qontent Tube may connect to third-party voice, AI, infrastructure, and payment providers. Those services are governed by their own terms and privacy policies.
 
-You are responsible for third-party accounts, credentials, fees, quotas, content rules, and provider availability. The Qontent Tube license price does not include third-party generation or API charges unless an offer expressly says otherwise.
+You are responsible for third-party accounts, credentials, fees, quotas, content rules, and provider availability. Qontent Tube preview access does not include third-party generation or API charges unless an offer expressly says otherwise.
 
 We are not responsible for third-party service changes, outages, output quality, security, pricing, or discontinued features.
 
-## 6. Payments, fulfillment, and taxes
+## 6. Verification, fulfillment, and historical payments
 
-Stripe processes payments. Prices and included rights are those displayed at checkout when you purchase. You agree to provide accurate billing and delivery information and authorize the applicable charge.
+The current private-preview download does not require payment. You must verify control of the email address used for delivery. Verification creates a passwordless Qontent Tube access session and permits us to issue private download links. Transactional verification and fulfillment messages are required for this flow; product and launch updates remain optional.
 
-Taxes may be collected where required. Refunds, cancellation rights, and statutory guarantees are governed by the checkout terms and applicable consumer law. Nothing in these Terms removes rights that cannot legally be waived.
+Private download links are time-limited, usage-limited bearer links and must not be shared. We may pause fulfillment or revoke unused links while investigating automated abuse, unauthorized access, or a material security risk.
 
-License delivery and fulfillment depend on successful payment confirmation. Private download links are time-limited, usage-limited bearer links and must not be shared. We may pause fulfillment or revoke unused links while investigating suspected fraud, refunds, disputes, chargeback abuse, duplicate transactions, or inaccurate purchase information.
+Stripe processed historical paid offers and may process future offers. For a paid offer, prices and included rights are those displayed at checkout, taxes may be collected where required, and fulfillment depends on successful payment confirmation. Refunds, cancellation rights, and statutory guarantees are governed by the applicable checkout terms and consumer law. Nothing in these Terms removes rights that cannot legally be waived.
 
 ## 7. Pre-release software
 
@@ -87,19 +89,19 @@ You are responsible for:
 - Maintaining an environment compatible with the documented system requirements.
 - Paying third-party service charges arising from credentials you connect.
 
-The current desktop release requires a supported Windows x64 or Linux x64 system and your own Deepgram API key plus internet access to generate narration. Finished video rendering additionally requires a compatible Chromium-family browser and ffmpeg 5 or later with H.264 (`libx264`) and AAC support. Optional AI drafting and automatic image generation require compatible third-party API access unless you use the documented manual workflows. These tools, accounts, credits, subscriptions, and usage charges are not included in the Qontent Tube purchase. Current details are listed in [Requirements before you buy](/docs/requirements).
+The current desktop release requires a supported Windows x64 or Linux x64 system and your own Deepgram API key plus internet access to generate narration. Finished video rendering additionally requires a compatible Chromium-family browser and ffmpeg 5 or later with H.264 (`libx264`) and AAC support. Optional AI drafting and automatic image generation require compatible third-party API access unless you use the documented manual workflows. These tools, accounts, credits, subscriptions, and usage charges are not included with the Qontent Tube download. Current details are listed in [Runtime and provider requirements](/docs/requirements).
 
-You agree not to attack, overload, scrape, disrupt, or attempt unauthorized access to the website, checkout service, software, licensing systems, or related infrastructure.
+You agree not to attack, overload, scrape, disrupt, or attempt unauthorized access to the website, verification or download service, software, licensing systems, or related infrastructure.
 
 ## 9. Updates, availability, and support
 
-We may update, replace, limit, or discontinue features and pre-release versions. The scope of included updates is determined by the offer associated with your license. Access to new early-adopter downloads and updates ends with the private pre-launch program and does not create an entitlement to public-release builds, features, updates, or support. This does not end your right to use a v0.x build you already obtained legitimately.
+We may update, replace, limit, or discontinue features and pre-release versions. Access to new preview downloads and updates ends when the private-preview program ends and does not create an entitlement to later preview or public-release builds, features, updates, or support. This does not end your right to use a v0.x build you already obtained legitimately. Historical purchasers retain the rights attached to their applicable paid offer.
 
 Unless a separate support agreement says otherwise, support is provided on a reasonable-efforts basis without guaranteed response or resolution times. We do not guarantee that the Services will always be available, error-free, compatible with every environment, or suitable for every production workflow.
 
 ## 10. Privacy
 
-Our [Privacy Policy](/privacy) explains how the website, checkout service, desktop application, and connected providers handle information. The desktop application is designed around local project storage, but information you choose to send to third-party providers is governed by their policies.
+Our [Privacy Policy](/privacy) explains how the website, email-verification and download service, historical checkout service, desktop application, and connected providers handle information. The desktop application is designed around local project storage, but information you choose to send to third-party providers is governed by their policies.
 
 ## 11. Suspension and termination
 
@@ -134,7 +136,7 @@ To the extent permitted by law, you agree to indemnify and hold harmless La Rebe
 
 ## 15. Changes to these Terms
 
-We may update these Terms as Qontent Tube evolves. We will update the date above and provide additional notice when required. Changes will not retroactively disable or remove the right to use a v0.x build legitimately obtained under the applicable early-adopter offer unless required by law or agreed with you.
+We may update these Terms as Qontent Tube evolves. We will update the date above and provide additional notice when required. Changes will not retroactively disable or remove the right to use a v0.x build legitimately obtained under the private-preview program or an applicable historical paid offer unless required by law or agreed with you.
 
 If you do not agree to updated Terms, stop using the affected Services.
 

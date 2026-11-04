@@ -13,9 +13,10 @@ bun run start
 
 The development server opens at `http://localhost:3000` by default.
 
-The pricing CTA expects the checkout Worker at `http://localhost:8787` during
-local development. Production builds use `https://api.qontent.tube` by default.
-Copy the backend's `.dev.vars.example` before testing checkout locally.
+The verified-email download CTA expects the fulfillment Worker at
+`http://localhost:8787` during local development. Production builds use
+`https://api.qontent.tube` by default. Copy the backend's `.dev.vars.example`
+before testing email verification and downloads locally.
 
 ## Validate and build
 
@@ -40,9 +41,9 @@ widget:
 QONTENT_TURNSTILE_SITE_KEY=0x... bun run build
 ```
 
-Publish the contents of `build/` to GitHub Pages. Checkout remains visibly
-disabled if the public site key is absent, which prevents a partially
-configured production launch.
+Publish the contents of `build/` to GitHub Pages. Preview access remains
+visibly unavailable until the Worker reports a verified current release and
+`DOWNLOADS_ENABLED=true`; OTP requests also require the public Turnstile key.
 
 ## Content and design
 

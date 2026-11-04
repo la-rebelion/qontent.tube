@@ -5,7 +5,7 @@ import {
   BenefitsSection,
   FaqSection,
   FirstWinSection,
-  PricingSection,
+  DownloadSection,
   ProblemSection,
   ProductSection,
   RoadmapSection,
@@ -18,7 +18,7 @@ import styles from "./landing.module.css";
 
 export default function LandingPage() {
   const { collectAnchor } = useBrokenLinks();
-  ["top", "how-it-works", "product", "use-cases", "pricing", "faq"].forEach(
+  ["top", "how-it-works", "product", "use-cases", "download", "faq"].forEach(
     collectAnchor,
   );
 
@@ -29,7 +29,7 @@ export default function LandingPage() {
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <p className={styles.prelaunchPill}>
-              <span /> Private pre-launch · early-adopter access
+              <span /> Free private preview · Windows and Linux
             </p>
             <h1>
               Faceless videos should never feel <em>voiceless.</em>
@@ -43,8 +43,8 @@ export default function LandingPage() {
               Write the story. Cast the voices. Press play.
             </p>
             <div className={styles.heroActions}>
-              <a className={styles.primaryButton} href="#pricing">
-                Get early access — $49 <span aria-hidden="true">→</span>
+              <a className={styles.primaryButton} href="#download">
+                Download the private preview <span aria-hidden="true">→</span>
               </a>
               <a className={styles.ghostButton} href="#how-it-works">
                 <span aria-hidden="true">▶</span> See how it works
@@ -53,8 +53,8 @@ export default function LandingPage() {
             <ul className={styles.heroProof} aria-label="Product highlights">
               <li>Runs locally on Windows and Linux</li>
               <li>Plain Markdown scripts you own</li>
-              <li>One-time pre-launch purchase</li>
-              <li>Limited to 25 early-adopter licenses</li>
+              <li>Free after email verification</li>
+              <li>Product updates are optional</li>
             </ul>
           </div>
           <div className={styles.heroVisual}>
@@ -72,7 +72,7 @@ export default function LandingPage() {
         <RoadmapSection />
         <UseCasesSection />
         <FirstWinSection />
-        <PricingSection />
+        <DownloadSection />
         <FaqSection />
         <StorySection />
       </main>

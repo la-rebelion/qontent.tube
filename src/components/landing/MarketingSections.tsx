@@ -1,6 +1,6 @@
 import Link from "@docusaurus/Link";
 import type { CSSProperties } from "react";
-import CheckoutButton from "./CheckoutButton";
+import PreviewDownload from "./PreviewDownload";
 import ProductGallery from "./ProductGallery";
 import styles from "./landing.module.css";
 
@@ -117,29 +117,29 @@ const faqs = [
     "The packaged desktop release targets Windows x64 and Linux x64. The application runs locally and opens its workspace in your browser.",
   ],
   [
-    "What do I need before buying?",
+    "What do I need before downloading?",
     "For voice generation you need your own Deepgram API key and internet access. Finished video rendering also needs ffmpeg 5+ with libx264 and AAC, plus Chrome, Chromium, or Edge. AI drafting and automatic scene images use optional third-party AI credentials; manual alternatives are available.",
   ],
   [
-    "How much does it cost?",
-    "Private pre-launch early-adopter access is $49 as a one-time purchase. It covers the private v0.x pre-launch period only; it does not include or guarantee a public-release license. Public-release features may be limited or require a separate purchase.",
+    "How much does the private preview cost?",
+    "The current private-preview download is free after email verification. It covers the current v0.x preview build only; future downloads, updates, public releases, and particular features are not guaranteed.",
   ],
   [
-    "How many early-adopter licenses are available?",
-    "The private pre-launch offer is limited to 25 early-adopter licenses. Once these are sold, the offer may no longer be available.",
+    "Why do I need to verify my email?",
+    "Verification keeps automated abuse away from the private binaries and makes sure the time-limited download links reach a real inbox. Product updates are a separate, optional choice.",
   ],
   [
-    "What happens if I miss the early-adopter window?",
-    "Once the 25 early-adopter licenses are sold, the private pre-launch offer may no longer be available. You may need to wait for the public release or any future offers.",
+    "Can preview access close later?",
+    "Yes. We may pause or end new private-preview downloads. A v0.x build you legitimately obtained remains usable without a time limit, but access to future downloads and updates is not guaranteed.",
   ],
   [
     "Is there a public release planned?",
     "Yes. After the private pre-launch period, a public release is expected. Details and pricing for the public release will be announced separately.",
   ],
   [
-    "What happens to my early-adopter license once the private pre-launch period ends?",
-    "Early-adopter licenses remain valid, but won't grant access to features or updates that are exclusive to the public release.",
-  ]
+    "What happens to my preview build once the private-preview period ends?",
+    "You may keep using a v0.x build you legitimately obtained. That does not grant access to public-release builds, equivalent features, updates, or support.",
+  ],
 ];
 
 export function AnswerSection() {
@@ -562,57 +562,55 @@ export function FirstWinSection() {
   );
 }
 
-export function PricingSection() {
+export function DownloadSection() {
   return (
     <section
       className={styles.pricingSection}
-      id="pricing"
-      aria-labelledby="pricing-title"
+      id="download"
+      aria-labelledby="download-title"
     >
       <div className={styles.pricingCopy}>
         <p className={`${styles.eyebrow} ${styles.orange}`}>
-          PRIVATE PRE-LAUNCH
+          FREE PRIVATE PREVIEW
         </p>
-        <h2 id="pricing-title">
-          An early-adopter license for creators who want to shape the workflow
+        <h2 id="download-title">
+          Try the real desktop workflow before the public release
         </h2>
         <p>
-          The current $49 offer is a one-time purchase for early-adopter access
-          to the private Windows and Linux v0.x pre-launch releases. Pay
-          securely through Stripe and use the same email for access delivery.
+          Verify your email to download the current Windows and Linux v0.x
+          preview. There is no charge, and product-update emails are always an
+          optional choice.
         </p>
         <p>
           You may keep using any v0.x build you legitimately obtain. Access to
-          new downloads and private-beta updates lasts only while the program is
-          active and does not automatically convert into a public-release
-          license.
+          future downloads and private-preview updates lasts only while the
+          program is active and does not automatically convert into a
+          public-release license.
         </p>
         <p>
-          Please note that this offer is only valid for the duration of the private 
-          pre-launch program and is subject to change. Only 25 licenses are available
-          for early adopters. After the 25 licenses are sold, the offer may no longer
-          be available.
+          Preview features are experimental. They may change, become restricted,
+          move into a different offer, or be unavailable in a public release.
         </p>
       </div>
       <div className={styles.priceCard}>
         <div className={styles.priceCardTop}>
-          <span className={styles.priceLabel}>Pre-launch early access</span>
-          <span className={styles.priceBadge}>Private release</span>
+          <span className={styles.priceLabel}>Private-preview access</span>
+          <span className={styles.priceBadge}>Email verified</span>
         </div>
         <div>
-          <strong>$49</strong>
-          <span>one-time</span>
+          <strong>Free</strong>
+          <span>current v0.x preview</span>
         </div>
         <ul>
           <li>Desktop app for Windows and Linux</li>
-          <li>No recurring subscription</li>
+          <li>No payment or subscription</li>
           <li>Markdown-first, local workflow</li>
           <li>Reusable multi-voice rosters</li>
-          <li>Private pre-launch v0.x access</li>
-          <li>Pre-launch updates while the program runs</li>
+          <li>Current private-preview v0.x build</li>
+          <li>Immediate and emailed download links</li>
         </ul>
         <aside className={styles.purchaseRequirements}>
-          <strong>Check before you buy</strong>
+          <strong>Check before you download</strong>
           <p>
             Voice generation requires your own Deepgram API key and internet
             access. Video rendering also requires ffmpeg 5+ with H.264/AAC and
@@ -622,12 +620,11 @@ export function PricingSection() {
           <Link to="/docs/requirements">Review every requirement →</Link>
         </aside>
         <p className={styles.licenseDisclosure}>
-          Private-beta features may change or be restricted in the public
-          release. Your purchase covers private v0.x access and does not
-          automatically include the public release.{" "}
-          <Link to="/terms">Read the terms.</Link>
+          Private-preview features may change or be restricted in the public
+          release. This download does not automatically include later preview
+          builds or the public release. <Link to="/terms">Read the terms.</Link>
         </p>
-        <CheckoutButton />
+        <PreviewDownload />
       </div>
     </section>
   );
@@ -678,7 +675,9 @@ export function StorySection() {
           Spend less time organizing clips and more time making videos people
           want to finish.
         </p>
-        <CheckoutButton />
+        <a className={styles.primaryButton} href="#download">
+          Download the private preview <span aria-hidden="true">→</span>
+        </a>
         <small>Windows x64 · Linux x64 · local-first</small>
       </div>
     </section>

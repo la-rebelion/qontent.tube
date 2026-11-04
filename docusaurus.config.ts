@@ -108,7 +108,7 @@ const config: Config = {
         { href: "/#how-it-works", label: "How it works", position: "left" },
         { href: "/#product", label: "Product", position: "left" },
         { href: "/#use-cases", label: "Use cases", position: "left" },
-        { href: "/#pricing", label: "Pricing", position: "left" },
+        { href: "/#download", label: "Download", position: "left" },
         { href: "/#faq", label: "FAQ", position: "left" },
         {
           type: "docSidebar",
@@ -118,8 +118,8 @@ const config: Config = {
         },
         { to: "/blog", label: "Blog", position: "right" },
         {
-          to: "/docs/getting-started",
-          label: "Get started",
+          href: "/#download",
+          label: "Download",
           position: "right",
           className: "navbar__cta",
         },
