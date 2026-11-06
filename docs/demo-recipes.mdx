@@ -1,0 +1,134 @@
+---
+title: Demo recipes
+description: Keep a product-demo video as one reviewable file beside your product's code, and move it between Studio, repositories, and computers.
+sidebar_position: 17
+---
+
+# Demo recipes
+
+A demo recipe holds everything needed to make a product-demo video again: the brief, the script, how to start the product, which flows to record for each scene, what each step may change, which secrets it needs (by name only), where a person must decide, and which videos to produce.
+
+It is one file, `qontent.demo.yaml`, plus the script, storyboard, and capture files it points to. Studio's [Capture a product demo](./capture-a-product-demo) writes it for you. You can also write it by hand, review it in a pull request, and run it from the [command line](./productions#from-the-command-line).
+
+## A small recipe
+
+```yaml
+schema: qontent-tube/demo@1
+id: acme-onboarding
+title: Acme onboarding
+product:
+  name: Acme
+brief:
+  goal: Show a new user creating their first workspace.
+  audience: Teams evaluating Acme.
+  lengthSeconds: 60
+content:
+  script: video/acme-onboarding.md
+outputs:
+  formats: ["16:9", "9:16"]
+  languages: [en, es]
+```
+
+A fuller recipe adds:
+
+| Section   | What it describes                                                                                                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `targets` | The web app to film: started by Qontent Tube (`managed`), already running (`attach`), or a public website.                                                                                       |
+| `sources` | Where footage comes from: a web page (with viewport, locale, color scheme), a terminal, an existing terminal recording (`.cast`), or a video or image file.                                      |
+| `takes`   | One recording per entry, for one scene, as a list of steps: `navigate`, `click`, `fill`, `select`, `press`, `scroll`, `wait`, `assert`, `mark`, `screenshot`, `record`, and `run` for terminals. |
+| `hooks`   | Product-specific scripts by reference, such as one that seeds demo data. They run only after you trust them.                                                                                     |
+| `secrets` | Names and purposes only. A value is never valid anywhere in a recipe.                                                                                                                            |
+| `gates`   | Where a person decides: the plan (`truth`), cost, privacy, a decision, and the final review.                                                                                                     |
+| `fit`     | How takes fit their scenes: speed up evenly (the default, up to 2.5×), hold the last frame, or trim.                                                                                             |
+| `outputs` | Formats, languages, captions, chapters, and narration. Each format × language is a separate video.                                                                                               |
+
+Example of a take that signs in and records creating a workspace:
+
+```yaml
+takes:
+  - id: create-workspace
+    scene: scene-2
+    source: app
+    gate: plan
+    steps:
+      - { action: navigate, url: /signin }
+      - action: fill
+        locator: { label: Password }
+        secret: acme-demo-password
+        effects: [target-write, secret]
+      - action: record
+        until: { text: Welcome }
+      - action: click
+        locator: { testId: new-workspace }
+        effects: [target-write]
+      - action: mark
+        region: sidebar
+        locator: { role: navigation }
+```
+
+## Effects are declared, not discovered
+
+Each step, target, and hook says what it can do: write to the product (`target-write`), run a program (`local-command`), reach another computer (`network`), or use a secret (`secret`). Anything beyond reading must be declared and covered by a gate, or the recipe is invalid. That is how Studio can show [Effects & trust](./capture-a-product-demo#3-effects--trust) before anything runs.
+
+There is no step that takes code. Shell one-liners such as `sh -c …` are refused; put that work in a hook file, where it can be reviewed and trusted.
+
+## Keep it with your product
+
+```text
+my-product/
+├── src/                              your product's code
+└── demo/                             the recipe folder
+    ├── qontent.demo.yaml
+    ├── video/
+    │   ├── onboarding.md             the script
+    │   ├── onboarding.storyboard.json
+    │   └── onboarding.capture.yaml
+    ├── hooks/seed.sh                 trusted local code
+    └── .qontent-tube/                run state, ignored by itself
+```
+
+Check in the recipe, scripts, storyboards, capture files, hooks, and any media you want to keep. Recordings, logs, and fitted footage go to `.qontent-tube/`, which ignores itself; your `.gitignore` is not touched. Secret values never go into the folder.
+
+## Check it without running anything
+
+These commands don't start the app, open a port, or launch a browser:
+
+```bash
+qontent-tube demo init --dir demo --title "Acme onboarding"
+qontent-tube demo validate --bundle demo
+qontent-tube demo inspect --bundle demo
+qontent-tube demo plan --bundle demo
+```
+
+- `init` creates a starter recipe and script. It never overwrites an existing recipe.
+- `validate` lists every problem with its path, line, and a suggestion: unknown fields, undeclared effects, missing gates, plaintext credentials, fragile CSS locators, missing files, and paths that leave the folder. `--strict` also fails on warnings.
+- `inspect` summarizes sources, takes, hooks (with hashes), effects, secret names, gates, and variants.
+- `plan` prints the normalized plan and its **identity**, a hash that ignores comments and formatting and changes only when behavior or a referenced file changes.
+
+Add `--json` to any of them for scripts. `qontent-tube` is the same executable you downloaded; use its file name, or put it on your `PATH` as `qontent-tube`.
+
+## Link a product folder
+
+In a project, choose **Demo bundle** under its scripts and link the folder that holds `qontent.demo.yaml` (desktop app only). Studio then shows one state:
+
+- **In sync**: Studio and the folder hold the same documents.
+- **Changes to review**: one side changed since the last sync. Use **Pull into Studio** or **Push to repo**.
+- **Conflict**: a document changed on both sides. Choose **Use repository version** or **Keep Studio version**, then pull or push. Nothing is guessed, and nothing is overwritten without your choice.
+- **Missing** or **Invalid**: the folder or a document is gone, or the recipe no longer validates. The problems are listed.
+
+Refreshing never writes anything. **Remove bundle** forgets the link and deletes no file.
+
+## Move a recipe between computers
+
+```bash
+qontent-tube demo export --bundle demo --out acme.qtbundle
+qontent-tube demo import acme.qtbundle --dir restored
+```
+
+A `.qtbundle` holds the recipe and every file it references, each with its hash. Media is left out unless you add `--include-media`, but its hash still pins it. `import` verifies every file and refuses to overwrite a different file unless you pass `--force`. Studio can also **import a .qtbundle** into a project, in the desktop app and in the cloud.
+
+## Draft from the brief
+
+The recipe's `brief` is all the AI drafting reads. It produces a draft script, an unapproved storyboard, and a capture-plan candidate that describes intent ("click the New script button"), never selectors or commands. Drafts never replace your documents and never record, approve, or render.
+
+Without an AI key, `qontent-tube demo draft --bundle demo --prompt` prints the exact prompt to paste into any chat assistant, and `--reply reply.json` checks the reply without writing anything.

@@ -1,0 +1,1188 @@
+{
+  "$id": "https://qontent.tube/schemas/demo-cli@1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "result"
+        },
+        "command": {
+          "type": "string",
+          "enum": [
+            "run",
+            "status",
+            "resume",
+            "retry",
+            "decide",
+            "cancel",
+            "artifacts",
+            "outputs",
+            "clean"
+          ]
+        },
+        "run": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^prod-[0-9]{8}T[0-9]{6}Z-[a-z0-9]{6}$"
+            },
+            "projectId": {
+              "type": "string"
+            },
+            "bundleId": {
+              "type": "string"
+            },
+            "planHash": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "waiting-for-review",
+                "waiting-for-input",
+                "paused",
+                "cancelling",
+                "cancelled",
+                "failed",
+                "interrupted",
+                "succeeded"
+              ]
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "rehearse": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "variants": {
+                  "maxItems": 24,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 40
+                  }
+                }
+              },
+              "required": [
+                "rehearse"
+              ],
+              "additionalProperties": false
+            },
+            "requested": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "pause",
+                    "cancel"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                    },
+                    "message": {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    "retryable": {
+                      "type": "boolean"
+                    },
+                    "suggestion": {
+                      "type": "string",
+                      "maxLength": 1000
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "retryable"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            },
+            "finishedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "projectId",
+            "bundleId",
+            "planHash",
+            "status",
+            "options",
+            "requested",
+            "error",
+            "revision",
+            "createdAt",
+            "updatedAt",
+            "finishedAt"
+          ],
+          "additionalProperties": false
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "queued",
+                  "running",
+                  "waiting",
+                  "succeeded",
+                  "reused",
+                  "failed",
+                  "cancelled",
+                  "interrupted",
+                  "stale"
+                ]
+              },
+              "attempts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "reusedFrom": {
+                "type": "string"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "retryable": {
+                    "type": "boolean"
+                  },
+                  "suggestion": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "additionalProperties": false
+              },
+              "progress": {
+                "type": "object",
+                "properties": {
+                  "done": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "total": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "done",
+                  "total"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "status",
+              "attempts"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "continuation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "runId": {
+                "type": "string"
+              },
+              "gate": {
+                "type": "string"
+              },
+              "step": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "truth",
+                  "privacy",
+                  "cost",
+                  "decision",
+                  "final",
+                  "approval",
+                  "content",
+                  "fit",
+                  "preflight"
+                ]
+              },
+              "question": {
+                "type": "string"
+              },
+              "inputHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                    },
+                    "label": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "description": {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    "outcome": {
+                      "type": "string",
+                      "enum": [
+                        "continue",
+                        "stop",
+                        "invalidate"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "label",
+                    "description",
+                    "outcome"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "decide": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "runId",
+              "gate",
+              "step",
+              "kind",
+              "question",
+              "inputHash",
+              "choices",
+              "decide"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "idempotencyKey": {
+          "type": "string"
+        },
+        "replayed": {
+          "type": "boolean"
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "string"
+            },
+            "answered": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unresolved": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "expired",
+                      "bundle",
+                      "hook",
+                      "target",
+                      "effect",
+                      "secret",
+                      "variant",
+                      "gate"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "subject",
+                  "message"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "id",
+            "digest",
+            "answered",
+            "unresolved"
+          ],
+          "additionalProperties": false
+        },
+        "exitCode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "command",
+        "run",
+        "steps",
+        "continuation",
+        "exitCode"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "error"
+        },
+        "command": {
+          "type": "string",
+          "enum": [
+            "run",
+            "status",
+            "resume",
+            "retry",
+            "decide",
+            "cancel",
+            "artifacts",
+            "outputs",
+            "clean"
+          ]
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "suggestion": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false
+        },
+        "details": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        "exitCode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "command",
+        "error",
+        "exitCode"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "event"
+        },
+        "event": {
+          "type": "object",
+          "properties": {
+            "v": {
+              "type": "number",
+              "const": 1
+            },
+            "runId": {
+              "type": "string"
+            },
+            "seq": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "at": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "run.status",
+                "step.status",
+                "step.progress",
+                "step.log",
+                "gate.waiting",
+                "gate.decided",
+                "artifact.committed",
+                "diagnostic"
+              ]
+            },
+            "step": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "v",
+            "runId",
+            "seq",
+            "at",
+            "type",
+            "step",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "event"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "artifacts"
+        },
+        "command": {
+          "type": "string",
+          "const": "artifacts"
+        },
+        "run": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "running",
+                "waiting-for-review",
+                "waiting-for-input",
+                "paused",
+                "cancelling",
+                "cancelled",
+                "failed",
+                "interrupted",
+                "succeeded"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._:-]{0,200}$"
+              },
+              "stepId": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "media-asset",
+                  "render-output",
+                  "report",
+                  "manifest",
+                  "log",
+                  "capture-run",
+                  "fitted-media"
+                ]
+              },
+              "ref": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "bytes": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "variant": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "committedAt": {
+                "type": "string"
+              },
+              "retained": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "stepId",
+              "kind",
+              "ref",
+              "sha256",
+              "bytes",
+              "variant",
+              "committedAt",
+              "retained"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "manifest": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "type": "string",
+                  "const": "qontent-tube/production-output@1"
+                },
+                "run": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "planHash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "bundle": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "identity": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "identity"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "planHash",
+                    "bundle"
+                  ],
+                  "additionalProperties": false
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "complete",
+                    "partial",
+                    "failed"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "captures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scene": {
+                        "type": "string"
+                      },
+                      "takes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "mediaAssetId": {
+                        "type": "string"
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "rawSha256": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      },
+                      "evidence": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "operations": {
+                        "type": "array",
+                        "items": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "operation": {
+                                  "type": "string",
+                                  "const": "join"
+                                },
+                                "inputs": {
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 9007199254740991
+                                },
+                                "width": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "operation",
+                                "inputs",
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "operation": {
+                                  "type": "string",
+                                  "const": "speed"
+                                },
+                                "factor": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 1
+                                }
+                              },
+                              "required": [
+                                "operation",
+                                "factor"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "operation": {
+                                  "type": "string",
+                                  "const": "trim"
+                                },
+                                "durationMs": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "operation",
+                                "durationMs"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "holdLastFrame": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "scene",
+                      "takes",
+                      "mediaAssetId",
+                      "sha256",
+                      "rawSha256",
+                      "evidence",
+                      "operations",
+                      "holdLastFrame"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "variants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "format": {
+                        "type": "string",
+                        "enum": [
+                          "16:9",
+                          "9:16"
+                        ]
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "succeeded",
+                          "failed",
+                          "not-run"
+                        ]
+                      },
+                      "renderJob": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "mp4",
+                                "srt",
+                                "chapters",
+                                "qa-frame",
+                                "contact-sheet",
+                                "part",
+                                "metadata",
+                                "validation-report"
+                              ]
+                            },
+                            "filename": {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "bytes": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "durationSeconds": {
+                              "type": "number",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "filename",
+                            "sha256",
+                            "bytes"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "validation": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              "errors": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "warnings": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "sha256",
+                              "errors",
+                              "warnings"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "approvals": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      },
+                      "error": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                              },
+                              "message": {
+                                "type": "string",
+                                "maxLength": 1000
+                              },
+                              "retryable": {
+                                "type": "boolean"
+                              },
+                              "suggestion": {
+                                "type": "string",
+                                "maxLength": 1000
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message",
+                              "retryable"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "format",
+                      "language",
+                      "status",
+                      "renderJob",
+                      "outputs",
+                      "validation",
+                      "approvals",
+                      "error"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "schema",
+                "run",
+                "status",
+                "createdAt",
+                "captures",
+                "variants"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exitCode": {
+          "type": "number",
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "command",
+        "run",
+        "artifacts",
+        "manifest",
+        "exitCode"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "outputs"
+        },
+        "command": {
+          "type": "string",
+          "const": "outputs"
+        },
+        "run": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "name",
+              "kind",
+              "sha256",
+              "bytes"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "exitCode": {
+          "type": "number",
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "command",
+        "run",
+        "files",
+        "exitCode"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "qontent-tube/demo-cli@1"
+        },
+        "type": {
+          "type": "string",
+          "const": "clean"
+        },
+        "command": {
+          "type": "string",
+          "const": "clean"
+        },
+        "removed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kept": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ref": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ref",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "exitCode": {
+          "type": "number",
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "type",
+        "command",
+        "removed",
+        "kept",
+        "exitCode"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

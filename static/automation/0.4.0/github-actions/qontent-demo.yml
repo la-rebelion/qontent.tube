@@ -1,0 +1,116 @@
+# Product-demo videos in CI with the Qontent Tube CLI (GitHub-hosted runner).
+#
+# Pull requests (forks included) only validate: no secrets, read-only token,
+# nothing runs. Productions run on main (or by hand) in the protected
+# `demo-production` environment, under a reviewed policy whose SHA-256 is a
+# protected secret, so a pull request cannot authorize itself by editing the
+# recipe and the policy together. See docs/ci.md.
+name: Product demo
+
+on:
+  pull_request:
+    paths: ['demo/**', 'ci/qontent-policy.yaml']
+  push:
+    branches: [main]
+    paths: ['demo/**', 'ci/qontent-policy.yaml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # One production per branch; a newer commit waits instead of cancelling a render.
+  group: qontent-demo-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    # Untrusted code may run here: it gets no secret and can execute nothing.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --global qontent-tube@0.4.0
+      - name: Validate the bundle
+        run: qontent-tube demo validate --bundle demo --strict --json
+      - name: Plan (changes nothing)
+        run: qontent-tube demo plan --bundle demo --json > plan.json
+      - name: Does the reviewed policy still cover it?
+        # Reports hook, target, effect, secret, and bundle changes for review.
+        # It is informational here: nothing in this job can run a production.
+        run: qontent-tube demo policy check ci/qontent-policy.yaml --bundle demo || true
+
+  produce:
+    needs: validate
+    # Never for pull requests, and never for code from a fork.
+    if: github.event_name != 'pull_request' && github.repository == 'acme/acme-app'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Required reviewers and branch rules guard these secrets.
+    environment: demo-production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --global qontent-tube@0.4.0
+      - run: sudo apt-get update && sudo apt-get install --yes ffmpeg
+      - run: qontent-tube demo doctor
+      - name: Produce
+        id: produce
+        env:
+          # The digest of ci/qontent-policy.yaml as a person reviewed it.
+          QONTENT_TUBE_POLICY_SHA256: ${{ secrets.QONTENT_TUBE_POLICY_SHA256 }}
+          # Named secrets the bundle uses, by environment variable.
+          FIXTURE_PASSWORD: ${{ secrets.ACME_FIXTURE_PASSWORD }}
+          # Narration provider key; leave it out to render without voice.
+          DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+        run: |
+          set +e
+          qontent-tube demo run --bundle demo --project "Acme demo" --no-input \
+            --policy ci/qontent-policy.yaml \
+            --idempotency-key "ci-${GITHUB_SHA}" \
+            --output ndjson > production.ndjson
+          code=$?
+          # Cancelled or interrupted (for example the job was cancelled and
+          # restarted on the same runner): continue, finished work is reused.
+          if [ "$code" -eq 4 ] || [ "$code" -eq 5 ]; then
+            qontent-tube demo resume --bundle demo --no-input \
+              --policy ci/qontent-policy.yaml --output ndjson >> production.ndjson
+            code=$?
+          fi
+          echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+          tail -n 1 production.ndjson > result.json
+          exit 0
+      - name: Collect outputs
+        if: steps.produce.outputs.exit-code == '0'
+        run: qontent-tube demo outputs --bundle demo --out delivered --output json > delivered.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-demo
+          path: |
+            delivered/
+            delivered.json
+            result.json
+            production.ndjson
+          if-no-files-found: ignore
+      - name: Report
+        env:
+          EXIT_CODE: ${{ steps.produce.outputs.exit-code }}
+        run: |
+          case "$EXIT_CODE" in
+            0) echo "Videos produced; see the product-demo artifact." ;;
+            3) echo "::warning::A person must review (privacy or an unlisted gate). Answer it in Studio or with qontent-tube demo decide, then re-run."
+               jq -r '.continuation[] | "waiting: \(.gate) (\(.kind)): \(.question)"' result.json
+               jq -r '.policy.unresolved[]? | "policy: \(.kind) \(.subject): \(.message)"' result.json ;;
+            6) echo "::error::Setup or policy mismatch:"; jq -r '.error.message, (.details.mismatches[]? | "  \(.kind) \(.subject): \(.message)")' result.json; exit 1 ;;
+            *) echo "::error::The production ended with exit code $EXIT_CODE."; jq -r '.steps[]? | select(.status == "failed") | "\(.id): \(.error.message)"' result.json; exit 1 ;;
+          esac

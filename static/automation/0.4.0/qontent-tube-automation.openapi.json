@@ -1,0 +1,4581 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Qontent Tube automation",
+    "version": "0.4.0",
+    "summary": "Plan, run, review, and collect product-demo productions on the computer that runs Qontent Tube.",
+    "description": "Served only by the local automation listener (`qontent-tube automation serve`), bound to 127.0.0.1 on an explicit port. Never by Cloudflare, never by the browser UI.\n\nAuthenticate with exactly one credential: a scoped bearer token (`Authorization: Bearer …`) or a scoped API key in the `x-qt-api-key` header. Never in a URL. A request with both is refused.\n\nNothing here approves a review for a person: gates the bundle does not mark `unattended: policy`, and every privacy review, are answered in Studio or with `qontent-tube demo decide`.",
+    "license": {
+      "name": "La Rebelion Labs Community License"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:{port}",
+      "description": "The local automation listener",
+      "variables": {
+        "port": {
+          "default": "45831"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    },
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "discovery",
+      "description": "What runs here, and what this credential may do."
+    },
+    {
+      "name": "plan",
+      "description": "Validate bundles and plan productions; changes nothing."
+    },
+    {
+      "name": "run",
+      "description": "Start, follow, and control productions."
+    },
+    {
+      "name": "review",
+      "description": "Gates: what waits for a person, and what may pass unattended."
+    },
+    {
+      "name": "artifacts",
+      "description": "Outputs with hashes, and downloads."
+    }
+  ],
+  "x-hapi-client-facts": [
+    {
+      "predicate": "demo.runner.ready",
+      "description": "getAutomationCapabilities answered with runner.available true."
+    },
+    {
+      "predicate": "demo.secrets.configured",
+      "description": "Every secret name the plan lists is configured on this computer (a person sets them; agents never invent or print one)."
+    },
+    {
+      "predicate": "demo.review.resolved",
+      "description": "A person answered the waiting gates in Studio or the CLI (getDemoRun shows no continuation)."
+    }
+  ],
+  "paths": {
+    "/api/automation/capabilities": {
+      "get": {
+        "operationId": "getAutomationCapabilities",
+        "tags": [
+          "discovery"
+        ],
+        "summary": "What this runtime can do, and what this credential may do",
+        "description": "Product version, local runner readiness and tool versions, the credential’s scopes and resources, and the projects it may use with their demo bundle identity. Never a path or a secret.\n\nRequires the `capabilities:read` scope.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Capabilities.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationCapabilities"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `capabilities:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "capabilities:read",
+        "x-hapi-capability": [
+          "demo/discovery"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "You need to know whether productions can run here and which projects you may use"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        }
+      }
+    },
+    "/api/automation/projects/{projectId}/bundle/validation": {
+      "get": {
+        "operationId": "validateDemoBundle",
+        "tags": [
+          "plan"
+        ],
+        "summary": "Validate the project’s demo bundle",
+        "description": "Every problem with its bundle-relative path and a suggestion, the plan identity, and a summary of sources, takes, effects, secrets (names only), and gates. Changes nothing.\n\nRequires the `bundles:plan` scope.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The validation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationValidation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `bundles:plan` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The project has no demo bundle.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.bundle.missing"
+                }
+              ]
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "bundles:plan",
+        "x-hapi-capability": [
+          "demo/plan"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "Before planning or running, to check the demo bundle"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        },
+        "x-hapi-planning": {
+          "produces": [
+            {
+              "predicate": "demo.bundle.validated"
+            }
+          ],
+          "cost": 1
+        }
+      }
+    },
+    "/api/automation/projects/{projectId}/production-plan": {
+      "post": {
+        "operationId": "planDemoProduction",
+        "tags": [
+          "plan"
+        ],
+        "summary": "Plan a production without starting it",
+        "description": "The closed-catalog steps, variants, gates, effects, and which steps would be reused. Changes nothing.\n\nRequires the `bundles:plan` scope.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "options": {
+                    "$ref": "#/components/schemas/ProductionPlanOptions"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The plan, or null with diagnostics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "plan",
+                    "diagnostics"
+                  ],
+                  "properties": {
+                    "plan": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/ProductionPlan"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "diagnostics": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductionDiagnostic"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `bundles:plan` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "See the error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.plan.invalid"
+                }
+              ]
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "bundles:plan",
+        "x-hapi-capability": [
+          "demo/plan"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "To see the steps, variants, gates, effects, and reuse of a production before starting it"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        },
+        "x-hapi-prerequisites": [
+          "The bundle validates without errors"
+        ],
+        "x-hapi-planning": {
+          "requires": [
+            {
+              "predicate": "demo.bundle.validated"
+            }
+          ],
+          "produces": [
+            {
+              "predicate": "demo.plan.accepted"
+            }
+          ],
+          "cost": 1
+        }
+      }
+    },
+    "/api/automation/projects/{projectId}/demo-runs": {
+      "get": {
+        "operationId": "listDemoRuns",
+        "tags": [
+          "run"
+        ],
+        "summary": "List the project’s productions, newest first",
+        "description": "Each run’s status, bundle identity, and timestamps.\n\nRequires the `runs:read` scope.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Runs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionRun"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:read",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "To find earlier or running productions of a project"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        }
+      },
+      "post": {
+        "operationId": "startDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Start a production on this computer",
+        "description": "Runs until it finishes, fails, or waits for a person. Send an Idempotency-Key (one is generated when absent and returned in the response header): repeating the request returns the same run; the same key with a different body is refused. Never approves a gate.\n\nRequires the `runs:start` scope.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Repeat a request safely: the same key and body return the original run; the same key with another body is refused (409 idempotency_conflict). Generated when absent and returned in the response header.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "options": {
+                    "$ref": "#/components/schemas/ProductionPlanOptions"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Already started with this Idempotency-Key and body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:start` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "No local runner here.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.runner.unavailable"
+                }
+              ]
+            }
+          },
+          "409": {
+            "description": "Not runnable here, or the key was used for another request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.run.conflict"
+                }
+              ]
+            }
+          },
+          "422": {
+            "description": "The production cannot be planned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:start",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "The person asked for a production and the plan was reviewed"
+          ],
+          "avoid-when": [
+            "The plan has not been reviewed, or a production with the same request is already running"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "create",
+          "side-effecting": true,
+          "requires-confirmation": true
+        },
+        "x-hapi-prerequisites": [
+          "The local runner is ready",
+          "Every secret the plan names is configured",
+          "Hooks the plan runs are trusted on this computer"
+        ],
+        "x-hapi-planning": {
+          "requires": [
+            {
+              "predicate": "demo.plan.accepted"
+            },
+            {
+              "predicate": "demo.runner.ready"
+            },
+            {
+              "predicate": "demo.secrets.configured"
+            }
+          ],
+          "produces": [
+            {
+              "predicate": "demo.run.created"
+            }
+          ],
+          "cost": 3
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}": {
+      "get": {
+        "operationId": "getDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Read a production: steps, gates, artifacts, and continuation",
+        "description": "The continuation lists each waiting gate with its question, choices, and the evidence hash a decision must name.\n\nRequires the `runs:read` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The production.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:read",
+        "x-hapi-capability": [
+          "demo/run",
+          "demo/review"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "To see where a production stands and which gate waits for a person"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/events": {
+      "get": {
+        "operationId": "streamDemoRunEvents",
+        "tags": [
+          "run"
+        ],
+        "summary": "Read or follow a production’s events as NDJSON",
+        "description": "Stored events after `after` (a sequence number). With `follow=true`, live events follow, each once, with a heartbeat line every 15 seconds, until the run stops moving. Reconnect with the last sequence seen.\n\nRequires the `runs:read` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "description": "Only events with a greater sequence.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "follow",
+            "in": "query",
+            "description": "Continue with live events (and heartbeats) until the run stops moving.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Stored events per request (1–1000).",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One JSON object per line: a ProductionEvent, or {\"type\":\"heartbeat\",\"at\":…} while following.",
+            "content": {
+              "application/x-ndjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:read",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "To follow a production as it runs"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/pause": {
+      "post": {
+        "operationId": "pauseDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Pause a production between steps",
+        "description": "Running steps finish; nothing new starts until it resumes.\n\nRequires the `runs:control` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The production.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:control` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:control",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "The person asked to pause a running production"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "action",
+          "side-effecting": true
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/resume": {
+      "post": {
+        "operationId": "resumeDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Resume a paused, cancelled, or interrupted production",
+        "description": "Continues from the last committed step; finished work is reused.\n\nRequires the `runs:control` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Resumed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:control` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:control",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "A paused, cancelled, or interrupted production should continue"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "action",
+          "side-effecting": true
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/cancel": {
+      "post": {
+        "operationId": "cancelDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Cancel a production",
+        "description": "Owned capture and render work stops at a safe point; committed results stay reusable.\n\nRequires the `runs:control` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The production.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:control` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:control",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "The person asked to stop a production"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "action",
+          "side-effecting": true,
+          "destructive": true,
+          "requires-confirmation": true
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/retry": {
+      "post": {
+        "operationId": "retryDemoRun",
+        "tags": [
+          "run"
+        ],
+        "summary": "Retry failed steps",
+        "description": "Reruns failed steps (or the named ones); fresh work is kept.\n\nRequires the `runs:control` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetryProductionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The production.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `runs:control` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "runs:control",
+        "x-hapi-capability": [
+          "demo/run"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "A step failed and its cause was fixed"
+          ],
+          "avoid-when": [
+            "The failure needs a change to the bundle first"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "action",
+          "side-effecting": true
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/gates/{gateId}/decision": {
+      "post": {
+        "operationId": "decideDemoGate",
+        "tags": [
+          "review"
+        ],
+        "summary": "Answer a gate a credential may answer",
+        "description": "Only gates the bundle marks `unattended: policy` (never privacy review) may be answered by automation, and only with the evidence hash from the continuation. Every other gate needs a person in Studio or the CLI; the refusal says so.\n\nRequires the `gates:decide` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GateDecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recorded; the production continues.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionRunSnapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The gate needs a person (human_only_gate, with its continuation), or the credential lacks gates:decide.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.review.human-required"
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The evidence changed (stale_gate), or the gate was decided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.review.stale"
+                }
+              ]
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "gates:decide",
+        "x-hapi-capability": [
+          "demo/review"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "A gate the bundle allows unattended waits, and the person or a trusted policy chose the answer"
+          ],
+          "avoid-when": [
+            "The gate is a privacy review or needs a person: report it instead"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "action",
+          "side-effecting": true,
+          "requires-confirmation": true
+        },
+        "x-hapi-prerequisites": [
+          "The answer names the evidence hash from the continuation"
+        ],
+        "x-hapi-planning": {
+          "requires": [
+            {
+              "predicate": "demo.run.created"
+            }
+          ],
+          "produces": [
+            {
+              "predicate": "demo.review.resolved"
+            }
+          ],
+          "cost": 1
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/outputs": {
+      "get": {
+        "operationId": "getDemoRunOutputs",
+        "tags": [
+          "artifacts"
+        ],
+        "summary": "The output manifest and downloadable artifacts of a finished production",
+        "description": "Portable artifact identities with hashes and sizes, and the operation that downloads each. Refused while the production has not finished.\n\nRequires the `artifacts:read` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Outputs with hashes and download operations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationOutputs"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `artifacts:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The production has not succeeded yet (not_finished, with its status).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            },
+            "x-hapi-outcome": {
+              "produces": [
+                {
+                  "predicate": "demo.production.pending"
+                }
+              ]
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "artifacts:read",
+        "x-hapi-capability": [
+          "demo/artifacts"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "A production succeeded and its videos, captions, and manifest should be reported"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        },
+        "x-hapi-planning": {
+          "requires": [
+            {
+              "predicate": "demo.run.created"
+            },
+            {
+              "predicate": "demo.review.resolved"
+            }
+          ],
+          "produces": [
+            {
+              "predicate": "demo.production.completed"
+            },
+            {
+              "predicate": "demo.outputs.available"
+            }
+          ],
+          "cost": 1
+        }
+      }
+    },
+    "/api/automation/demo-runs/{runId}/artifacts/{artifactId}/content": {
+      "get": {
+        "operationId": "getDemoRunArtifact",
+        "tags": [
+          "artifacts"
+        ],
+        "summary": "Download one artifact (byte ranges supported)",
+        "description": "Render outputs and production files by artifact ID. Send Range to resume a download; the ETag is the SHA-256.\n\nRequires the `artifacts:read` scope.",
+        "parameters": [
+          {
+            "name": "runId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "artifactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Range",
+            "in": "header",
+            "required": false,
+            "description": "One byte range, to resume a download.",
+            "schema": {
+              "type": "string",
+              "example": "bytes=0-1048575"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The bytes; ETag is the SHA-256.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "The requested range.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, unknown, expired, or revoked credential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The credential lacks `artifacts:read` on this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "The range is outside the file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests for this credential; see Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomationError"
+                }
+              }
+            }
+          }
+        },
+        "x-qt-scope": "artifacts:read",
+        "x-hapi-capability": [
+          "demo/artifacts"
+        ],
+        "x-hapi-intent": {
+          "use-when": [
+            "To download one output by its artifact ID"
+          ]
+        },
+        "x-hapi-effects": {
+          "mode": "read",
+          "side-effecting": false
+        },
+        "x-hapi-prerequisites": [
+          "The artifact is listed by the outputs operation"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "A short-lived token from `qontent-tube automation token create` (qtbt_…). Valid until it expires or automation stops."
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-qt-api-key",
+        "description": "A named key from `qontent-tube automation key create` (qtak_<id>_<secret>). Persists across restarts until it expires or is revoked."
+      }
+    },
+    "schemas": {
+      "AutomationError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "suggestion": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": {}
+      },
+      "AutomationCapabilities": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string",
+            "const": "Qontent Tube"
+          },
+          "version": {
+            "type": "string"
+          },
+          "runner": {
+            "type": "object",
+            "properties": {
+              "available": {
+                "type": "boolean"
+              },
+              "code": {
+                "type": "string",
+                "enum": [
+                  "ready",
+                  "local_runner_required",
+                  "setup_required"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "web",
+                    "terminal",
+                    "cast",
+                    "media"
+                  ]
+                }
+              },
+              "actions": {
+                "type": "object",
+                "properties": {
+                  "web": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "terminal": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "web",
+                  "terminal"
+                ],
+                "additionalProperties": false
+              },
+              "tools": {
+                "type": "object",
+                "properties": {
+                  "browser": {
+                    "type": "object",
+                    "properties": {
+                      "found": {
+                        "type": "boolean"
+                      },
+                      "version": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "warning": {
+                        "type": "string",
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "found"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "ffmpeg": {
+                    "type": "object",
+                    "properties": {
+                      "found": {
+                        "type": "boolean"
+                      },
+                      "version": {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      "warning": {
+                        "type": "string",
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "found"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "pty": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "browser",
+                  "ffmpeg",
+                  "pty"
+                ],
+                "additionalProperties": false
+              },
+              "limits": {
+                "type": "object",
+                "properties": {
+                  "maxTakeSeconds": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "maxStepSeconds": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "maxHookSeconds": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "maxTakeSeconds",
+                  "maxStepSeconds",
+                  "maxHookSeconds"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "available",
+              "code",
+              "sources",
+              "actions",
+              "limits"
+            ],
+            "additionalProperties": false
+          },
+          "credential": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "bearer",
+                  "api-key"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "capabilities:read",
+                    "bundles:plan",
+                    "runs:read",
+                    "runs:start",
+                    "runs:control",
+                    "gates:decide",
+                    "artifacts:read"
+                  ]
+                }
+              },
+              "resources": {
+                "type": "object",
+                "properties": {
+                  "projects": {
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "bundles": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    }
+                  }
+                },
+                "required": [
+                  "projects",
+                  "bundles"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "label",
+              "scopes",
+              "resources"
+            ],
+            "additionalProperties": false
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "bundle": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "identity": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "identity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "bundle"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "product",
+          "version",
+          "runner",
+          "credential",
+          "projects"
+        ],
+        "additionalProperties": false
+      },
+      "AutomationValidation": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "identity": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "product": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "takes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "scene": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "steps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "scene",
+                        "source",
+                        "steps"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "hooks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "type": "string"
+                        },
+                        "sha256": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "effects": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "target-read",
+                              "target-write",
+                              "local-command",
+                              "network",
+                              "secret",
+                              "human-decision"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "run",
+                        "sha256",
+                        "effects"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "effects": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "target-read",
+                        "target-write",
+                        "local-command",
+                        "network",
+                        "secret",
+                        "human-decision"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "secrets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "gates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "truth",
+                            "privacy",
+                            "cost",
+                            "decision",
+                            "final"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "unattended": {
+                          "type": "string",
+                          "enum": [
+                            "pause",
+                            "policy"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "title",
+                        "unattended"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "variants": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "product",
+                  "sources",
+                  "takes",
+                  "hooks",
+                  "effects",
+                  "secrets",
+                  "gates",
+                  "variants"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "diagnostics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "severity": {
+                  "type": "string",
+                  "enum": [
+                    "error",
+                    "warning",
+                    "info"
+                  ]
+                },
+                "code": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{1,63}$"
+                },
+                "path": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "message": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "line": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "column": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "suggestion": {
+                  "type": "string",
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "severity",
+                "code",
+                "path",
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "valid",
+          "identity",
+          "summary",
+          "diagnostics"
+        ],
+        "additionalProperties": false
+      },
+      "AutomationOutputs": {
+        "type": "object",
+        "properties": {
+          "run": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "running",
+                  "waiting-for-review",
+                  "waiting-for-input",
+                  "paused",
+                  "cancelling",
+                  "cancelled",
+                  "failed",
+                  "interrupted",
+                  "succeeded"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "status"
+            ],
+            "additionalProperties": false
+          },
+          "manifest": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "schema": {
+                    "type": "string",
+                    "const": "qontent-tube/production-output@1"
+                  },
+                  "run": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "planHash": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "bundle": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "identity": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "identity"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "planHash",
+                      "bundle"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "complete",
+                      "partial",
+                      "failed"
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "captures": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "scene": {
+                          "type": "string"
+                        },
+                        "takes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "mediaAssetId": {
+                          "type": "string"
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        },
+                        "rawSha256": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "evidence": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "operations": {
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "operation": {
+                                    "type": "string",
+                                    "const": "join"
+                                  },
+                                  "inputs": {
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "width": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "height": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                },
+                                "required": [
+                                  "operation",
+                                  "inputs",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "operation": {
+                                    "type": "string",
+                                    "const": "speed"
+                                  },
+                                  "factor": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 1
+                                  }
+                                },
+                                "required": [
+                                  "operation",
+                                  "factor"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "operation": {
+                                    "type": "string",
+                                    "const": "trim"
+                                  },
+                                  "durationMs": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 9007199254740991
+                                  }
+                                },
+                                "required": [
+                                  "operation",
+                                  "durationMs"
+                                ],
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        },
+                        "holdLastFrame": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "scene",
+                        "takes",
+                        "mediaAssetId",
+                        "sha256",
+                        "rawSha256",
+                        "evidence",
+                        "operations",
+                        "holdLastFrame"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "variants": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "format": {
+                          "type": "string",
+                          "enum": [
+                            "16:9",
+                            "9:16"
+                          ]
+                        },
+                        "language": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "succeeded",
+                            "failed",
+                            "not-run"
+                          ]
+                        },
+                        "renderJob": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "outputs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "mp4",
+                                  "srt",
+                                  "chapters",
+                                  "qa-frame",
+                                  "contact-sheet",
+                                  "part",
+                                  "metadata",
+                                  "validation-report"
+                                ]
+                              },
+                              "filename": {
+                                "type": "string",
+                                "maxLength": 400
+                              },
+                              "sha256": {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              "bytes": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "durationSeconds": {
+                                "type": "number",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "filename",
+                              "sha256",
+                              "bytes"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "validation": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "sha256": {
+                                  "type": "string",
+                                  "pattern": "^[a-f0-9]{64}$"
+                                },
+                                "errors": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "warnings": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9007199254740991
+                                }
+                              },
+                              "required": [
+                                "sha256",
+                                "errors",
+                                "warnings"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "approvals": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          }
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "string",
+                                  "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "maxLength": 1000
+                                },
+                                "retryable": {
+                                  "type": "boolean"
+                                },
+                                "suggestion": {
+                                  "type": "string",
+                                  "maxLength": 1000
+                                }
+                              },
+                              "required": [
+                                "code",
+                                "message",
+                                "retryable"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "format",
+                        "language",
+                        "status",
+                        "renderJob",
+                        "outputs",
+                        "validation",
+                        "approvals",
+                        "error"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "schema",
+                  "run",
+                  "status",
+                  "createdAt",
+                  "captures",
+                  "variants"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9._:-]{0,200}$"
+                },
+                "stepId": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "media-asset",
+                    "render-output",
+                    "report",
+                    "manifest",
+                    "log",
+                    "capture-run",
+                    "fitted-media"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                "sha256": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "bytes": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "variant": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "committedAt": {
+                  "type": "string"
+                },
+                "retained": {
+                  "type": "boolean"
+                },
+                "download": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "stepId",
+                "kind",
+                "ref",
+                "sha256",
+                "bytes",
+                "variant",
+                "committedAt",
+                "retained",
+                "download"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "run",
+          "manifest",
+          "artifacts"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionPlanOptions": {
+        "type": "object",
+        "properties": {
+          "rehearse": {
+            "default": false,
+            "type": "boolean"
+          },
+          "variants": {
+            "maxItems": 24,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 40
+            }
+          }
+        },
+        "required": [
+          "rehearse"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionPlan": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "const": "qontent-tube/production-plan@1"
+          },
+          "bundle": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "identity": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "identity"
+            ],
+            "additionalProperties": false
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "rehearse": {
+                "default": false,
+                "type": "boolean"
+              },
+              "variants": {
+                "maxItems": 24,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 40
+                }
+              }
+            },
+            "required": [
+              "rehearse"
+            ],
+            "additionalProperties": false
+          },
+          "sourceLanguage": {
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "16:9",
+                    "9:16"
+                  ]
+                },
+                "language": {
+                  "type": "string"
+                },
+                "captions": {
+                  "type": "boolean"
+                },
+                "chapters": {
+                  "type": "boolean"
+                },
+                "voice": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "format",
+                "language",
+                "captions",
+                "chapters",
+                "voice"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9.:_-]{0,160}$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "content.script",
+                    "content.storyboard",
+                    "content.translation",
+                    "gate",
+                    "target.prepare",
+                    "capture.rehearse",
+                    "capture.take",
+                    "capture.import",
+                    "media.fit",
+                    "capture.assemble",
+                    "voice.generate",
+                    "review.validate",
+                    "render",
+                    "output.collect"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "needs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "resource": {
+                  "type": "string",
+                  "enum": [
+                    "light",
+                    "capture",
+                    "media",
+                    "voice",
+                    "render"
+                  ]
+                },
+                "variant": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "language": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "scene": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "take": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "gate": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "truth",
+                            "privacy",
+                            "cost",
+                            "decision",
+                            "final",
+                            "approval",
+                            "content",
+                            "fit",
+                            "preflight"
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "origin": {
+                          "type": "string",
+                          "enum": [
+                            "bundle",
+                            "pipeline"
+                          ]
+                        },
+                        "unattended": {
+                          "type": "string",
+                          "enum": [
+                            "pause",
+                            "policy"
+                          ]
+                        },
+                        "authority": {
+                          "type": "string",
+                          "const": "person"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "title",
+                        "origin",
+                        "unattended",
+                        "authority"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "effects": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "target-read",
+                      "target-write",
+                      "local-command",
+                      "network",
+                      "secret",
+                      "human-decision"
+                    ]
+                  }
+                },
+                "inputs": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "title",
+                "needs",
+                "resource",
+                "variant",
+                "language",
+                "scene",
+                "take",
+                "gate",
+                "effects",
+                "inputs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "estimate": {
+            "type": "object",
+            "properties": {
+              "steps": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "shared": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "perVariant": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "captures": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fits": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "voiceLanguages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "renders": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "gates": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "steps",
+              "shared",
+              "perVariant",
+              "captures",
+              "fits",
+              "voiceLanguages",
+              "renders",
+              "gates"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema",
+          "bundle",
+          "options",
+          "sourceLanguage",
+          "variants",
+          "steps",
+          "estimate"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionDiagnostic": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{1,63}$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "step": {
+            "type": "string"
+          },
+          "suggestion": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "severity",
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionRun": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^prod-[0-9]{8}T[0-9]{6}Z-[a-z0-9]{6}$"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "bundleId": {
+            "type": "string"
+          },
+          "planHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "waiting-for-review",
+              "waiting-for-input",
+              "paused",
+              "cancelling",
+              "cancelled",
+              "failed",
+              "interrupted",
+              "succeeded"
+            ]
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "rehearse": {
+                "default": false,
+                "type": "boolean"
+              },
+              "variants": {
+                "maxItems": 24,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 40
+                }
+              }
+            },
+            "required": [
+              "rehearse"
+            ],
+            "additionalProperties": false
+          },
+          "requested": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "pause",
+                  "cancel"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "retryable": {
+                    "type": "boolean"
+                  },
+                  "suggestion": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "finishedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "bundleId",
+          "planHash",
+          "status",
+          "options",
+          "requested",
+          "error",
+          "revision",
+          "createdAt",
+          "updatedAt",
+          "finishedAt"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionRunSnapshot": {
+        "type": "object",
+        "properties": {
+          "run": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^prod-[0-9]{8}T[0-9]{6}Z-[a-z0-9]{6}$"
+              },
+              "projectId": {
+                "type": "string"
+              },
+              "bundleId": {
+                "type": "string"
+              },
+              "planHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "queued",
+                  "running",
+                  "waiting-for-review",
+                  "waiting-for-input",
+                  "paused",
+                  "cancelling",
+                  "cancelled",
+                  "failed",
+                  "interrupted",
+                  "succeeded"
+                ]
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "rehearse": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "variants": {
+                    "maxItems": 24,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 40
+                    }
+                  }
+                },
+                "required": [
+                  "rehearse"
+                ],
+                "additionalProperties": false
+              },
+              "requested": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "pause",
+                      "cancel"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "error": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 1000
+                      },
+                      "retryable": {
+                        "type": "boolean"
+                      },
+                      "suggestion": {
+                        "type": "string",
+                        "maxLength": 1000
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message",
+                      "retryable"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "finishedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "projectId",
+              "bundleId",
+              "planHash",
+              "status",
+              "options",
+              "requested",
+              "error",
+              "revision",
+              "createdAt",
+              "updatedAt",
+              "finishedAt"
+            ],
+            "additionalProperties": false
+          },
+          "plan": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "type": "string",
+                "const": "qontent-tube/production-plan@1"
+              },
+              "bundle": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "identity": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "identity"
+                ],
+                "additionalProperties": false
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "rehearse": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "variants": {
+                    "maxItems": 24,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 40
+                    }
+                  }
+                },
+                "required": [
+                  "rehearse"
+                ],
+                "additionalProperties": false
+              },
+              "sourceLanguage": {
+                "type": "string"
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "format": {
+                      "type": "string",
+                      "enum": [
+                        "16:9",
+                        "9:16"
+                      ]
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "captions": {
+                      "type": "boolean"
+                    },
+                    "chapters": {
+                      "type": "boolean"
+                    },
+                    "voice": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "format",
+                    "language",
+                    "captions",
+                    "chapters",
+                    "voice"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "steps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9.:_-]{0,160}$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "content.script",
+                        "content.storyboard",
+                        "content.translation",
+                        "gate",
+                        "target.prepare",
+                        "capture.rehearse",
+                        "capture.take",
+                        "capture.import",
+                        "media.fit",
+                        "capture.assemble",
+                        "voice.generate",
+                        "review.validate",
+                        "render",
+                        "output.collect"
+                      ]
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "needs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "resource": {
+                      "type": "string",
+                      "enum": [
+                        "light",
+                        "capture",
+                        "media",
+                        "voice",
+                        "render"
+                      ]
+                    },
+                    "variant": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "scene": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "take": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "gate": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "truth",
+                                "privacy",
+                                "cost",
+                                "decision",
+                                "final",
+                                "approval",
+                                "content",
+                                "fit",
+                                "preflight"
+                              ]
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "origin": {
+                              "type": "string",
+                              "enum": [
+                                "bundle",
+                                "pipeline"
+                              ]
+                            },
+                            "unattended": {
+                              "type": "string",
+                              "enum": [
+                                "pause",
+                                "policy"
+                              ]
+                            },
+                            "authority": {
+                              "type": "string",
+                              "const": "person"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "title",
+                            "origin",
+                            "unattended",
+                            "authority"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "effects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "target-read",
+                          "target-write",
+                          "local-command",
+                          "network",
+                          "secret",
+                          "human-decision"
+                        ]
+                      }
+                    },
+                    "inputs": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "title",
+                    "needs",
+                    "resource",
+                    "variant",
+                    "language",
+                    "scene",
+                    "take",
+                    "gate",
+                    "effects",
+                    "inputs"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "estimate": {
+                "type": "object",
+                "properties": {
+                  "steps": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "shared": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "perVariant": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "captures": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "fits": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "voiceLanguages": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "renders": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "gates": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "steps",
+                  "shared",
+                  "perVariant",
+                  "captures",
+                  "fits",
+                  "voiceLanguages",
+                  "renders",
+                  "gates"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "schema",
+              "bundle",
+              "options",
+              "sourceLanguage",
+              "variants",
+              "steps",
+              "estimate"
+            ],
+            "additionalProperties": false
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "content.script",
+                    "content.storyboard",
+                    "content.translation",
+                    "gate",
+                    "target.prepare",
+                    "capture.rehearse",
+                    "capture.take",
+                    "capture.import",
+                    "media.fit",
+                    "capture.assemble",
+                    "voice.generate",
+                    "review.validate",
+                    "render",
+                    "output.collect"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "queued",
+                    "running",
+                    "waiting",
+                    "succeeded",
+                    "reused",
+                    "failed",
+                    "cancelled",
+                    "interrupted",
+                    "stale"
+                  ]
+                },
+                "fingerprint": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "outputHash": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "result": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "attempts": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "startedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "finishedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                        },
+                        "message": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "retryable": {
+                          "type": "boolean"
+                        },
+                        "suggestion": {
+                          "type": "string",
+                          "maxLength": 1000
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "retryable"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "staleReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 500
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "progress": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "done": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "total": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "label": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "required": [
+                        "done",
+                        "total"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "reusedFrom": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "generation": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "status",
+                "fingerprint",
+                "outputHash",
+                "result",
+                "attempts",
+                "startedAt",
+                "finishedAt",
+                "error",
+                "staleReason",
+                "progress",
+                "reusedFrom",
+                "generation"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "gates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "stepId": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "truth",
+                    "privacy",
+                    "cost",
+                    "decision",
+                    "final",
+                    "approval",
+                    "content",
+                    "fit",
+                    "preflight"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "waiting",
+                    "approved",
+                    "rejected",
+                    "superseded",
+                    "expired"
+                  ]
+                },
+                "inputHash": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "question": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "evidence": {
+                  "maxItems": 200,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "ref": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "detail": {
+                        "type": "string",
+                        "maxLength": 1000
+                      }
+                    },
+                    "required": [
+                      "label"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "choices": {
+                  "minItems": 1,
+                  "maxItems": 8,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                      },
+                      "label": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "description": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "outcome": {
+                        "type": "string",
+                        "enum": [
+                          "continue",
+                          "stop",
+                          "invalidate"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "label",
+                      "description",
+                      "outcome"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "authority": {
+                  "type": "string",
+                  "const": "person"
+                },
+                "unattended": {
+                  "type": "string",
+                  "enum": [
+                    "pause",
+                    "policy"
+                  ]
+                },
+                "expiresAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "decision": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "choice": {
+                          "type": "string"
+                        },
+                        "by": {
+                          "type": "string",
+                          "maxLength": 120
+                        },
+                        "at": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "string",
+                          "maxLength": 1000
+                        }
+                      },
+                      "required": [
+                        "choice",
+                        "by",
+                        "at"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "stepId",
+                "kind",
+                "title",
+                "state",
+                "inputHash",
+                "question",
+                "evidence",
+                "choices",
+                "authority",
+                "unattended",
+                "expiresAt",
+                "decision",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9._:-]{0,200}$"
+                },
+                "stepId": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "media-asset",
+                    "render-output",
+                    "report",
+                    "manifest",
+                    "log",
+                    "capture-run",
+                    "fitted-media"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "maxLength": 500
+                },
+                "sha256": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "bytes": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "variant": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "committedAt": {
+                  "type": "string"
+                },
+                "retained": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "stepId",
+                "kind",
+                "ref",
+                "sha256",
+                "bytes",
+                "variant",
+                "committedAt",
+                "retained"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "stepId": {
+                  "type": "string"
+                },
+                "number": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "running",
+                    "waiting",
+                    "succeeded",
+                    "failed",
+                    "cancelled",
+                    "interrupted"
+                  ]
+                },
+                "idempotencyKey": {
+                  "type": "string"
+                },
+                "domain": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "startedAt": {
+                  "type": "string"
+                },
+                "finishedAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,63}$"
+                        },
+                        "message": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "retryable": {
+                          "type": "boolean"
+                        },
+                        "suggestion": {
+                          "type": "string",
+                          "maxLength": 1000
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message",
+                        "retryable"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "stepId",
+                "number",
+                "fingerprint",
+                "status",
+                "idempotencyKey",
+                "domain",
+                "startedAt",
+                "finishedAt",
+                "error"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "lastSeq": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "continuation": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "runId": {
+                  "type": "string"
+                },
+                "gate": {
+                  "type": "string"
+                },
+                "step": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "truth",
+                    "privacy",
+                    "cost",
+                    "decision",
+                    "final",
+                    "approval",
+                    "content",
+                    "fit",
+                    "preflight"
+                  ]
+                },
+                "question": {
+                  "type": "string"
+                },
+                "inputHash": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "choices": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9-]{0,40}$"
+                      },
+                      "label": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "description": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "outcome": {
+                        "type": "string",
+                        "enum": [
+                          "continue",
+                          "stop",
+                          "invalidate"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "label",
+                      "description",
+                      "outcome"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "decide": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "runId",
+                "gate",
+                "step",
+                "kind",
+                "question",
+                "inputHash",
+                "choices",
+                "decide"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "run",
+          "plan",
+          "steps",
+          "gates",
+          "artifacts",
+          "attempts",
+          "lastSeq",
+          "continuation"
+        ],
+        "additionalProperties": false
+      },
+      "ProductionEvent": {
+        "type": "object",
+        "properties": {
+          "v": {
+            "type": "number",
+            "const": 1
+          },
+          "runId": {
+            "type": "string"
+          },
+          "seq": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "at": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "run.status",
+              "step.status",
+              "step.progress",
+              "step.log",
+              "gate.waiting",
+              "gate.decided",
+              "artifact.committed",
+              "diagnostic"
+            ]
+          },
+          "step": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "v",
+          "runId",
+          "seq",
+          "at",
+          "type",
+          "step",
+          "data"
+        ],
+        "additionalProperties": false
+      },
+      "RetryProductionRequest": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GateDecisionRequest": {
+        "type": "object",
+        "properties": {
+          "choice": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,40}$"
+          },
+          "inputHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "choice",
+          "inputHash"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

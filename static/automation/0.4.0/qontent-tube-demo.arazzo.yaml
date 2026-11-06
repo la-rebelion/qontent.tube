@@ -1,0 +1,184 @@
+# Arazzo workflows over the Qontent Tube automation API: from a reviewed
+# demo bundle to finished videos. A workflow never waits in a loop and
+# never answers a review for a person: when a production needs one, the
+# workflow returns the run with its continuation (gate, question, choices,
+# evidence hash) and stops.
+#
+#   hapi arazzo validate --specs docs/automation/qontent-tube-demo.arazzo.yaml
+#   hapi serve --specs docs/automation/qontent-tube-demo.arazzo.yaml \
+#     --url http://127.0.0.1:45831 --mcp --headless --port 3000 \
+#     --capability-graph --capability-planning
+#
+# Credentials are never in this file: HAPI forwards the caller's
+# Authorization bearer or x-qt-api-key header (see docs/automation.md).
+arazzo: 1.1.0
+info:
+  title: Qontent Tube demo productions
+  version: 0.4.0
+  summary: Validate, plan, start, check, and collect product-demo productions.
+  description: >-
+    Workflows over the local automation listener (`qontent-tube automation
+    serve`). Start a production from a project's demo bundle, check where it
+    stands, and collect its outputs once a person has answered every review.
+sourceDescriptions:
+  - name: qt
+    url: ./qontent-tube-automation.openapi.json
+    type: openapi
+
+workflows:
+  - workflowId: startProduction
+    summary: Check the runner, validate and plan the bundle, start a production, and report where it stands.
+    description: >-
+      Stops with a failure when the local runner is not ready or the bundle
+      has errors, before anything runs. Otherwise starts the production once
+      per idempotency key (repeating the workflow with the same key returns
+      the same run) and returns its status. When a gate waits for a person,
+      the `continuation` output lists it: report it, do not answer it. Call
+      `checkProduction` later, and `collectOutputs` once it succeeded.
+    inputs:
+      type: object
+      required: [projectId, idempotencyKey]
+      properties:
+        projectId:
+          type: string
+          description: A project the credential may use (see getAutomationCapabilities).
+        idempotencyKey:
+          type: string
+          pattern: '^[A-Za-z0-9._:-]{1,128}$'
+          description: One key per requested production, for example ci-1234.
+          examples: [agent-2026-11-05-1]
+        options:
+          type: object
+          description: Production options, such as variants to produce.
+          properties:
+            rehearse: { type: boolean }
+            variants: { type: array, items: { type: string } }
+    steps:
+      - stepId: checkRunner
+        description: Productions run on the computer that runs Qontent Tube.
+        operationId: $sourceDescriptions.qt.getAutomationCapabilities
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body#/runner/available == true
+        outputs:
+          version: $response.body#/version
+          runnerCode: $response.body#/runner/code
+      - stepId: validateBundle
+        operationId: $sourceDescriptions.qt.validateDemoBundle
+        parameters:
+          - name: projectId
+            in: path
+            value: $inputs.projectId
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: $response.body#/valid == true
+        outputs:
+          identity: $response.body#/identity
+          diagnostics: $response.body#/diagnostics
+      - stepId: planProduction
+        description: The steps, variants, effects, and gates, before anything runs.
+        operationId: $sourceDescriptions.qt.planDemoProduction
+        parameters:
+          - name: projectId
+            in: path
+            value: $inputs.projectId
+        requestBody:
+          contentType: application/json
+          payload:
+            options: $inputs.options
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          plan: $response.body#/plan
+          planDiagnostics: $response.body#/diagnostics
+      - stepId: startRun
+        operationId: $sourceDescriptions.qt.startDemoRun
+        parameters:
+          - name: projectId
+            in: path
+            value: $inputs.projectId
+          - name: Idempotency-Key
+            in: header
+            value: $inputs.idempotencyKey
+        requestBody:
+          contentType: application/json
+          payload:
+            options: $inputs.options
+        successCriteria:
+          - condition: $statusCode == 202 || $statusCode == 200
+        outputs:
+          runId: $response.body#/run/id
+      - stepId: inspectRun
+        description: Where the production stands now; never waits for it.
+        operationId: $sourceDescriptions.qt.getDemoRun
+        parameters:
+          - name: runId
+            in: path
+            value: $steps.startRun.outputs.runId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          status: $response.body#/run/status
+          continuation: $response.body#/continuation
+    outputs:
+      runId: $steps.startRun.outputs.runId
+      status: $steps.inspectRun.outputs.status
+      continuation: $steps.inspectRun.outputs.continuation
+      bundleIdentity: $steps.validateBundle.outputs.identity
+
+  - workflowId: checkProduction
+    summary: Report a production's status and any review waiting for a person.
+    description: >-
+      One read. `continuation` lists each waiting gate with its question,
+      choices, and the evidence hash an answer must name; a person answers
+      it in Studio or with `qontent-tube demo decide`.
+    inputs:
+      type: object
+      required: [runId]
+      properties:
+        runId: { type: string, examples: [prod-20261105T054137Z-24a968] }
+    steps:
+      - stepId: readRun
+        operationId: $sourceDescriptions.qt.getDemoRun
+        parameters:
+          - name: runId
+            in: path
+            value: $inputs.runId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          status: $response.body#/run/status
+          continuation: $response.body#/continuation
+          error: $response.body#/run/error
+    outputs:
+      status: $steps.readRun.outputs.status
+      continuation: $steps.readRun.outputs.continuation
+      error: $steps.readRun.outputs.error
+
+  - workflowId: collectOutputs
+    summary: The output manifest and downloadable files of a production that succeeded.
+    description: >-
+      Fails with not_finished (and the run's status and continuation) while
+      the production has not succeeded; it never reports completion early.
+      Each artifact has a SHA-256 and a download path on the automation
+      listener.
+    inputs:
+      type: object
+      required: [runId]
+      properties:
+        runId: { type: string, examples: [prod-20261105T054137Z-24a968] }
+    steps:
+      - stepId: readOutputs
+        operationId: $sourceDescriptions.qt.getDemoRunOutputs
+        parameters:
+          - name: runId
+            in: path
+            value: $inputs.runId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          manifest: $response.body#/manifest
+          artifacts: $response.body#/artifacts
+    outputs:
+      manifest: $steps.readOutputs.outputs.manifest
+      artifacts: $steps.readOutputs.outputs.artifacts

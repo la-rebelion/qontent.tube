@@ -1,0 +1,120 @@
+---
+title: Productions
+description: Run a demo recipe from capture to finished videos in one resumable production, with people deciding at every gate.
+sidebar_position: 19
+---
+
+# Productions
+
+A production takes a [demo recipe](./demo-recipes) all the way to finished videos in one run: it records every take, fits the takes to their scenes, places them in the storyboard, generates narration, validates, asks people to review, renders each variant, and hashes every output.
+
+Each step remembers what it was made from. If a production stops, fails, or runs again next release, it **continues from what is still valid** instead of starting over.
+
+## The production dashboard
+
+Start a production from [Capture a product demo](./capture-a-product-demo#5-review--run), then follow it on its dashboard. **Productions** in the sidebar lists the project's latest runs.
+
+![A completed production: phases, variants, captures, events, and hashed outputs](/img/v040/production-completed.png)
+
+- **Phases**: Draft, Approve plan, Prepare target, Capture, Narration, Fit media, Assemble, Validate, Review, Render, and Outputs. Select one to see its steps, attempts, progress, and errors.
+- **Variants**: one card per format and language, with render progress.
+- **Captures · raw and fitted**: how each scene's takes were fitted (as recorded, sped up, joined, holding the last frame), with both videos side by side.
+- **Events**: the live log, which reconnects where it left off.
+- **Outputs**: when every render has finished, each file with its hash, and the output manifest that ties them to the captures and approvals behind them.
+
+The header keeps the controls that apply now: **Pause** and **Cancel** while running, **Resume** when paused, interrupted, or cancelled, and **Retry failed steps** after a failure. States are always an icon and a word, never color alone.
+
+## People decide
+
+![A gate waiting for a person: the question, the evidence, and the choices](/img/v040/production-waiting.png)
+
+A production pauses at each **gate** and shows why it is asking, the evidence (captured footage plays inline), and what each choice does:
+
+| Gate             | Asks you to                                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Plan             | Accept the production plan and its effects.                                                                          |
+| Cost             | Accept the narration cost estimate before any voice is generated.                                                    |
+| Privacy          | Confirm the captures show nothing private.                                                                           |
+| Approval         | Approve the captured scenes for rendering.                                                                           |
+| Final            | Accept the result before rendering.                                                                                  |
+| Draft acceptance | Accept a drafted script or translation.                                                                              |
+| Fit              | Decide for a take that can't fit its scene: trim it, allow a faster speed, record it again, or change the narration. |
+
+Your decision is tied to the exact evidence you saw. If it changes, the gate asks again. Important approvals need the same choice twice (the second press reads **Confirm: …**), and stop choices never need confirming. A gate never decides by itself, and the dashboard works fully from the keyboard.
+
+Privacy review and approval you already gave in Studio for the same bytes count, so you aren't asked twice.
+
+## Resume, don't redo
+
+Every step has a fingerprint of everything it used. A finished result is reused when its fingerprint matches, in the same run or a later one:
+
+- **Change one take's locator**, and only that take, its scene's fitting, and what follows run again. Other takes are reused.
+- **Change one narration line**, and only that line is voiced again.
+- **A render that stopped** continues from its finished chunks.
+- **Cancel or quit** at any time. Finished steps stay done, and resuming continues from the next one. A crash marks the run _interrupted_, and it resumes the same way.
+
+The banner tells you how many steps were reused from earlier work.
+
+## When something fails
+
+The failure panel shows the step and the error and, for a capture, the screenshot taken when it failed and what the locator matched.
+
+- **Correct this step** opens the recipe at that take with the picker.
+- **Retry this step** runs it again. Unrelated finished steps stay done.
+- A missing secret: add it in **Effects & trust**, then retry.
+- A missing tool: the runner status names it, and `qontent-tube demo doctor` has the details.
+
+## Fitting footage to the narration
+
+Real recordings rarely last exactly as long as their narration. By default, a take that runs long is sped up evenly, up to 2.5×, to end just before its scene does. A short take plays at its own speed and holds its last real frame. Several takes in one scene are joined in order.
+
+Fitting always writes a **new** file and records how it was made. Your raw recordings never change. A take that can't fit within its policy stops at a fit gate; nothing is applied without your decision.
+
+## What you get
+
+Each variant (format × language) is rendered on your computer, with captions, chapters, and QA frames as the recipe asks. The **output manifest** lists every file with its SHA-256 and size, the captures each scene shows, the validation result, and the approvals the render was checked against. It contains no local paths and no secrets.
+
+Publishing to YouTube, social networks, or a CMS isn't included; the files and their metadata are ready for you to upload.
+
+## From the command line
+
+The same production runs from a terminal, without opening Studio:
+
+```bash
+qontent-tube demo run --bundle demo --project "Acme onboarding"
+```
+
+At a terminal, each gate asks you its question and continues with your answer. The other commands:
+
+| Command                                                     | What it does                                                                          |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `demo status`                                               | Every step's state and errors, and any gate waiting with the command that answers it. |
+| `demo decide --gate <id> --choice <id> --input-hash <hash>` | Answers a waiting gate, naming the evidence you reviewed, then continues.             |
+| `demo resume`                                               | Continues a paused, interrupted, cancelled, or waiting production.                    |
+| `demo retry [--step <id>]`                                  | Runs failed steps (or the ones you name) again. Fresh work is kept.                   |
+| `demo cancel`                                               | Stops at the next safe point. Finished work stays reusable.                           |
+| `demo artifacts`                                            | Lists what the production committed.                                                  |
+| `demo outputs --out <folder>`                               | Copies the finished videos, captions, chapters, and manifest, checking every hash.    |
+| `demo clean`                                                | Removes intermediate files of a stopped production.                                   |
+
+`run`, `resume`, `retry`, and `decide` drive the production themselves, so Qontent Tube must be closed while they run (exit code 7 tells you it's open). `status`, `artifacts`, `cancel`, and `clean` work while the app is open.
+
+With `--no-input`, the command never chooses for you. It stops at the first gate with exit code 3 and prints what to answer. For scripts, coding agents, and CI, see [Agents and automation](./agents-and-automation) and [Productions in CI](./ci).
+
+## Running from the cloud
+
+Qontent Tube in the cloud can edit, review, and plan productions, and show their history, but recording and rendering happen on your computer. Use **Download the bundle (.qtbundle)**, then:
+
+```bash
+qontent-tube demo import acme.qtbundle --dir acme-demo
+qontent-tube demo run --bundle acme-demo
+```
+
+## Troubleshooting
+
+- **Exit 7, "Qontent Tube is open"**: quit the app, or start the production from Studio instead.
+- **The recipe changed since the last sync**: pull it in **Demo bundle** (or choose a version), then `demo retry`.
+- **The recipe changed after the production started**: resuming is refused. Start a new production; unchanged steps are reused.
+- **A take failed**: `demo evidence --run <capture run>` shows the failed step and its screenshot.
+- **Validation failed**: open Validate & render, apply the fixes it offers, then retry.
+- **A render failed**: retry; it continues from its finished chunks.

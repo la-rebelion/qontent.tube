@@ -1,0 +1,99 @@
+# Product-demo videos from CI through a running Qontent Tube automation
+# listener (a self-hosted runner on the computer that runs Qontent Tube).
+#
+# The listener (`qontent-tube automation serve --port 45831`) and a scoped
+# API key (`qontent-tube automation key create --name github-ci --project
+# "Acme demo" --scope runs:read --scope runs:start --scope artifacts:read
+# --expires 90d --out ci.key`) are set up once by a person. The key's value
+# is the QONTENT_TUBE_API_KEY secret of the protected `demo-production`
+# environment. Rotate it with `qontent-tube automation key rotate`, update
+# the secret, then revoke the old key. See docs/ci.md.
+name: Product demo (automation listener)
+
+on:
+  push:
+    branches: [main]
+    paths: ['demo/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qontent-demo-listener
+  cancel-in-progress: false
+
+jobs:
+  produce:
+    # Self-hosted runners must never run code from forks or pull requests.
+    if: github.event_name != 'pull_request' && github.repository == 'acme/acme-app'
+    runs-on: [self-hosted, qontent-tube]
+    timeout-minutes: 120
+    environment: demo-production
+    env:
+      QT: http://127.0.0.1:45831/api/automation
+      PROJECT_ID: ${{ vars.QONTENT_TUBE_PROJECT_ID }}
+    steps:
+      - name: Write the key where only this job reads it
+        env:
+          QONTENT_TUBE_API_KEY: ${{ secrets.QONTENT_TUBE_API_KEY }}
+        run: |
+          umask 077
+          printf 'x-qt-api-key: %s\n' "$QONTENT_TUBE_API_KEY" > "$RUNNER_TEMP/qt-header"
+      - name: Start (once per commit) and wait for the production
+        id: produce
+        run: |
+          auth=(--header "@$RUNNER_TEMP/qt-header")
+          curl --fail-with-body --silent "${auth[@]}" "$QT/capabilities" > capabilities.json
+          jq -e '.runner.available' capabilities.json > /dev/null
+          curl --fail-with-body --silent "${auth[@]}" \
+            --header 'content-type: application/json' \
+            --header "Idempotency-Key: ci-${GITHUB_SHA}" \
+            --data '{}' "$QT/projects/$PROJECT_ID/demo-runs" > started.json
+          run_id=$(jq -r '.run.id' started.json)
+          echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
+          # Follow until it stops moving; never answer a gate.
+          curl --silent --no-buffer "${auth[@]}" \
+            "$QT/demo-runs/$run_id/events?after=0&follow=true" > events.ndjson || true
+          curl --fail-with-body --silent "${auth[@]}" "$QT/demo-runs/$run_id" > run.json
+          echo "status=$(jq -r '.run.status' run.json)" >> "$GITHUB_OUTPUT"
+      - name: Download outputs
+        if: steps.produce.outputs.status == 'succeeded'
+        run: |
+          auth=(--header "@$RUNNER_TEMP/qt-header")
+          mkdir -p delivered
+          curl --fail-with-body --silent "${auth[@]}" \
+            "$QT/demo-runs/${{ steps.produce.outputs.run-id }}/outputs" > outputs.json
+          jq -r '.artifacts[] | select(.kind == "render-output" or .kind == "manifest") | "\(.download) \(.ref | split("/") | last) \(.sha256)"' outputs.json |
+            while read -r path name sha; do
+              curl --fail --silent "${auth[@]}" "http://127.0.0.1:45831$path" --output "delivered/$name"
+              echo "$sha  delivered/$name" | sha256sum --check --quiet
+            done
+      - name: Cancel the production if this job is cancelled
+        if: cancelled() && steps.produce.outputs.run-id != ''
+        run: |
+          curl --silent --header "@$RUNNER_TEMP/qt-header" --request POST \
+            "$QT/demo-runs/${{ steps.produce.outputs.run-id }}/cancel" > /dev/null
+      - name: Forget the key file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/qt-header"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-demo
+          path: |
+            delivered/
+            run.json
+            events.ndjson
+          if-no-files-found: ignore
+      - name: Report
+        env:
+          STATUS: ${{ steps.produce.outputs.status }}
+        run: |
+          case "$STATUS" in
+            succeeded) echo "Videos produced; see the product-demo artifact." ;;
+            waiting-for-review|waiting-for-input|paused)
+              echo "::warning::A person must review. Answer it in Studio or with qontent-tube demo decide, then re-run this workflow (it resumes the same production)."
+              jq -r '.continuation[] | "waiting: \(.gate) (\(.kind)): \(.question)"' run.json ;;
+            *) echo "::error::The production is $STATUS."; jq -r '.steps[] | select(.status == "failed") | "\(.id): \(.error.message)"' run.json; exit 1 ;;
+          esac

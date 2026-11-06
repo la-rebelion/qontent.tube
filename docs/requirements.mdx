@@ -33,6 +33,18 @@ Voice generation does not require these tools. The **RENDER** workflow does:
 
 The app detects both tools and shows a setup checklist. Custom executable paths can be configured when automatic detection fails. See [Rendering videos](./rendering).
 
+## Required for recording product demos
+
+[Capture a product demo](./capture-a-product-demo) records on your computer with the same tools rendering uses, so nothing else is downloaded:
+
+- **Google Chrome, Chromium, or Microsoft Edge**, to drive and record web pages.
+- **ffmpeg 5 or later** with `libx264`, to encode recordings and fit them to their scenes.
+- The **product you want to film**: a start command, an app already running on your computer, or a public website address.
+
+Run `qontent-tube demo doctor` to see what was found. Terminal recordings use a real terminal on Linux; on Windows, tools that need one may print less. Native desktop windows can't be recorded yet.
+
+Recording and running productions need your computer. Qontent Tube in the cloud can edit and review recipes, and hands them to your computer to run.
+
 ## Optional AI and image services
 
 These credentials unlock convenience features; they are **not required** to write scripts, build rosters, generate Deepgram narration, or edit storyboards manually.
@@ -69,3 +81,6 @@ Before connecting a provider, review what is sent in [AI drafting](./ai-drafting
 | Generate scene backgrounds automatically | OpenAI-compatible image API access                          |
 | Upload your own backgrounds              | No image API key                                            |
 | Render MP4, captions, and chapters       | Chromium-family browser plus ffmpeg 5+ with libx264 and AAC |
+| Record a product demo                    | The same browser and ffmpeg, plus the product or website    |
+| Run productions from CI or an agent      | The `qontent-tube` CLI; no AI key needed                    |
+| Expose productions as MCP tools          | [HAPI](https://hapi.mcp.com.ai), run beside Qontent Tube    |

@@ -416,17 +416,18 @@ export function RoadmapSection() {
       <div className={styles.roadmapHeading}>
         <div>
           <p className={styles.roadmapStatus}>
-            <span aria-hidden="true" /> IN DESIGN · V0.2
+            <span aria-hidden="true" /> AVAILABLE NOW · V0.4
           </p>
-          <p className={styles.eyebrow}>MARKDOWN → VOICE → ANIMATION</p>
+          <p className={styles.eyebrow}>MARKDOWN → CAPTURE → VIDEO</p>
           <h2 id="roadmap-title">
-            Your script is about to step onto the stage.
+            Record your demo once. Rebuild it every release.
           </h2>
         </div>
         <p>
-          Today, Qontent Tube gives your Markdown a cast and a voice. Next, the
-          same script becomes editable scenes you can preview, style, and render
-          locally into a finished video.
+          Qontent Tube turns your Markdown into scenes with a voice, built from
+          real captures of your product. Since 0.4, the demo itself is a recipe
+          beside your code: it records the product, fits the footage, asks you
+          to review, and renders every format again, redoing only what changed.
         </p>
       </div>
 
@@ -434,17 +435,17 @@ export function RoadmapSection() {
         <figure className={styles.roadmapFeature}>
           <div className={styles.roadmapImageFrame}>
             <img
-              src="/img/roadmap/studio-v020.png"
-              alt="Concept preview of the upcoming Qontent Tube Studio with a Markdown script, animated stage, mobile adaptation controls, and multi-track timeline"
+              src="/img/v040/production-completed.png"
+              alt="A completed Qontent Tube production with every phase, raw and fitted captures, variants, and hashed outputs"
               loading="lazy"
             />
           </div>
           <figcaption>
-            <span>01 · STUDIO + RENDER</span>
-            <h3>Hear it. See it. Ship it.</h3>
+            <span>01 · PRODUCTIONS</span>
+            <h3>Record once. Rebuild every release.</h3>
             <p>
-              Voice-driven timing, a scene timeline, wide and vertical previews,
-              and local MP4 rendering from one workspace.
+              One run records the product, fits the footage, asks people to
+              review, and renders every format and language.
             </p>
           </figcaption>
         </figure>
@@ -453,51 +454,51 @@ export function RoadmapSection() {
           <figure>
             <div className={styles.roadmapImageFrame}>
               <img
-                src="/img/roadmap/themes-v020.png"
-                alt="Concept preview of the upcoming theme editor with color tokens, contrast checks, and live wide and mobile previews"
+                src="/img/v040/guided-recording.png"
+                alt="Guided recording in Studio, with the controls outside the product window"
                 loading="lazy"
               />
             </div>
             <figcaption>
-              <span>02 · THEMES</span>
-              <h3>Make every frame feel like yours.</h3>
-              <p>Reusable colors, accessible contrast, and live previews.</p>
+              <span>02 · GUIDED RECORDING</span>
+              <h3>Use your product. Keep the steps.</h3>
+              <p>Each click becomes a step with a stable locator.</p>
             </figcaption>
           </figure>
           <figure>
             <div className={styles.roadmapImageFrame}>
               <img
-                src="/img/roadmap/characters-v020.png"
-                alt="Concept preview of the upcoming character builder with generated variations, expressions, voice assignment, and animation rig controls"
+                src="/img/v030/regions.jpg"
+                alt="The capture editor with named regions and camera moves over a real screenshot"
                 loading="lazy"
               />
             </div>
             <figcaption>
-              <span>03 · CHARACTERS</span>
-              <h3>Build a cast your audience remembers.</h3>
-              <p>Reusable characters with expressions, voices, and motion.</p>
+              <span>03 · REAL CAPTURES</span>
+              <h3>Pixels you can trust.</h3>
+              <p>Regions, camera, and callouts. Never a redrawn screen.</p>
             </figcaption>
           </figure>
         </div>
       </div>
 
-      <ol className={styles.roadmapMilestones} aria-label="Planned milestones">
+      <ol className={styles.roadmapMilestones} aria-label="Releases">
         <li>
-          <span>M1</span>
-          <strong>Stage + local video render</strong>
+          <span>v0.2</span>
+          <strong>Stage, storyboards + local video render</strong>
         </li>
         <li>
-          <span>M2 · v0.2</span>
-          <strong>Storyboards, themes + characters</strong>
+          <span>v0.3</span>
+          <strong>Real captures, languages + mobile</strong>
         </li>
         <li>
-          <span>M3 · v0.3</span>
-          <strong>Languages + mobile adaptation</strong>
+          <span>v0.4</span>
+          <strong>Product demos on repeat, CI + MCP</strong>
         </li>
       </ol>
       <p className={styles.roadmapNote}>
-        These are working product sketches. The details may evolve; the
-        direction will not.
+        See the <a href="/blog/qontent-tube-0-4">0.4 launch post</a> for the
+        real thing.
       </p>
     </section>
   );

@@ -51,6 +51,18 @@ Confirm that the file is a regular top-level `.md` file in the selected project'
 
 Open **Storyboard → Validate & render** and fix the errors it lists. Errors have no override, so a missing file or unfinished privacy review must be resolved. To check from a terminal, see [the capture commands](./validate-and-approve#from-the-command-line).
 
+## Automation without a window
+
+`qontent-tube automation serve --port 45831` starts Qontent Tube without a browser window, for coding agents, CI, and MCP tools. It stops on its own after 30 minutes of no requests and no production, or with `qontent-tube automation stop`. Opening Qontent Tube while it runs shows the usual window, and the app then stays open after automation stops. See [Agents and automation](./agents-and-automation).
+
+## A production says Qontent Tube is open
+
+`demo run`, `resume`, `retry`, and `decide` drive the production from the terminal, so they exit with code 7 while the app is open. Quit the app, or run the production from Studio or through the [automation listener](./agents-and-automation#the-automation-listener). `demo status` works either way.
+
+## A recording or production fails
+
+Open the production's failure panel, or run `qontent-tube demo evidence --bundle <folder> --run latest`, for the failed step, its screenshot, and what the locator matched. If the browser or ffmpeg isn't found, run `qontent-tube demo doctor`. See [Record takes](./recording-takes#troubleshooting) and [Productions](./productions#troubleshooting).
+
 ## Your data after an upgrade or uninstall
 
 Release upgrades and uninstall intentionally preserve `.qontent-tube` and any separately configured content directory. Back up that directory using your normal file backup workflow.

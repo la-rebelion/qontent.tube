@@ -1,0 +1,134 @@
+---
+title: Record takes
+description: Rehearse and record web, terminal, and pre-recorded footage on your computer, with secrets by name and hooks you trust.
+sidebar_position: 18
+---
+
+# Record takes
+
+A take is one recording for one scene. Qontent Tube starts your product, drives it with the recipe's steps, and records it, so the same take can be recorded again next release, identically. Studio does all of this from [Capture a product demo](./capture-a-product-demo#4-record); this page explains what happens underneath and how to do it from a terminal.
+
+Recording runs only on your computer, never in the cloud.
+
+## What you need
+
+- **Chrome, Chromium, or Edge**, the same browser rendering uses. No second browser is downloaded. Set `QONTENT_TUBE_BROWSER` to choose one.
+- **ffmpeg 5 or later** with libx264. Set `QONTENT_TUBE_FFMPEG` to choose one.
+- For terminal takes, a real terminal is used on Linux. On Windows commands run through pipes, so tools that need a terminal may print less.
+
+```bash
+qontent-tube demo doctor
+```
+
+`doctor` reports what it found, by version only.
+
+## Sources
+
+| Source   | What a take does                                                                                                                                                                         |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Web page | Opens the product in a clean browser with a fixed size, locale, color scheme, and reduced motion, runs the steps, and records 30 fps H.264 with a visible pointer and no browser chrome. |
+| Terminal | Runs commands (never through a shell), records their output as an asciinema cast, and renders it.                                                                                        |
+| Cast     | Replays an existing asciinema recording, shortening long pauses. Output is never retyped or changed.                                                                                     |
+| Media    | Checks a PNG, JPEG, WebP, or H.264 MP4 you already have. A trim makes a separate file and keeps the original.                                                                            |
+
+## Rehearse, then record
+
+```bash
+qontent-tube demo rehearse --bundle demo
+qontent-tube demo capture --bundle demo --take sign-in --take draft
+qontent-tube demo evidence --bundle demo --run latest
+```
+
+- **Rehearse** runs every step against the real product without recording video, so a broken locator or a changed screen shows up in seconds.
+- **Capture** runs the same steps and keeps a recording per take.
+- **Evidence** shows what happened: each step, its locator and how many elements it matched, assertions, marked regions, and a screenshot when a step failed.
+
+Both stop everything they started and run your reset hooks afterwards. Ctrl+C cancels cleanly.
+
+Nothing is imported until you **accept** a take. An accepted take goes to **Assets** with its provenance: which recipe, run, take, and step produced it, its hashes, and how it was trimmed or fitted. [Validate & render](./validate-and-approve) shows where each capture came from and blocks footage from a failed run, a failed assertion, or a file that changed.
+
+## Steps that don't break
+
+Each step must find **exactly one visible element**, waiting up to 10 seconds. If none matches, or more than one does, the step fails with the number of matches and a short description of each, rather than clicking the wrong thing.
+
+Choose locators in this order:
+
+1. `testId`: a `data-testid` attribute you add to the product.
+2. `role` with `name`: "the button named Save".
+3. `label`: a form field's label.
+4. `text`: visible text.
+5. `css`: works, but is reported as fragile.
+
+Use `wait` with `until` for screens that load, and `assert` to check that the product shows what the narration claims. A failed assertion fails the take.
+
+## Guided recording from a terminal
+
+```bash
+qontent-tube demo record --bundle demo --source app --take signup --scene scene-2 --gate plan
+```
+
+A browser opens on your product. Use it, then press Enter in the terminal. Qontent Tube proposes one step per interaction with the strongest locator it can find. Add `--apply` to write the take into the recipe, keeping your comments.
+
+- Passwords, one-time codes, and fields that look like credentials become secret references. Their values are never read, and no screenshot is taken of them.
+- Drags, context menus, rich-text editing, and file choosers have no safe step. They become gaps, with a suggestion to replace or omit them, or to use a hook.
+- Clicks and typing are marked `target-write` to be safe. Narrow them when you review.
+
+## Public websites
+
+To film a page anyone can open, such as a web app or a documentation page you want to explain, point a target at its https address. Nothing is started, installed, or written:
+
+```yaml
+targets:
+  - id: apple
+    kind: web
+    lifecycle: attach
+    baseUrl: https://developer.apple.com/documentation/appintents/siri-ai-developer-preview
+    isolation: shared
+    effects: [target-read, network]
+    gate: plan
+```
+
+Visiting another computer is a `network` effect, approved with the plan. Steps never leave that site. A page on another site becomes a gap to fill or omit. Privacy review still applies, and you are responsible for the site's terms and the rights to what you record.
+
+## Secrets
+
+A recipe names secrets; their values never enter it. At run time each name is looked up:
+
+1. **In the environment**: the name itself, or in upper case with `_` (`demo-admin-password` → `DEMO_ADMIN_PASSWORD`). Use this in CI.
+2. **In Qontent Tube's local credential store**, saved with `qontent-tube demo secrets set <name>`, which reads the value from standard input, or from **Effects & trust** in Studio.
+
+```bash
+printf '%s' "$PASSWORD" | qontent-tube demo secrets set acme-demo-password
+```
+
+A run missing a secret stops before anything starts and names every missing variable. Values are replaced by `[secret:name]` in logs, terminal recordings, errors, and records.
+
+:::warning[Pixels can't be redacted]
+A password typed into a visible field may appear on screen. That is why every take still needs a person's privacy review.
+:::
+
+## Hooks
+
+A hook is a script in your recipe folder, such as one that seeds demo data before recording and removes it afterwards. It runs only after you trust its **exact contents and declaration**: interpreter, arguments, folder, effects, secrets, and outputs.
+
+```bash
+qontent-tube demo hooks --bundle demo
+qontent-tube demo trust --bundle demo --hook seed --sha256 <hash shown by demo hooks>
+```
+
+Any later change makes the trust stale, and the run stops before the hook starts. A hook that writes inside the recipe folder outside its declared outputs fails. Hooks are **not sandboxed**: trust one only as you would run it yourself.
+
+## Use test data
+
+Use a fixture: a `setup` hook that copies seed data into place and a `reset` hook that removes it, so every recording starts from the same state. A target marked `isolation: shared` that also writes is allowed, but reported, because those clicks change real data.
+
+## Troubleshooting
+
+- **"No visible element matches"**: open the failure screenshot from `demo evidence`. The control may not be rendered yet (add a `wait` with `until`), may be hidden, or its label changed.
+- **"The locator matches N visible elements"**: the evidence lists the candidates. Add a `data-testid`, or use `role` with `name`.
+- **"The target was not ready"**: check the start command, the health address, and that `${port}` is passed to your app. The target's log is in the run's `logs/` folder.
+- **"Port … is already in use"**: use `port: auto`.
+- **"Hook … is not trusted" or "changed since it was trusted"**: review the hook, then trust its current hash.
+- **The browser doesn't start**: run `demo doctor`. On WSL, choose a Chrome or Chromium that isn't a snap package with `QONTENT_TUBE_BROWSER`.
+
+Native desktop windows can't be recorded yet. Takes stop after 10 minutes, and hooks after their own timeout, at most one hour.

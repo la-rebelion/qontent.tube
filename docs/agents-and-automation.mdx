@@ -1,0 +1,159 @@
+---
+title: Agents and automation
+description: Let a coding agent, a script, or an MCP client run demo productions through a stable contract, without ever deciding for a person.
+sidebar_position: 20
+---
+
+# Agents and automation
+
+Coding agents and scripts use the same recipe, the same production, and the same gates as you do in Studio. There are three ways in, from simplest to most connected:
+
+| Use                         | When                                                                                      |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| **The CLI**                 | The agent works on the computer where your product and Qontent Tube live. Preferred.      |
+| **The automation listener** | A tool can only speak HTTP, or Qontent Tube is open and should keep running.              |
+| **HAPI, as MCP tools**      | An MCP client, such as an AI assistant, should start and check productions through tools. |
+
+Whichever you use, the rules are the same: **validate before running, never answer a gate for a person, never print or invent a secret, resume instead of restarting, and report outputs by name and hash.**
+
+## The CLI contract
+
+Every production command takes `--output json` (one document at the end) or `--output ndjson` (events as they happen, then one result line). Each line names its contract, `qontent-tube/demo-cli@1`, and its `type`: `event`, `result`, `error`, `artifacts`, `outputs`, or `clean`. Standard output holds nothing else; notes go to standard error. The contract's [JSON Schema](pathname:///automation/0.4.0/demo-cli@1.schema.json) is versioned: new fields keep `@1`, and anything that changes meaning becomes `@2`.
+
+| Exit | Meaning                    | What an agent does next                                          |
+| ---- | -------------------------- | ---------------------------------------------------------------- |
+| 0    | Succeeded                  | `demo outputs --out <folder>`, then report names and hashes.     |
+| 1    | Failed                     | Read the step's error and suggestion, fix it, then `demo retry`. |
+| 2    | Wrong usage                | Fix the command.                                                 |
+| 3    | Waiting for a person       | Report the gate, its question, and its choices. Don't answer it. |
+| 4    | Cancelled                  | `demo resume` when asked to continue.                            |
+| 5    | Interrupted                | `demo resume`.                                                   |
+| 6    | Setup required             | Report the message and suggestion. Don't work around it.         |
+| 7    | Busy: Qontent Tube is open | Use the automation listener, or ask for the app to be closed.    |
+
+A typical session:
+
+```bash
+qontent-tube demo validate --bundle demo --json
+qontent-tube demo plan --bundle demo --json
+qontent-tube demo run --bundle demo --no-input --idempotency-key build-42 --output ndjson
+qontent-tube demo status --bundle demo --output json
+qontent-tube demo outputs --bundle demo --out delivered --output json
+```
+
+- **`--idempotency-key`** starts at most one production per key. Repeating the same command returns the same production (`"replayed": true`) instead of starting a second one; the same key with different options is refused.
+- **Ctrl+C or a stop signal** cancels the production cleanly and still prints the result. A second signal quits at once, and `demo resume` continues later.
+- **No local paths or secret values** ever appear in the output. Artifacts have portable names such as `render:<job>/<file>`, with their SHA-256.
+
+## An agent skill
+
+The [`qt-demo` skill](pathname:///automation/0.4.0/qt-demo/SKILL.md) teaches a coding agent, such as Claude Code, the safe loop: inspect the plan and say what running it will do, prefer isolated test data, run with an idempotency key, stop and report at gates, resume rather than restart, and report outputs by hash. Save it as `.claude/skills/qt-demo/SKILL.md` in your project, or wherever your agent reads skills.
+
+## The automation listener
+
+The listener is a second, deliberate door into a running Qontent Tube, just for programs. It is off until you start it:
+
+```bash
+qontent-tube automation serve --port 45831
+qontent-tube automation status
+qontent-tube automation stop
+```
+
+- It listens on `127.0.0.1` at exactly the port you choose, and nowhere else. If the port is taken, it fails rather than picking another.
+- If Qontent Tube isn't open, `serve` starts it without a browser window. Opening Qontent Tube later shows the usual window.
+- It stops itself after 30 minutes with no requests and no production running (`--idle-timeout`, or `never`).
+- It serves only the production operations: capabilities, validating and planning, starting and following productions, pause, resume, cancel, retry, gates the recipe allows, and outputs. Your settings, provider keys, files, and the rest of the app are not reachable through it.
+
+### Credentials
+
+Every request carries exactly one credential, in a header:
+
+|                 | Bearer token                           | API key                                      |
+| --------------- | -------------------------------------- | -------------------------------------------- |
+| Header          | `Authorization: Bearer qtbt_…`         | `x-qt-api-key: qtak_…`                       |
+| Lasts           | 15 minutes by default, 8 hours at most | 90 days by default, or the expiry you choose |
+| After a restart | Gone                                   | Kept until it expires or you revoke it       |
+| Best for        | One agent session                      | CI, or a long-lived HAPI companion           |
+
+Both are limited to **scopes** and **projects**. Without `--scope`, a credential can only read: capabilities, plans, productions, and outputs. Add `runs:start` to start productions, `runs:control` to pause, resume, cancel, or retry, and `gates:decide` to answer gates the recipe marks `unattended: policy` (never privacy review).
+
+```bash
+qontent-tube automation token create --project "Acme onboarding" --ttl 30m --out ~/.config/qontent-tube/agent.token
+qontent-tube automation key create --name github-ci --project "Acme onboarding" \
+  --scope runs:read --scope runs:start --scope artifacts:read --expires 90d \
+  --out ~/.config/qontent-tube/ci.key
+```
+
+The secret is shown once: written to a new file only you can read (`--out`), or printed once with `--json`. Qontent Tube keeps only a digest. Pass it to tools from that file or an environment variable, never as a command argument, where it would end up in your shell history:
+
+```bash
+curl --silent --header @<(printf 'x-qt-api-key: %s\n' "$(cat ~/.config/qontent-tube/ci.key)") \
+  http://127.0.0.1:45831/api/automation/capabilities
+```
+
+Rotate, revoke, and review use:
+
+```bash
+qontent-tube automation key list
+qontent-tube automation key rotate <id> --expires 90d --out ~/.config/qontent-tube/ci.next.key
+qontent-tube automation key revoke <id>
+qontent-tube automation audit --limit 50
+```
+
+Rotation keeps the old key working until you revoke it, so you can switch your tools first. The audit lists each request's time, credential, operation, and result, never a secret or a body.
+
+### What it protects against
+
+- **Web pages in your browser.** Any request from a web page is refused, and so is any host name other than `127.0.0.1`, `localhost`, or `[::1]`, which stops DNS rebinding.
+- **Your browser session.** The app's own session doesn't work on the listener, and listener credentials don't work in the app.
+- **Too much access.** A credential outside its scopes or projects is refused, without revealing what else exists. Requests are rate-limited per credential.
+- **Leaks.** Tokens expire quickly, keys can be revoked at once, and a credential put in a URL is refused, because it may already be in a log.
+- **People's decisions.** No credential can answer a privacy review, or a gate the recipe leaves to a person.
+
+It can't protect against another program running as your user, which can read your files. Keep credential files out of repositories and shared folders, and never expose the port beyond this computer through port forwarding, tunnels, or proxies.
+
+**If a credential leaks**, revoke it, or stop the listener to end every token, then check `automation audit`.
+
+## HAPI: productions as MCP tools
+
+[HAPI](https://hapi.mcp.com.ai) turns the listener's contract into MCP tools for any MCP client. Qontent Tube doesn't include an MCP server; run HAPI beside it with the published contracts:
+
+- [Arazzo workflows](pathname:///automation/0.4.0/qontent-tube-demo.arazzo.yaml): three tools, recommended.
+- [OpenAPI contract](pathname:///automation/0.4.0/qontent-tube-automation.openapi.json): every operation, with capability-graph metadata.
+
+Keep both files in one folder; the workflows refer to the contract beside them:
+
+```bash
+curl --remote-name-all \
+  https://qontent.tube/automation/0.4.0/qontent-tube-demo.arazzo.yaml \
+  https://qontent.tube/automation/0.4.0/qontent-tube-automation.openapi.json
+qontent-tube automation serve --port 45831
+qontent-tube automation key create --name hapi --project "Acme onboarding" \
+  --all-scopes --expires 30d --out ~/.config/qontent-tube/hapi.key
+export HAPI_API_KEY="$(cat ~/.config/qontent-tube/hapi.key)"
+hapi serve \
+  --specs ./qontent-tube-demo.arazzo.yaml \
+  --url http://127.0.0.1:45831 \
+  --mcp --headless --port 3000 \
+  --capability-graph --capability-planning
+```
+
+Connect your MCP client to `http://localhost:3000/mcp`. It lists three tools:
+
+- **`startProduction`** checks the runner, validates and plans the recipe, starts the production once per idempotency key, and returns its status and any gate waiting for a person. It never loops and never answers a gate.
+- **`checkProduction`** returns the status and any gate waiting for a person.
+- **`collectOutputs`** returns the output manifest and the files to download, once the production has succeeded.
+
+To use a bearer token instead of a key, set `HAPI_AUTHENTICATION` from the token file instead of `HAPI_API_KEY`.
+
+When your assistant plans with HAPI's capability graph, starting a production and answering a gate need confirmation. A plan to "produce the demo video" comes back asking you to confirm, rather than running on its own.
+
+## Troubleshooting
+
+- **`Port 45831 is already in use`**: choose another port with `--port`. Nothing falls back on its own.
+- **`401 unauthenticated`**: the credential is missing, expired, or revoked. A token also ends when the listener restarts. `automation key list` and `token list` show what's active.
+- **`400 ambiguous_credentials`**: the request carried both a token and a key. Send exactly one.
+- **`400 credential_in_url`**: move the credential to its header, and revoke it.
+- **`403 forbidden`**: the credential lacks the scope or the project.
+- **`403 human_only_gate`**: a person must answer in Studio, or with `qontent-tube demo decide`.
+- **`409 not_finished`**: outputs are available once the production has succeeded.

@@ -1,0 +1,100 @@
+---
+title: Capture a product demo
+description: Describe a demo video in plain words, review its plan, record the takes, and run the whole production from Studio.
+sidebar_position: 16
+---
+
+# Capture a product demo
+
+**Capture a product demo** turns a short description into a finished product video, and makes it repeatable. Qontent Tube drafts a plan you can read, records your real product, fits the footage to the narration, asks you to review, and renders every format and language you chose.
+
+> The product supplies the truth. Qontent Tube records the evidence, composes the explanation, and makes the production repeatable.
+
+Everything you set up here is saved as a [demo recipe](./demo-recipes), a plain file you can keep beside your product's code. You can run it again next release with one click, or one command, and only what changed is redone.
+
+Open a project and choose **Capture a product demo** in the sidebar. There are five steps. Going back and forward never loses work, and **nothing runs until the last step**.
+
+## 1. Describe
+
+![Describe the video: the story, the audience, and a public website to film](/img/v040/describe-public.png)
+
+Say what the video should show and who it is for, choose the length, roster, and theme, and pick how to plan it:
+
+- **A prompt**: your configured AI provider drafts the script, storyboard, and capture plan from your story.
+- **A prompt, pasted by me**: copy the prompt into any chat assistant and paste its reply back. It goes through the same checks, and no key is needed.
+- **A script I have**: use a script from this project and record the takes yourself.
+
+Then choose **the product to film**:
+
+| How it starts                              | Use it when                                                                                                                                                                      |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Qontent Tube starts it**                 | You have a start command, such as `npm run dev -- --port ${port}`. Qontent Tube starts it on a free port, waits until it answers, and stops it afterwards.                       |
+| **It is already running on this computer** | The app is already up, at an address such as `http://localhost:3000`.                                                                                                            |
+| **A public website (just visit it)**       | You want to film a page anyone can open: a public web app, or a documentation page you want to explain in a narrated, faceless video. Nothing is started, installed, or changed. |
+| No web app                                 | The video uses terminal recordings and files you already have.                                                                                                                   |
+
+The **product folder** is optional. Choose one to keep the recipe beside your product's code, so it can be reviewed in pull requests. Without one, the recipe is stored in the project and still records and runs on this computer.
+
+Finally, choose the **variants**: 16:9 and 9:16, the languages, captions, chapters, and narration. Each format and language becomes its own video from the same plan.
+
+Missing fields are named before anything is written. **Draft plan** saves the recipe and drafts the script, storyboard, and capture plan. Drafts are only candidates: nothing records, runs, approves, or renders yet.
+
+:::tip[Filming someone else's website]
+A public website is visited the way you would visit it, read-only. The plan asks you to approve the visit, and privacy review still applies. You are responsible for respecting the site's terms and the rights to what you record.
+:::
+
+## 2. Plan
+
+![The plan in plain language: scenes, takes, and their steps](/img/v040/plan.png)
+
+The plan reads like instructions to a colleague: _Open /_, _Type the secret FIXTURE_PASSWORD into the "Password" field_, _Click the "new-script" control_. Each step that can change something carries a tag, such as `target-write` or `local-command`, so you see it before anything happens.
+
+Draft scripts are accepted here. **Advanced** has the recipe's YAML, the normalized plan, and the list of production steps, for when you want to see exactly what will run.
+
+## 3. Effects & trust
+
+![What running this plan can do: commands, secrets, data changes, hooks](/img/v040/trust.png)
+
+Before you record, Qontent Tube lists everything running the plan can do, the riskiest first:
+
+- **Runs local commands**: which steps start programs on your computer.
+- **Uses secrets**: by name only, and where each is used.
+- **Changes data in the product**: clicks and typing that write to the app you film. Prefer a fixture or test account.
+- **Runs trusted hooks**: product-specific scripts, such as one that seeds demo data.
+- **Asks people to decide** and **Reads the product**: the review points and the read-only steps.
+
+**Trusting a hook** opens a confirmation with its command, folder, effects, and outputs, and binds to the hook's exact contents. If the script changes, it has to be trusted again. Hooks are not sandboxed, so trust one only as you would run it yourself.
+
+**Secrets** are listed by name. A value you type here goes to a write-only store on this computer. It is never shown again, never written into the recipe, and hidden from logs as `[secret:name]`. You can also provide it as an environment variable.
+
+## 4. Record
+
+![Guided recording: the controller stays in Studio while you use the product](/img/v040/guided-recording.png)
+
+Each take records one scene. You can edit its steps and locators directly, or let Qontent Tube write them for you:
+
+- **Guided recording** opens your product in its own browser window, while the controller stays in Studio: **Pause**, **Undo last**, **Mark region**, **Finish**, and **Discard**. Nothing from Qontent Tube appears in the recording. Use the product normally, and each click, entry, and navigation becomes a step with the most stable locator it can find. Passwords become secret references; their values are never read.
+- **Pick the control** fixes one step. It replays the steps before it, then takes your next click as the new locator.
+- **Fit** decides what happens when a take is longer or shorter than its scene. The default speeds it up evenly, up to 2.5×, or holds its last frame.
+
+**Add the take to the recipe** saves it. Before saving, the bar lists which production steps the change will redo, so you know what a small fix costs.
+
+Locators prefer test IDs, then accessible roles and names, then labels and text. A CSS selector still works, but it is flagged as fragile.
+
+## 5. Review & run
+
+Choose the variants and select **Start production**. Captures, narration, fitted takes, and renders that are still fresh from an earlier run are reused. Follow it on the [production dashboard](./productions).
+
+## Where it runs
+
+Editing and reviewing work everywhere. Recording and running need your computer, which every view shows as one of:
+
+- **Local runner ready**, with the browser, ffmpeg, and terminal-capture versions found.
+- **The local runner needs setup**, with the reason. `qontent-tube demo doctor` has the details.
+- **Runs on your computer**, when you use Qontent Tube in the cloud. **Download the bundle (.qtbundle)**, then import and run it locally (see [Demo recipes](./demo-recipes#move-a-recipe-between-computers)). It plans exactly as Studio showed it.
+
+## Safe by design
+
+- **Every save names the version you edited.** If the recipe changed on disk in the meantime, nothing is overwritten and the view reloads.
+- **Every decision names the evidence you saw.** If it changed while you were looking, the decision is refused and the gate reloads.
+- **Nothing is generated in place of missing evidence.** A failed take is reported with its screenshot, never replaced by a drawing.

@@ -17,3 +17,7 @@ animation:
 release:
   label: Release
   description: What changed in each Qontent Tube version.
+
+automation:
+  label: Automation
+  description: Repeatable productions, coding agents, CI, and MCP tools.

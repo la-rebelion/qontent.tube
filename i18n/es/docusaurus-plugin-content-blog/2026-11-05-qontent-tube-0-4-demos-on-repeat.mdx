@@ -1,0 +1,143 @@
+---
+title: "Qontent Tube 0.4: graba una vez, reconstruye en cada versión"
+description: Tu demo de producto se convierte en una receta que vive junto a tu código. Qontent Tube graba el producto, ajusta las tomas, pide revisión a las personas y renderiza todos los formatos, y lo repite en la siguiente versión rehaciendo solo lo que cambió.
+slug: /qontent-tube-0-4
+tags: [product, release, automation]
+keywords:
+  - video demo de producto
+  - video como código fuente
+  - automatización de demos
+  - MCP
+image: /img/v040/production-completed.png
+---
+
+Una demo de producto queda obsoleta la semana después de grabarla. Un botón se mueve, cambia una etiqueta, y tu video ahora muestra un producto que ya no existe. Así que la vuelves a grabar a mano, la vuelves a ajustar a la narración y la vuelves a exportar en cada formato.
+
+Qontent Tube 0.3 hizo videos a partir de tus pantallas reales. **Qontent Tube 0.4 los hace repetibles.** Tu demo se convierte en una receta que vive junto al código de tu producto. Qontent Tube graba el producto, ajusta las tomas a la narración, te pide revisión y renderiza todos los formatos e idiomas. En la siguiente versión lo vuelve a hacer y **rehace solo lo que cambió**.
+
+{/* Marcador del video de lanzamiento: reemplaza la nota de abajo por un elemento de video como en la publicación de 0.3 (póster /img/v040/launch-poster.jpg, fuente /video/qontent-tube-v040.16x9.es.mp4). */}
+
+:::info[El video de lanzamiento está en producción]
+Estamos haciendo el video de lanzamiento de 0.4 como hicimos el de 0.3: con el propio Qontent Tube, a partir de una receta que graba Qontent Tube. Aparecerá aquí en cuanto esté renderizado.
+:::
+
+{/* truncate */}
+
+## El producto aporta la verdad
+
+Ese es el principio detrás de todo en 0.4. Qontent Tube graba la evidencia, compone la explicación y hace la producción repetible. Nunca dibuja una pantalla que tu producto no mostró. Si un paso falla, obtienes una captura de lo que salió mal, no un reemplazo verosímil.
+
+## Descríbelo y luego lee el plan
+
+Abre un proyecto y elige **Capture a product demo**. Di qué debe mostrar el video y para quién es, y elige qué filmar: una app que Qontent Tube inicia por ti, una que ya está en ejecución o **cualquier sitio web público**.
+
+![Describe el video: la historia, la audiencia y la página a filmar](/img/v040/describe-public.png)
+
+Un proveedor de IA de tu elección redacta el guion, el storyboard y el plan de captura. ¿No tienes clave? Copia el prompt en cualquier asistente de chat y pega la respuesta; pasa por las mismas comprobaciones. En ambos casos el resultado es un borrador, y el plan se lee como instrucciones para un colega: _Abre la página de inicio de sesión. Escribe la contraseña secreta en el campo "Password". Haz clic en "New script"._
+
+**Nada se ejecuta hasta que tú lo digas.** Describir, planificar y grabar son pasos separados, y los primeros solo escriben archivos que puedes leer.
+
+## Mira lo que puede hacer antes de que lo haga
+
+Antes de grabar nada, Qontent Tube enumera todo lo que puede hacer el plan al ejecutarse: los comandos que inicia, los datos que cambia en tu producto, los secretos que usa (por nombre) y los scripts que ejecuta.
+
+![Effects & trust: comandos, secretos, cambios de datos y hooks, antes de ejecutar nada](/img/v040/trust.png)
+
+Los scripts propios del producto, como uno que carga datos de demostración, solo se ejecutan después de que confíes en su contenido exacto. Cambia un byte y necesitan tu confianza otra vez. Los valores de los secretos nunca entran en la receta y se reemplazan por `[secret:name]` en todos los registros.
+
+## Grábalo una vez, conserva los pasos
+
+**La grabación guiada** abre tu producto en su propia ventana del navegador, mientras el control permanece en Studio. Usa el producto con normalidad. Cada clic, cada entrada y cada página se convierte en un paso con el localizador más estable que encuentre, y nada de Qontent Tube aparece en pantalla.
+
+![Grabación guiada: los controles permanecen en Studio, fuera de la ventana del producto](/img/v040/guided-recording.png)
+
+Las contraseñas se convierten en referencias a secretos; sus valores nunca se leen. En la siguiente versión, los mismos pasos vuelven a grabar el producto de forma idéntica: mismo tamaño de ventana, idioma y esquema de color. Si un botón se movió, el paso falla mostrando lo que encontró en lugar de hacer clic en lo incorrecto, y **Pick the control** lo corrige con un clic.
+
+## Cualquier sitio web, no solo el tuyo
+
+No necesitas ser dueño del producto. Apunta Qontent Tube a una página pública, como la [vista previa para desarrolladores de Siri AI de Apple](https://developer.apple.com/documentation/appintents/siri-ai-developer-preview), y la visitará como lo harías tú: no se inicia, instala ni cambia nada. Así, un explicativo narrado y sin rostro de un lanzamiento, un registro de cambios o una página de documentación se hace en pocos minutos. Respeta los términos del sitio; la revisión de privacidad sigue aplicando.
+
+## Una ejecución, de la captura a todos los formatos
+
+**Start production**, y una sola ejecución graba cada toma, ajusta cada una a su escena, la coloca en el storyboard, genera la narración, valida, pide revisión y renderiza 16:9 y 9:16 en cada idioma que elegiste.
+
+![Una producción completada: cada fase, las capturas tal como se grabaron y ajustadas, y salidas con hash](/img/v040/production-completed.png)
+
+Las grabaciones reales nunca duran exactamente lo mismo que su narración. Por defecto, una toma larga se acelera de forma uniforme, hasta 2.5×, y una corta mantiene su último fotograma real. El ajuste siempre escribe un archivo nuevo; tus grabaciones originales nunca cambian. Si una toma no cabe, la ejecución te pregunta en lugar de adivinar.
+
+## Reanuda, no rehagas
+
+Cada paso recuerda exactamente de qué se hizo. Cambia el localizador de una toma y solo esa toma y lo que sigue se vuelven a ejecutar. Cambia una línea de narración y solo esa línea se vuelve a locutar. Un render que se detuvo continúa desde sus fragmentos terminados. Cancela, cierra la app o pierde la electricidad: la producción se reanuda desde el último paso terminado.
+
+Eso es lo que hace barato mantener una demo al día. La segunda producción es, en su mayoría, trabajo reutilizado.
+
+## Las personas deciden. Siempre.
+
+![Una compuerta esperando a una persona, con la evidencia por la que pregunta](/img/v040/production-waiting.png)
+
+Una producción se pausa en cada **compuerta**: el plan, el costo de la narración, la privacidad, la aprobación de escenas y la revisión final. Cada una muestra la evidencia, y tu decisión queda ligada exactamente a esa evidencia. Si el material cambia, se te vuelve a preguntar. Nada se aprueba solo.
+
+**La revisión de privacidad siempre es de una persona.** El software no puede detectar todos los secretos de una pantalla, así que ninguna automatización, política ni IA la firma jamás.
+
+## Para agentes de código, CI y MCP
+
+Todo lo de Studio también funciona desde la línea de comandos, mediante un contrato hecho para máquinas:
+
+```bash
+qontent-tube demo validate --bundle demo --json
+qontent-tube demo run --bundle demo --no-input --idempotency-key build-42 --output ndjson
+qontent-tube demo outputs --bundle demo --out delivered --output json
+```
+
+- **Un contrato versionado** (`qontent-tube/demo-cli@1`, con JSON Schema): la salida estándar contiene solo líneas para máquinas, y los códigos de salida dicen qué hacer después. La salida 3 significa "una persona debe decidir", y un agente lo informa en lugar de responderlo.
+- **Claves de idempotencia** que inician como máximo una producción por clave, así un paso de CI reintentado devuelve la misma producción en lugar de iniciar otra.
+- **Un listener de automatización local** (`qontent-tube automation serve`) para herramientas que solo hablan HTTP: solo loopback, un puerto explícito y tokens de corta duración o claves de API con alcances que puedes rotar, revocar y auditar.
+- **Herramientas MCP mediante [HAPI](https://hapi.mcp.com.ai)**: los contratos OpenAPI y Arazzo publicados convierten las producciones en tres herramientas para cualquier cliente MCP: `startProduction`, `checkProduction` y `collectOutputs`.
+- **Políticas de CI**: un archivo revisado, de confianza solo mediante un secreto protegido, permite a CI pasar las compuertas que autorizaste y nada más. Cambia la receta, un hook o un destino, y CI se detiene antes de ejecutar. Un pull request no puede aprobarse a sí mismo.
+- **Una skill para agentes**, `qt-demo`, enseña a los agentes de código a validar primero, informar las compuertas, reanudar e informar las salidas por hash.
+
+## Si haces videos por primera vez
+
+Sigues sin necesitar un editor de línea de tiempo ni un diseñador de movimiento. Describe el video, graba tu producto una vez con la grabación guiada, revisa y renderiza. Cuando el producto cambie, vuelve a iniciar la producción. El render se ejecuta en tu computadora y solo pagas los servicios que elijas, como una clave de voz. [Captura tu primera demo de producto](/docs/capture-a-product-demo).
+
+## Si ya eres experto
+
+Toda la producción es un único archivo comparable junto a tu código, `qontent.demo.yaml`, con cada efecto declarado y cada compuerta nombrada:
+
+```yaml
+takes:
+  - id: create-workspace
+    scene: scene-2
+    source: app
+    gate: plan
+    steps:
+      - { action: navigate, url: /signin }
+      - action: fill
+        locator: { label: Password }
+        secret: acme-demo-password
+        effects: [target-write, secret]
+      - action: record
+        until: { text: Welcome }
+      - action: click
+        locator: { testId: new-workspace }
+        effects: [target-write]
+```
+
+Valídalo en un pull request, reconstruye el video en `main` y obtén un manifiesto de salida que liga cada MP4 a las capturas y aprobaciones que lo respaldan, por hash. En 0.3 lo llamamos **Video as Source**: el guion es la fuente de verdad y el video es un artefacto de compilación. En 0.4, la compilación está automatizada.
+
+## También en 0.4
+
+- **La carpeta del producto es opcional.** Una receta creada en Studio se guarda en el proyecto y aun así graba y se ejecuta en tu computadora.
+- **Qontent Tube en la nube** edita y revisa recetas, y las entrega a tu computadora como un `.qtbundle` para ejecutarlas.
+- **Los guiones faltantes** pueden empezarse de nuevo o eliminarse en lugar de quedarse atascados en la lista.
+- **Preparación de render más rápida:** encontrar el navegador ya no lee todo el navegador en memoria.
+
+No incluido en 0.4: publicar en YouTube o redes sociales (tus archivos están listos para subir) y grabar ventanas nativas de escritorio.
+
+## Lo que sigue para ti
+
+- Empieza con [Capture a product demo](/docs/capture-a-product-demo) y luego [Productions](/docs/productions).
+- ¿Automatizas? Lee [Agents and automation](/docs/agents-and-automation) y [Productions in CI](/docs/ci).
+- ¿Ya usas 0.3? Tus proyectos, guiones, storyboards y capturas siguen funcionando. Las recetas son opcionales.
+
+Graba una vez. Reconstruye en cada versión.

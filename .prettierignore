@@ -4,3 +4,6 @@ build
 qontent.tube-landing-page.html
 static/img/product
 static/fonts
+
+# Published copies of the Qontent Tube automation contracts; keep byte-identical to the app repository.
+static/automation/

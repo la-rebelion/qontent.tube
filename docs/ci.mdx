@@ -1,0 +1,110 @@
+---
+title: Productions in CI
+description: Produce demo videos unattended in CI, within limits a person reviewed in advance, and stop for everything else.
+sidebar_position: 21
+---
+
+# Productions in CI
+
+Your demo video can be rebuilt by CI whenever the product changes, the same way your tests run. But CI can't look at a screen, so Qontent Tube lets it go only as far as a person approved **in advance**. Everything else fails closed or waits for a person.
+
+That approval is a **policy**: a small file that pins the exact recipe, hooks, targets, effects, secret names, and variants, and names the gates CI may answer.
+
+## Create the policy
+
+Don't write it by hand. Generate it from the recipe as it is now, review it like code, and commit it:
+
+```bash
+qontent-tube demo policy init --bundle demo --out ci/qontent-policy.yaml --gate plan=approve --expires 90d
+qontent-tube demo policy check ci/qontent-policy.yaml --bundle demo
+```
+
+The result looks like this, with real hashes in place of the placeholders:
+
+```yaml
+schema: qontent-tube/ci-policy@1
+id: acme-demo-ci
+expires: "2027-02-01T00:00:00.000Z"
+bundle: { id: acme-demo, identity: <plan identity> }
+hooks:
+  - { id: seed, sha256: <file hash>, declaration: <declaration hash> }
+targets:
+  - { id: app, identity: <target identity> }
+effects: [local-command, target-read, target-write]
+secrets: [ACME_PASSWORD]
+variants: [16x9.en, 9x16.en]
+gates:
+  - { id: plan, choice: approve }
+```
+
+`init` prints the file's SHA-256. Store it as a **protected** CI secret named `QONTENT_TUBE_POLICY_SHA256`, in an environment only your main branch can use. CI accepts the policy only when its digest matches that secret, so a pull request that edits both the recipe and the policy authorizes nothing.
+
+On your own computer, `qontent-tube demo policy trust <file>` trusts one reviewed policy instead.
+
+## What it pins
+
+Anything that differs stops the production **before anything runs**, with exit code 6 and a list of every difference:
+
+| Pinned     | Stops when                                                                                               |
+| ---------- | -------------------------------------------------------------------------------------------------------- |
+| `bundle`   | Anything in the normalized plan changed: steps, targets, takes, effects, or a referenced file.           |
+| `hooks`    | A hook's file, command, effects, secrets, or outputs changed, or there's a hook the policy doesn't name. |
+| `targets`  | A target's start command, address, isolation, fixture hooks, or effects changed.                         |
+| `effects`  | The plan uses an effect the policy doesn't allow.                                                        |
+| `secrets`  | The plan needs a secret name the policy doesn't list. A new disclosure needs a person.                   |
+| `variants` | The run asks for a format or language the policy doesn't allow.                                          |
+| `expires`  | The policy has expired.                                                                                  |
+
+The pinned hooks are trusted on the CI runner for exactly those bytes, and nothing else. The inputs are checked again before each gate the policy answers, so a fixture that changes during a run leaves the gate waiting.
+
+## Which gates CI may answer
+
+Only gates the recipe marks `unattended: policy`:
+
+```yaml
+gates:
+  - { id: plan, kind: truth, title: Approve the plan, unattended: policy }
+```
+
+A policy **never** answers privacy review, and never a gate the recipe leaves to a person. Those stop the run with exit code 3 and say what is waiting. Privacy review passes in CI only through a person's earlier privacy approval in Studio for exactly the same capture bytes; CI can't create one.
+
+Each policy decision is recorded as made by the policy, with the rule that matched. The result says which gates the policy answered and why the others need a person:
+
+```json
+"policy": {
+  "id": "acme-demo-ci",
+  "answered": ["plan"],
+  "unresolved": [
+    { "kind": "gate", "subject": "privacy", "message": "Privacy review needs a person; a policy never answers it." }
+  ]
+}
+```
+
+So the usual loop is: a person records and reviews once in Studio, and CI rebuilds the video unattended for as long as the captures stay the same. When the product's screens change, the run stops at privacy review, and a person looks again.
+
+## GitHub Actions
+
+Two workflows to adapt:
+
+### On a GitHub-hosted runner
+
+[`qontent-demo.yml`](pathname:///automation/0.4.0/github-actions/qontent-demo.yml) runs the CLI on the runner:
+
+- **Pull requests, forks included**, only validate: no secrets, a read-only token, `demo validate`, `demo plan`, and `demo policy check`, which reports what a change would invalidate. Nothing runs.
+- **The production job** runs only on `main` or by hand, never for pull requests or other repositories, in a protected `demo-production` environment. Secrets enter only as environment variables: the policy digest, the recipe's named secrets, and an optional narration key.
+- `--idempotency-key "ci-${GITHUB_SHA}"` makes a re-run of the same commit return the same production. A cancelled job cancels the production cleanly.
+- Outputs are copied with `demo outputs` and uploaded with their hashes, the events, and the result.
+
+### Through a running Qontent Tube
+
+[`qontent-demo-automation.yml`](pathname:///automation/0.4.0/github-actions/qontent-demo-automation.yml) uses a self-hosted runner on the computer that runs Qontent Tube with the [automation listener](./agents-and-automation#the-automation-listener). It authenticates with a scoped API key from the `QONTENT_TUBE_API_KEY` environment secret, written to a file only the job can read, never on a command line. It starts the production with an idempotency key, follows its events, downloads and verifies the outputs, and cancels the production if the job is cancelled.
+
+:::danger[Self-hosted runners]
+Never let a self-hosted runner run pull requests from forks. Anyone could run code on your computer.
+:::
+
+## Keys for CI
+
+- Give CI its own key with the fewest scopes it needs (`runs:read`, `runs:start`, `artifacts:read`) and only its project. Add `gates:decide` only if a person agreed that CI answers `unattended: policy` gates through the listener.
+- Set an expiry, and rotate before it: `qontent-tube automation key rotate <id> --out ci.next.key`, update the secret, confirm a run, then `qontent-tube automation key revoke <old id>`. `automation key list` shows when each key was last used.
+- If a key leaks, revoke it at once. The next request with it fails.
