@@ -1,0 +1,151 @@
+---
+title: Guided scene regeneration
+description: Tell AI what a scene should show, give it a diagram or image as inspiration, and review the result beside the current scene before anything changes.
+sidebar_position: 7
+---
+
+# Guided scene regeneration
+
+Regenerating a scene never replaces it on the spot. Qontent Tube makes a **candidate**, shows it beside the current scene, and changes the storyboard only when you **Accept**.
+
+Every scene card has two buttons:
+
+- **Regenerate scene**: AI decides what explains the scene best. Nothing to fill in.
+- **With guidance…**: describe what the scene should show, choose an approach, and add a visual reference.
+
+Approved and locked scenes can't be regenerated; unapprove or unlock them first. Locked elements stay exactly as they are in every candidate.
+
+## Guide the result
+
+![Regenerate with guidance: an instruction, Rich animation, and an SVG from Assets as inspiration](/img/v040/regenerate-guided.png)
+
+- **What should the scene show?** Plain words, for example _"three lanes for the person, the assistant, and the product, revealing each step as it is named."_ Optional.
+- **Visual approach**
+  - **Auto**: AI chooses.
+  - **Standard elements**: cards, flows, titles, and the other storyboard elements you can edit by hand.
+  - **Rich animation**: a motion-designed scene (staggered builds, highlights moving through a diagram, badges flipping, dots travelling along connectors) that AI writes as a small web animation, timed to the narration. It runs only inside a locked sandbox; see [How rich animations stay safe](#how-rich-animations-stay-safe).
+- **Remember for this scene** keeps the instruction, approach, and reference with the scene once you accept, and fills them in the next time you open the dialog. Without it, the instruction is used for this run only.
+
+## Adjust an animation by hand
+
+**Adjust animation** on a scene with an accepted rich animation opens the editor:
+
+- Click an element in the preview to select it (Shift-click to add more, Alt-click for the element around it), or pick it from the list. Drag the time slider to see any moment.
+- Change its **text**, **color**, **position** (arrow keys move 1 px, Shift+arrows 10 px), **size**, **timing** (appears later or earlier, in ms), or **hide** it. **Words** edits the animation's texts. **Undo** and **Redo** (Ctrl/Cmd+Z) work throughout.
+- Adjustments are stored on the scene, never in the animation's code, and saved with the storyboard.
+- **Change the selection with AI**: describe what should change (*"make it pulse on each step"*); the result is a candidate to review, and anything AI changed outside your selection is called out.
+- **Source** shows the HTML, CSS, and JavaScript. Edited code is checked and test-run in every format before it is used; editing a template's code detaches the scene from that template.
+
+**Editing** sets how regeneration treats your adjustments, for this video or as your default:
+
+| Choice | Regeneration |
+| --- | --- |
+| **Both** (default) | Keeps your adjustments on elements that still exist and tells AI which ones you adjusted. |
+| **Adjust manually** | The same, and lists any adjustment whose element is gone so you can drop it or move it to a new element before accepting. |
+| **Let AI decide** | Asks AI to build your adjustments into the new design; they are then not reapplied. |
+
+## Templates
+
+**Template** is a fourth approach: a designed infographic from the template library, filled with this scene's words. Pick **AI chooses** (AI picks the template that explains the scene) or a specific template, then **AI fills it** or **I fill it** (a form with the template's fields; nothing is sent to AI).
+
+Built-in infographic templates: Diagram walkthrough, Loop cycle, Branching graph, State grid, Code highlight, Score and checklist, Step protocol, Device showcase, Orbit menu, and Price compare.
+
+Built-in metaphor templates explain with an illustration whose parts move:
+
+| Template | What happens |
+| --- | --- |
+| **Lab fill** | Test tubes draw on and fill to their values, one by one, as the narration names them. |
+| **Gauge metaphor** | A thermometer (or your own meter) rises to a score, with the score, a verdict, and a note. |
+| **Assemble** | Pieces fly in from around the frame and click into place, each with a label. |
+| **Box reveal** | A finished, colored picture wipes away to its dashed blueprint. |
+| **Magnifier callout** | The drawing draws on, then a magnifier lens enlarges one detail beside a note. |
+
+Every template works in 16:9, 9:16, and 4:5 and follows the video look. Template fills are small, so fast models do them well.
+
+- **Save as template** on a scene with an accepted rich animation turns it into a template for this project or every project; it is test-run first.
+- **Templates** in the storyboard toolbar lists the library, exports a template as a single `.qt-template.json` file, imports one (checked and test-run before it is saved), and deletes your own.
+- A scene keeps its own copy of the template it used: changing or deleting a template never changes a video. When a newer version exists, the scene offers **Update template**, which keeps every value that still fits and shows the result for review first.
+- Template authoring can be turned off (`QONTENT_TUBE_TEMPLATE_AUTHORING=off`); templates can still be used.
+
+## Illustrations
+
+Each metaphor template has its own line drawing. To use different art, open its **Illustration** field in **I fill it**:
+
+- **Drawing** lists the project's SVG images; **The template’s own drawing** is the default.
+- **Draw with AI…** asks AI to draw it, already asking for the parts the template animates.
+- **Upload SVG…** adds your own file.
+- Then map each role (for example *First liquid*) to one of the drawing's named parts. Parts are the `id` (or `data-part`) names of its shapes or groups; a part with the role's own name is mapped for you.
+
+**Draw illustration** in the Assets library does the same on its own: describe what to draw and name its parts (`liquid-1: the first tube’s liquid`), choose a shape, and **Draw**. AI draws line art in the video look's illustration style, with no text, and colors that follow the theme in light and dark scenes. The SVG is checked and cleaned before you see it: scripts, event handlers, links, embedded images, and style sheets are removed or refused, and a drawing that loses a requested part is sent back to be fixed. Review it, **Draw again**, or **Save to assets**. Without an AI key, the dialog shows the prompt to paste into any chat product and checks the reply the same way.
+
+A saved drawing is a project asset marked **AI-drawn**, with the model that drew it and its parts. It is artwork, never capture evidence, and it can't be deleted while a scene uses it.
+
+## Add a visual reference
+
+One image can guide the design: a diagram you drew, a whiteboard photo, or a page you want to explain.
+
+- **Upload** a PNG, JPEG, WebP, or SVG.
+- **Paste URL** of a public image. Qontent Tube downloads it once into the project and keeps its own copy; previews and renders never load the URL again. Only direct `https://` image addresses work, not web pages. (Not available in the Cloudflare version: download the image and upload it.)
+- **Choose from Assets** reuses a library image.
+
+Then choose its role:
+
+| Role                        | What happens                                                                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Inspiration only**        | The default. AI reads the reference's structure and order and recreates them with its own shapes and words. The result never shows the image. |
+| **May appear in the scene** | A rich animation may show the image itself. It becomes part of the video, so the asset can't be deleted while an accepted scene uses it.      |
+
+**May appear** isn't available with **Standard elements**; choose Auto or Rich animation.
+
+SVG files are checked when you add them: scripts, links, embedded images, external fonts, and animation are refused, so a drawing can't run or load anything. An SVG is a drawing, never a capture of your product.
+
+## Confirm what is sent
+
+![Send this reference to the provider: the reference, destination, purpose, and role](/img/v040/regenerate-consent.png)
+
+Choosing or importing a reference stays on your computer. Before an image goes to your AI provider, Qontent Tube shows exactly what will be sent (the reference and its hash, the provider and model, the purpose, and the role) and sends it only for that one run. An SVG is sent as a PNG rendition. Cancel, and nothing is sent.
+
+Without an AI key, the dialog shows the prompt to paste into any chat product; attach the named reference there yourself and paste the reply back. Qontent Tube sends nothing, and the reply is checked exactly like a provider's.
+
+While it works, the dialog shows the step (writing the scene, test-running it in every format, fixing what the test found, reviewing frames) and a running clock. Rich animations usually take one to three minutes.
+
+## Check frames and choose a model
+
+For a rich animation, **Check frames and let AI fix layout problems** adds a review step after the test run. Qontent Tube plays the animation in its sandbox, looks at the key moments of every format (the middle and end of each spoken line, and the end of the scene), and finds layout problems on its own: elements overlapping, text that doesn't fit its box, content in the area kept for captions and chrome, text too faint to read, and an empty frame while the narration speaks. When it finds any, it sends the problems and up to six small frames (480 px JPEG) to the same model to fix, at most twice, and keeps a fix only if it is still valid and has fewer problems. The review lists the rounds, the problems left with their format and time, and the extra tokens used.
+
+Review is off by default. It is on by default when the chosen model is a top-tier one; it sends images, so the consent step names the frames before anything is sent. A model that can't read images skips it and says why. Review needs the local runtime with a browser; elsewhere the review says it was skipped and why.
+
+**Model advice** appears before you generate: how demanding this scene is (template fill, standard elements, a rich animation, an edit), why (a dense scene, a reference image, several formats, review), roughly how many output tokens it needs, and a recommended model from your provider's live list. **Use recommended** switches to it; nothing switches on its own. Warnings say when the chosen model can't read the reference or review frames, may stop early, or is lighter than the scene needs.
+
+Recommendations come from model profiles: a tier (fast, balanced, top), whether the model reads images, and its output limit, matched by model name. Models without a profile show **unknown tier** in the model list: you can still choose them, they are just never recommended. To correct or add a profile, edit `library/profiles/models.model-profiles.json` (`GET`/`PUT /api/assist/model-profiles`); your profiles come before the built-in ones.
+
+The motion scorecard measures this on your own provider: `bun scripts/motion-scorecard.ts --models <a>,<b>` runs a small infographic suite (three rich-animation scenes, one fill per built-in template) on each model, test-runs every result in the sandbox, counts layout problems, and writes `scorecards/<date>/scorecard.md` and `.json` with a suggested tier per model. `--mock` checks the setup without any AI calls.
+
+## Review, then accept
+
+![Current and proposed scene at 50% and 90%, with the changes, validation, and provenance](/img/v040/regenerate-review.png)
+
+The review shows the current and proposed scene at 50% and 90% of its narration, what was added and removed, which locked elements were kept, how the reply validated, and which provider and model made it with its token use.
+
+- **Accept** makes the candidate the scene in one save.
+- **Discard** keeps the current scene.
+- **Revise and regenerate** goes back to your guidance for another try.
+
+A candidate goes **Out of date** if the scene's dialogue, its locked elements, the theme, the cast, the remembered guidance, or the reference's bytes change before you accept it; regenerate to get a current one. If someone else saved the storyboard meanwhile, nothing is accepted and the dialog says so.
+
+## How rich animations stay safe
+
+A rich animation is code written by AI, so Qontent Tube never runs it like the rest of the app:
+
+- **A sealed frame.** It runs in its own sandboxed frame, in the Studio and in renders alike. It cannot read your session, cookies, or storage, reach the internet or your API, open windows, or navigate. Fonts and images are handed to it by Qontent Tube; it can't load anything itself.
+- **Checked before you see it.** Code that tries to use the network, timers, the clock, or storage is refused, and the animation is run once in the sandbox, in every format of your production, before it becomes a candidate. If it fails, AI gets one chance to fix it with the error; otherwise the job reports what went wrong.
+- **Timed to the narration.** Everything moves at a spoken line, so a re-recorded voice moves the animation with it. If a line the animation needs is gone, the scene says so instead of guessing.
+- **The same frames every time.** Each frame depends only on its time, so previews, scrubbing backwards, and renders show the same picture, and two renders of the same scene are identical.
+- **Stopped if stuck.** An animation that never finishes building or drawing is stopped after a few seconds and the scene shows why; the rest of the Studio keeps working.
+- **Made for your formats.** An animation is made for 16:9 and the formats your production has when it is generated. In a format added later, the scene shows its closest layout fitted to the frame: **Contain** (the default) keeps all of it, letterboxed over the scene background; **Cover** fills the frame and crops the edges. Choose with **Fit in …** on the scene card, or regenerate the scene to get a layout made for every format.
+
+No Docker or cloud service is needed: previews run in your browser and renders on your computer or your own CI, offline.
+
+## Rich animations are authoring, not evidence
+
+A rich animation is labelled **AI-assisted** in the review, in previews, and in [render metadata](./rendering). It may resemble an interface from your reference, but it is never a capture of a real screen and never satisfies a capture's evidence rules. Rendering uses the accepted animation exactly; it never asks AI again or reloads a URL. If the animation file or an image it shows goes missing or changes, the render checklist blocks with the scene named.

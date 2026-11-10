@@ -1,6 +1,6 @@
 ---
 title: Rendering videos
-description: Export MP4 videos with captions and chapters on your computer, in 16:9 or 9:16.
+description: Export MP4 videos with captions and chapters on your computer, in 16:9, 9:16, or 4:5.
 sidebar_position: 10
 ---
 
@@ -16,14 +16,28 @@ These tools are not bundled. Rendering requires ffmpeg 5 or later with `libx264`
 
 Before rendering, a checklist confirms that the render tools are ready, every line has fresh voice, a storyboard exists, scenes are approved, anchors resolve, and the theme and characters are found. Warnings can be confirmed; your confirmation is recorded with the job. Without voice, choose **Render an animatic** for estimated timing and silence.
 
+## Frame rate
+
+**Frame rate** in RENDER sets how many frames per second the video has. 30 fps is the default and suits most videos. Animation, narration, and captions keep their timing at any rate; only the smoothness and the render time change.
+
+| Rate | Use it for                                                                        |
+| ---- | --------------------------------------------------------------------------------- |
+| 5, 8 | Quick drafts and GIF-like loops. Renders fastest; motion steps visibly.           |
+| 12   | A stylized look, like hand-drawn animation. Renders in under half the time of 30. |
+| 24   | A cinematic feel.                                                                 |
+| 30   | The default for YouTube, social video, and product demos.                         |
+| 60   | The smoothest camera pans and scrolling. About twice the render time of 30.       |
+
+Screen recordings are captured at 30 fps, so at 60 fps recorded footage repeats frames while animation and camera moves still gain smoothness.
+
 ## Outputs
 
-- **MP4** · 1920 × 1080 (or 1080 × 1920) · 30 fps
+- **MP4** · 1920 × 1080, 1080 × 1920 for 9:16, or 1080 × 1350 for 4:5 · 30 fps by default
 - **Captions** (`.srt`)
 - **YouTube chapters** (`.txt`)
 - **QA frames** and a contact sheet
 - Optional caption bubbles in the picture and a looped **music bed** from `library/music/`
-- **9:16 parts** under 60 seconds (see [Mobile formats](./mobile-formats))
+- **9:16 parts** under 60 seconds (see [Mobile and feed formats](./mobile-formats))
 
 Files are saved in `renders/<project>/` in your content folder; earlier files are kept with a timestamp.
 

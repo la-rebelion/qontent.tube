@@ -10,7 +10,7 @@ A capture scene shows a real screenshot or recording of your product. The stage 
 
 ## Add a capture
 
-1. Import your files in **Library → Assets**. PNG, JPEG, WebP, and H.264 MP4 are checked from their bytes and hashed.
+1. Import your files in **Library → Assets**. PNG, JPEG, WebP, and H.264 MP4 are checked from their bytes and hashed. Assets also accept SVG drawings and one-time imports from a public image URL, for [visual references](./guided-regeneration#add-a-visual-reference); those are never captures.
 2. In **Storyboard**, choose **Add capture** on a scene.
 3. Choose a source. If the script has no sidecar yet, choose where to keep the capture: a sidecar file, or the storyboard.
 
@@ -42,9 +42,9 @@ Overlays sit above the capture: focus outlines, dimming, callouts, connectors, c
 
 Recordings play muted at their own speed from the trim point, and their captured audio never reaches the video. If the narration outlasts the trim, the scene stops the render unless you choose to hold the last real frame. Screenshots have no trim and can't show captured actions.
 
-## Vertical video
+## Vertical and feed video
 
-In 9:16, a capture is contained without cropping or distortion, and asks for review. With 9:16 selected in the editor, camera and frame edits apply only to the vertical version.
+In 9:16 and 4:5, a capture is contained without cropping or distortion, and asks for review. With 9:16 or 4:5 selected in the editor, camera and frame edits apply only to that format; 16:9 and the other portrait format keep their own.
 
 ## Autosave and conflicts
 

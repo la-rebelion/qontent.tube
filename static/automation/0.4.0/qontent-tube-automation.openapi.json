@@ -2575,11 +2575,23 @@
                           "type": "string",
                           "enum": [
                             "16:9",
-                            "9:16"
+                            "9:16",
+                            "4:5"
                           ]
                         },
                         "language": {
                           "type": "string"
+                        },
+                        "fps": {
+                          "type": "number",
+                          "enum": [
+                            5,
+                            8,
+                            12,
+                            24,
+                            30,
+                            60
+                          ]
                         },
                         "status": {
                           "type": "string",
@@ -2921,7 +2933,8 @@
                   "type": "string",
                   "enum": [
                     "16:9",
-                    "9:16"
+                    "9:16",
+                    "4:5"
                   ]
                 },
                 "language": {
@@ -2935,6 +2948,17 @@
                 },
                 "voice": {
                   "type": "boolean"
+                },
+                "fps": {
+                  "type": "number",
+                  "enum": [
+                    5,
+                    8,
+                    12,
+                    24,
+                    30,
+                    60
+                  ]
                 }
               },
               "required": [
@@ -3554,7 +3578,8 @@
                       "type": "string",
                       "enum": [
                         "16:9",
-                        "9:16"
+                        "9:16",
+                        "4:5"
                       ]
                     },
                     "language": {
@@ -3568,6 +3593,17 @@
                     },
                     "voice": {
                       "type": "boolean"
+                    },
+                    "fps": {
+                      "type": "number",
+                      "enum": [
+                        5,
+                        8,
+                        12,
+                        24,
+                        30,
+                        60
+                      ]
                     }
                   },
                   "required": [

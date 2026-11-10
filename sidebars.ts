@@ -14,6 +14,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "studio-and-stage",
         "storyboards",
+        "guided-regeneration",
         "ai-drafting",
         "themes",
         "characters",
