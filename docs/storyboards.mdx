@@ -44,6 +44,22 @@ Each element remembers the exact file it shows, by hash:
 
 Images from assets and PiPs need the v3 storyboard format: adding one upgrades the draft automatically, and older storyboards keep working. AI drafting and regeneration never add or change them. A regenerated scene keeps them as they are, like locked elements. An image embedded in a storyboard as a `data:` URI (from an older file, pasted JSON, or an API client) moves to the project's assets when you save. The element then points at the asset, which keeps the storyboard small and readable, and the image becomes reusable like any other asset. The same image saved again reuses its asset (**Embedded image** plus a short hash). Scene brand marks stay as they are.
 
+## PiP narrator: a presenter in faceless videos
+
+A PiP can present a **narrator**: a real person who opens the video, introduces themselves, or presents solo scenes, speaking with their own voice and face. Their lines are ordinary script lines (`**MARIA:** Hi, I'm Maria.`), so timing, captions, anchors, and translations work as for any speaker.
+
+1. **Write the lines** in the script, and add the speaker to the roster with a voice. Until the take exists, their lines use that voice as a **draft voice**, so you can preview the timing.
+2. **Rehearse:** in the PiP, choose the **Speaker**, then **Rehearsal sheet**. It lists their lines in order with estimated seconds, and the other speakers' lines as cues.
+3. **Record one take** reading the lines in order, then upload it and choose it as the PiP's recording.
+4. **Propose spans from the recording:** QT finds where speech is (no transcription) and matches it to the lines in script order, skipping false starts and retakes. Check each line, use **Use next region** where needed, and **Apply spans**. You can play or adjust any line's in and out times later.
+
+A mapped line's voice is cut from the take in the local app (it needs ffmpeg, set up in RENDER), and the line lasts exactly as long as its span. Picture and voice come from the same moment of the same file, so the lips match.
+
+- **On screen:** the narrator PiP lasts the whole scene. It shows a ring at full brightness while the narrator speaks, and is dimmed and silent otherwise. Between lines the footage plays on silently. If the take ends before the scene does, it loops a marked **idle loop**, or holds the last frame.
+- **Translations are dubbed:** in another language, the narrator's lines use their roster voice for that language. The footage plays muted, with the same ring timing.
+- **Render:** RENDER warns while lines still use the draft voice, and blocks if a mapped line no longer belongs to the narrator after a script edit.
+- **Cloudflare:** recorded voices are cut in the local app. On Cloudflare the narrator's lines keep the draft voice.
+
 ## Anchors: when things appear
 
 Every element has an **Enters** anchor (and optionally **Leaves**): a dialogue line of the scene, shown with its speaker and text, and a fraction of that line. "Line 2 at 50%" means halfway through the second line. Items inside cards, chips, flows, and tables can have their own anchors to appear one by one as the narration mentions them.
