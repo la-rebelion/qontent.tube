@@ -1,0 +1,70 @@
+---
+title: Publishing to YouTube
+description: Post a reviewed video to YouTube as a landscape video, a vertical Short candidate, or both, and follow each upload until it is published.
+---
+
+# Publishing to YouTube
+
+When a draft in the [publish composer](./publish-composer.mdx) passes its checks, **Review and confirm…** shows exactly what will be posted. **Publish now** posts it and opens the publishing results. Nothing is posted until a person chooses **Publish now**; automation and agents cannot confirm or start a publish.
+
+## What is sent
+
+For each YouTube post, Qontent Tube uploads the exact video file you previewed and chose (identified by its hash, so a later render cannot change it), then sets:
+
+- **Title**, **description** (with hashtags at the end), and **tags**;
+- **language**: the draft's language, for both the title and the audio;
+- **visibility**: public, unlisted, or private, as you chose;
+- **made for kids**: your answer, which YouTube requires;
+- **altered or synthetic content**: on when you ticked *Contains AI-generated or altered content*;
+- **paid promotion**: on when you ticked *Includes paid promotion*;
+- **captions**: the video's caption track, when it has one;
+- **thumbnail**: for 16:9 videos, a frame of the video at the cover time you chose.
+
+## Landscape, vertical, or both
+
+A 16:9 post and a 9:16 post are separate uploads with their own YouTube video IDs and results. If one fails, the other is not affected.
+
+A 9:16 post is labelled a **Short candidate**: it is uploaded as a vertical video, and **YouTube decides whether it is shown as a Short** (for example by its length and shape). Qontent Tube does not promise that it will be.
+
+## Following an upload
+
+The results page lists each post with its state:
+
+| State | Meaning |
+| --- | --- |
+| **Waiting** | Queued; nothing has been sent yet. |
+| **Uploading** | The video is being sent, with a progress bar. |
+| **Processing** | YouTube has the video and is processing it. Captions and the thumbnail are added now. |
+| **Published** | Done. **Open on YouTube** links to it. |
+| **Published with limits** | Published, but YouTube changed something. For example, it keeps the video private until Qontent Tube's app finishes Google's audit. The note says what changed. |
+| **Needs attention** | Something needs your decision. The message says what. |
+| **Failed** | It was not published. **Retry** appears when trying again can help. |
+| **Cancelled** | You cancelled it before anything was sent. |
+
+The results come from Qontent Tube, not from the browser tab: you can close the tab or refresh, and the page shows the same thing. If Qontent Tube closes during an upload, the upload resumes from where it stopped the next time it starts.
+
+Each rendered video in the composer lists where it was published, with a link to the results.
+
+## When something goes wrong
+
+- **Network drops**: uploads resume from the last part YouTube received. Nothing is sent twice.
+- **The answer to the last part was lost**: Qontent Tube asks YouTube whether the video was created before doing anything else. If it was, the post continues with that video.
+- **YouTube can no longer tell whether it was created** (rare): the post needs attention. Check your channel. **Check again** asks once more; **Create it again…** uploads a new video only after you confirm, because if the first one did arrive you would have two.
+- **Captions or thumbnail fail**: the video is still published. The post needs attention and **Add what is missing** retries only the part that failed. Custom thumbnails need a verified YouTube channel; until then YouTube uses its own.
+- **Quota**: YouTube limits how many uploads an app can make per day. When the limit is reached the post fails with a message, and **Retry** works after the quota resets (midnight Pacific time).
+- **Authorization**: if YouTube no longer accepts the connection, reconnect the channel in **Library → Accounts**, then retry.
+- **YouTube refuses the post** (for example, a title it does not accept): edit the draft and confirm again. Retrying the same post would be refused again, so retry isn't offered.
+
+## Cancelling
+
+**Cancel what has not been sent** stops posts that are waiting and uploads whose last part has not been sent. Posts that are already published stay published: cancelling never deletes anything from YouTube. Remove a video in YouTube Studio if you need to.
+
+## Privacy
+
+Your YouTube authorization stays on your computer. The upload session and every request go directly from your computer to YouTube. Qontent Tube keeps the video IDs, links, states, and attempt history it shows you, never your credentials or YouTube's raw responses.
+
+## For operators: before enabling YouTube publishing
+
+- **Google review**: YouTube uploads use the `youtube.upload` scope. Until the Google Cloud project behind Qontent Tube's managed app passes Google's OAuth verification and the YouTube API audit, uploads are locked to private. Qontent Tube shows them as **Published with limits**.
+- **Quota**: each upload uses a large share of the project's daily YouTube Data API quota. Request a quota increase before release; quota errors are shown to users with their reset time.
+- **Certification**: with a test channel connected, prepare a draft with a private or unlisted 16:9 and 9:16 post, run the local API, and run `bun run certify:youtube <draftId>`. It asks you to type `PUBLISH`, follows both uploads, checks the video IDs, links, captions, and thumbnail, and writes sanitized evidence to `docs/certification/`. Finish by disconnecting the channel and checking that Google lists the app as removed.

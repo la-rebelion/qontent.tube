@@ -1,0 +1,81 @@
+---
+title: Connected accounts
+description: Connect YouTube, Instagram, Facebook, TikTok, X, and LinkedIn destinations, see what each can publish, and reconnect or disconnect them safely.
+---
+
+# Connected accounts
+
+**Library → Accounts** lists the channels, Pages, and profiles Qontent Tube can publish to, and what each one can do. Version 0.5 publishes to them; this page covers connecting them, and [Publish composer](./publish-composer.mdx) covers preparing posts.
+
+## How connecting works
+
+1. Choose **Connect** on a network. Its own sign-in and consent page opens in your browser.
+2. Approve access there. Qontent Tube never sees or asks for your password.
+3. Back in Qontent Tube, the connection appears with every destination it found: each channel, Page, professional account, profile, or organization.
+
+You can connect several destinations on the same network, for example two YouTube channels or many Facebook Pages.
+
+## Privacy
+
+- **Credentials stay on your computer.** Qontent Tube uses its own registered apps on each network. A short-lived relay on Qontent Tube's servers completes the sign-in and hands the result to your computer in encrypted form, readable only by the app that started it. The relay keeps nothing usable afterwards: it deletes the result as soon as it is collected, and within five minutes at the latest.
+- On your computer, credentials are protected for your user account: Windows Data Protection on Windows, and private owner-only files on Linux. If your system cannot protect them, Qontent Tube does not connect the account at all.
+- Credentials are never shown in the app, written to project files, exports, or logs, or sent to Qontent Tube's servers. The only exception is cloud scheduling, later in v0.5: it asks separately, says exactly what is uploaded, and for how long.
+- Connecting asks only for the permissions needed to identify your destinations and publish. Analytics permissions are requested later, only if you use insights.
+
+## What each card shows
+
+Each destination shows:
+- its status: **Ready**, **Limited**, **Cannot publish**, **Needs reconnection**, or **No longer listed**;
+- the post kinds and formats it accepts (16:9, 9:16), visibility options, and whether captions and a cover image are supported;
+- limits the platform reported, such as a maximum length;
+- its default language, when the platform has one;
+- granted and missing permissions;
+- when it was last checked.
+
+**Check now** asks the platform again. What it reports replaces what was stored, so the card always shows the latest answer.
+
+## Provider eligibility
+
+### YouTube
+
+A YouTube channel. Each authorization connects the channel you choose on Google's page; connect again to add another. Until a channel is verified, YouTube limits it to videos of up to 15 minutes, and the card says so.
+
+### Instagram
+
+An Instagram **professional** (Business or Creator) account, linked to a Facebook Page you manage. Personal Instagram accounts cannot publish through Instagram's API. When a Page has no linked professional account, Qontent Tube tells you which Page and what to change. Instagram accepts Reels (9:16).
+
+### Facebook
+
+A **Page** you manage, with a role that can create content. Personal profiles cannot be destinations: Facebook allows app publishing only to Pages. A Page where your role cannot post is listed as **Cannot publish**, with the reason.
+
+### TikTok
+
+A TikTok creator account. Until TikTok audits Qontent Tube, its posts can only be private (visible only to you). The card shows this as **Limited** before you publish anything.
+
+### X
+
+The X account you sign in with.
+
+### LinkedIn
+
+Your LinkedIn member profile. To post as an organization you administer, choose **Post as organizations** on the connection. LinkedIn asks you to approve this extra permission separately; Qontent Tube never adds it on its own.
+
+## Reconnect and add permissions
+
+- **Needs reconnection** means the platform no longer accepts the authorization: it expired, you changed your password, or you removed access on the platform. Nothing is published there until you choose **Reconnect** and approve again.
+- Reconnecting keeps the same connection and destinations. If you sign in as a different account by mistake, nothing is changed and Qontent Tube says which account it saw.
+- When a destination is missing a permission it needs, the card names it. **Reconnect** lets you grant it.
+
+## Disconnect and revoke
+
+- **Disconnect** on a connection removes its credentials from your computer first, then asks the platform to revoke Qontent Tube's access. If the platform does not confirm, the card says where to remove access yourself.
+- **Disconnect this Page** (or organization) removes one destination and keeps its siblings. Platforms revoke whole authorizations, not single Pages, so this removes it from Qontent Tube only.
+- Posts already published are not affected. Past results keep their labels and links.
+
+## Networks not in this version
+
+**Threads** is not available yet. Publishing to Threads needs your video at a public web address, and Qontent Tube does not put your media on the public internet without asking.
+
+## When a network is unavailable
+
+Every network stays listed, even when it cannot be connected yet, with the reason. For example, a network may still be waiting for the platform's review of Qontent Tube's app, or Qontent Tube's connection service may be unreachable. Connected accounts are a desktop feature: the cloud version of Studio lists the networks but does not connect them.

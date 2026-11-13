@@ -47,6 +47,12 @@ const sidebars: SidebarsConfig = {
         "ci",
       ],
     },
+    {
+      type: "category",
+      label: "Publish once (0.5)",
+      collapsed: false,
+      items: ["connected-accounts", "publish-composer", "publishing-to-youtube"],
+    },
     "files-and-storage",
     "desktop-and-troubleshooting",
   ],

@@ -1,0 +1,94 @@
+---
+title: Publish composer
+description: Prepare one video for many destinations, with short cuts from chapters, platform text limits, AI suggestions you review, and checks before anything is posted.
+---
+
+# Publish composer
+
+The publish composer prepares a finished video for several destinations at once: which video goes where, the text for each post, and what each platform requires. After a person confirms, it posts to YouTube; the other networks arrive in later 0.5 updates. See [Publishing to YouTube](./publishing-to-youtube.mdx).
+
+Open it from **RENDER**: on a completed render, choose **Publish…**. A draft is created for that script and saved as you work, so you can leave and come back.
+
+## The three panes
+
+- **Rendered videos** (left): the completed renders and cuts in the draft's language. A video that can't be used says why, for example *Replaced by a newer render*. Formats that have never been rendered get a **Render 9:16** (or 16:9, 4:5) button.
+- **Destinations** (center): every connected channel, Page, or profile, with its formats. Choose a format to add a post; choose it again to remove it. You can add several formats to one destination, for example a YouTube video and a YouTube vertical.
+- **Post details** (right): the selected post's video, text, visibility, disclosures, options, and checks. Below 1280 pixels wide this becomes a drawer; open it with **Post details** or by choosing a post.
+
+The bar at the bottom always shows how many posts are going to how many destinations, how many are ready, and whether your changes are saved.
+
+## Choosing a video
+
+A post only offers videos in a format it accepts. Pick one to preview it, then choose **I watched it — use this video**. Nothing is chosen until you have previewed it.
+
+The exact file you chose is kept for the post, by its content hash. If you render again later, the post says its video is **stale**. The earlier file is still there as **Earlier render**, so you can keep it or choose the new one. Nothing switches silently.
+
+## Short cuts from chapters
+
+**Short cut from chapters** builds a shorter video from whole scenes of a completed render:
+
+1. Choose the render in **From**.
+2. Tick the chapters you want. They are added in the order you tick them; use the arrows to reorder.
+3. Choose **Make this cut**.
+
+Cuts never trim inside a scene, speed up speech, or generate replacement footage. If a cut is too long for a destination, the check says by how much, and you choose which chapters to drop. Captions are rebuilt from the scene timings, so they stay in sync. Making the same cut twice gives the same file.
+
+## Missing formats: render, then resume
+
+If a post needs a format you haven't rendered (say, 9:16 for a TikTok), choose **Render 9:16** in the left pane or in the post's checks. The render runs like any other render in **RENDER**. The draft remembers it, and when it finishes, **Show it** brings it back here. You still preview and choose it yourself.
+
+## Text
+
+- **Common text** is written once and copied into new posts. **Copy to posts not edited by hand** updates the posts whose fields still follow it.
+- A field you edit by hand, or an AI suggestion you accepted, is never overwritten by the common text.
+- Each field counts characters the way the platform does, including hashtags that are added to the text, and shows how far over the limit you are.
+- After any change, tick **I reviewed this post's text** again.
+
+### AI suggestions
+
+**Suggest text with AI** (one post) or **Suggest text for all posts** asks the assistant for platform-fitting text (`social-post-copy@1`). Without a configured provider, a dialog gives you a prompt to paste into any chat assistant and a box for its reply.
+
+Suggestions never replace your text. Each one appears as a difference beside your text, and you choose **Use suggestion** or **Keep my text**. You can't mark a post reviewed while a suggestion is pending.
+
+## Formats and limits
+
+A star marks the recommended format for each network. It is guidance from platform defaults, not a promise of results; any compatible format can be chosen.
+
+| Format | Video | Length | Text |
+| --- | --- | --- | --- |
+| ★ YouTube video | 16:9 | up to 12 h | Title (required) 100, description 5,000, 15 hashtags |
+| YouTube vertical | 9:16 | up to 3 min | Title (required) 100, description 5,000, 15 hashtags |
+| ★ Instagram Reel | 9:16 | 3 s – 15 min | Caption 2,200, 30 hashtags |
+| ★ Facebook Reel | 9:16 | 3 – 90 s | Description 2,200, 30 hashtags |
+| Facebook Page video | 16:9 or 4:5 | up to 4 h | Title 255, description 5,000 |
+| ★ TikTok video | 9:16 | 3 s – 10 min | Caption 2,200, 30 hashtags |
+| ★ X post with video | 16:9, 9:16 or 4:5 | up to 2 min 20 s | Post text 280, 5 hashtags |
+| ★ LinkedIn video post | 16:9, 9:16 or 4:5 | 3 s – 30 min | Commentary 3,000, 10 hashtags |
+
+These are the 2026-11 profiles. When a destination reports a stricter limit of its own, the stricter one is used, and the check says it came from the destination. If a newer profile version replaces the one a post was made with, the post shows a note.
+
+YouTube asks whether the video is **made for kids**; you must answer. Every post can declare **AI-generated or altered content** and **paid promotion**.
+
+## Checks
+
+Every post is checked as you work. **Needs attention** posts have at least one blocking problem; **Ready with notes** posts can go ahead. Checks include:
+
+- no video chosen, a stale or unavailable video, the wrong format, too long, too short, or too large;
+- missing captions, or text close to the edges in vertical formats where the platform draws its buttons;
+- a missing required title, text over the limit, too many hashtags or tags, an unreviewed text or a pending AI suggestion;
+- a required disclosure or visibility not chosen;
+- a destination that needs reconnection (with a **Reconnect** link), was removed, lacks a permission, or can't take this kind of post.
+
+## Confirming
+
+**Review and confirm…** opens a summary of exactly what would be posted: each destination, video, text, and setting. It belongs to this version of the draft; any change afterwards means a new summary. Only a person can confirm it; automation and agents cannot.
+
+**Publish now** posts exactly what the summary lists and opens the publishing results. It is available when every post goes to a network this version can publish to (YouTube); otherwise the dialog names the networks still to come, and you can remove those posts to publish the rest. See [Publishing to YouTube](./publishing-to-youtube.mdx).
+
+## Several people or windows
+
+If the draft changed in another window since you opened it, the composer says so and keeps your edits on screen. Choose **Load the newer version** or **Keep my edits**. Nothing is merged silently.
+
+## API
+
+The composer uses the local API: `GET /api/publish/outputs`, `GET /api/publish/outputs/content` (streams a video for preview), `/api/social-drafts` (create, read, update with a revision, delete), and on a draft `cuts`, `preflight`, `confirmation-summary`, `render-missing`, `copy-draft`, and `copy-draft/reply`. They are local-only and are not part of the automation API.
