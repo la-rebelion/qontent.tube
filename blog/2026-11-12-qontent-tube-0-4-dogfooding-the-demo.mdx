@@ -1,0 +1,151 @@
+---
+title: "We asked Qontent Tube to demo itself. It found the bugs for us."
+description: We built the Qontent Tube 0.4 launch demo with Capture a product demo. The real run exposed stale steps, proved deterministic recovery, reused finished work, and stopped for people at every decision.
+slug: /qontent-tube-0-4-dogfooding-the-demo
+tags: [product, release, automation]
+keywords:
+  - Qontent Tube product demo
+  - dogfooding
+  - repeatable product videos
+  - deterministic video automation
+image: /img/v041-dogfood/final-review.png
+---
+
+The best test of a product-demo tool is brutally simple: **ask it to make its own product demo.**
+
+That is exactly what we did with Qontent Tube 0.4. We gave **Capture a product demo** a short story, selected the HAPI Team with Roby as narrator, and asked it to explain the most important parts of the release—from planning and guided capture to Storyboard, validation, and multi-format rendering.
+
+It did not go perfectly on the first attempt.
+
+That turned out to be the most useful result we could have asked for.
+
+{/* YouTube placeholder. Replace VIDEO_ID after publishing the final render. */}
+
+<div
+  style={{
+    aspectRatio: "16 / 9",
+    display: "grid",
+    placeItems: "center",
+    padding: "2rem",
+    border: "1px solid var(--ifm-color-emphasis-300)",
+    borderRadius: "12px",
+    background: "var(--ifm-background-surface-color)",
+    textAlign: "center",
+  }}
+>
+  <div>
+    <strong>Qontent Tube 0.4 dogfooding demo</strong>
+    <div style={{ margin: "0.5rem 0 0" }}>
+      YouTube video coming after the final storyboard review and render.
+    </div>
+    {/* Replace this block with: <iframe width="100%" height="100%" src="https://www.youtube.com/embed/VIDEO_ID" title="Qontent Tube 0.4 dogfooding demo" allowFullScreen /> */}
+  </div>
+</div>
+
+{/* truncate */}
+
+## One story became a production plan
+
+We did not begin with a timeline or a shot list. We described the story in plain language:
+
+- Show why product videos normally take too many disconnected steps.
+- Start a demo from one brief.
+- Review the script, storyboard, and capture plan before anything runs.
+- Record the real product locally.
+- Improve scenes with Storyboard tools and guided regeneration.
+- Validate and prepare 16:9, 9:16, and 4:5 versions.
+- Keep Roby as the only narrator.
+
+Qontent Tube turned that into a script and seven proposed product recordings. More importantly, the plan stayed a proposal. It showed what it wanted to record, which scene each take belonged to, and which actions would be performed—but it did not operate the product until we reviewed it.
+
+![A story transformed into seven reviewable recording plans](/img/v041-dogfood/plan-from-story.png)
+
+This is the difference between asking AI to “make a demo” and using AI inside a controlled production process. AI can suggest the story. **The product, the recipe, and the reviewer decide what actually happens.**
+
+## The camera was another clean Qontent Tube session
+
+Guided recording opened Qontent Tube in a separate browser window. The controller stayed outside the recorded frame while we used the app normally. Every relevant navigation and click became a replayable step.
+
+![Guided recording running outside the product window it observes](/img/v041-dogfood/guided-recording.png)
+
+Because this was Qontent Tube recording Qontent Tube, the test exercised a particularly difficult case: the captured product was also a protected packaged-local application. A fresh browser could not simply inherit the session from the browser where we started the production.
+
+The run exposed that boundary. We fixed packaged self-capture so the recording browser receives its own one-time local session without putting a credential in the recipe or weakening normal access controls.
+
+That is what dogfooding should do. It should challenge the real security and lifecycle rules—not use a hidden shortcut that customers will never have.
+
+## When the UI changed, the recipe refused to guess
+
+One older recording identified a **Record** control using text that had become ambiguous. The latest interface now had several visible matches.
+
+Qontent Tube did not click one and hope.
+
+It stopped the take and reported that the locator matched three controls. We replaced it with the stable step control and started another production. Previously completed captures, narration, and preparation were reused by their input hashes. Only the affected path needed new work.
+
+That failure is a feature. A plausible-looking capture of the wrong button is much more dangerous than an explicit stop. Deterministic production means uncertainty becomes a reviewable problem, not a fabricated success.
+
+## Storyboard remained creative without becoming unpredictable
+
+The captured screens supplied the truth, but the explanation still needed pacing and visual focus. In Storyboard we could apply Video Looks, inspect the captured frames, use assets, and open **Regenerate with guidance** for a scene.
+
+![Guided scene regeneration with a natural-language animation direction](/img/v041-dogfood/guided-regeneration.png)
+
+For this demo, the direction asked for a clean three-step diagram synchronized to Roby's narration. Qontent Tube could propose a richer candidate, but the current scene remained untouched until someone compared and accepted it.
+
+That separation matters:
+
+- The real capture remains evidence.
+- The animation direction is explicit.
+- The proposed scene is reviewable.
+- Accepted motion follows narration anchors rather than fragile timestamps.
+- Rendering the accepted result stays deterministic.
+
+Creativity belongs in the authoring step. Repeatability belongs in the production step.
+
+## The run found more than one real release issue
+
+This was not a staged happy path. The end-to-end run helped us identify and correct several problems in the 0.4.1 release:
+
+- Proposed recording instructions were not always handed from the draft into Plan.
+- Consecutive guided takes did not consistently inherit the reviewed target gate.
+- A packaged self-capture browser needed its own authenticated local session.
+- Large plans could produce more gate evidence than the production dashboard contract accepted.
+- One recorded locator had become ambiguous as the interface evolved.
+
+Each fix was validated against the same production. The recipe became both the demo and the regression test.
+
+## People still made the consequential decisions
+
+The run paused for the plan, narration cost, privacy review, capture approval, and final review. It never treated “automation” as permission to approve itself.
+
+For privacy, we reviewed the exact bytes of all seven recordings. For capture approval, Qontent Tube tied the decision to the hashes of those recordings and the storyboard. If any of that evidence changes, the previous decision no longer applies.
+
+The final dashboard tells the story of the run clearly: **21 steps reused by hash**, seven captures assembled, three output formats prepared, and rendering still blocked until a person approves the final production.
+
+![The dogfooding production paused at final review, with 21 steps reused instead of repeated](/img/v041-dogfood/final-review.png)
+
+We intentionally stopped there. The remaining storyboard refinements are creative choices, so we want to make them by hand before publishing the final YouTube video above.
+
+## What this changed for us
+
+The original [Qontent Tube 0.4 launch article](/blog/qontent-tube-0-4) explains the promise: record once, keep the recipe, and rebuild every release.
+
+This run gave us the proof.
+
+It showed that a repeatable demo is not one that never fails. It is one that:
+
+1. Fails visibly when the product no longer matches the recipe.
+2. Preserves the evidence needed to understand why.
+3. Lets a person correct the smallest affected part.
+4. Reuses everything whose inputs did not change.
+5. Never crosses a privacy or approval boundary silently.
+
+That is how product videos stop being disposable editing projects and become maintainable product assets.
+
+## Try it with your own product
+
+Open a project, choose **Capture a product demo**, and describe the story you want your audience to understand. Review the proposed plan, record the real experience, shape the explanation, and let Qontent Tube prepare every format.
+
+Your first run creates the video. Your next release proves why the recipe matters.
+
+**Describe it. Capture the truth. Shape the story. Render everywhere.**
