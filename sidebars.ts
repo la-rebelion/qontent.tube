@@ -6,6 +6,7 @@ const sidebars: SidebarsConfig = {
     "getting-started",
     "writing-scripts",
     "rosters-and-voices",
+    "record-your-lines",
     "generation-and-playback",
     {
       type: "category",
@@ -51,7 +52,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Publish once (0.5)",
       collapsed: false,
-      items: ["connected-accounts", "publish-composer", "publishing-to-youtube"],
+      items: ["connected-accounts", "publish-composer", "publishing-to-youtube", "publishing-to-social-networks", "scheduled-publishing", "queue-and-results"],
     },
     "files-and-storage",
     "desktop-and-troubleshooting",

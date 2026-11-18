@@ -1,0 +1,70 @@
+---
+title: Queue & results
+description: See the week's posts by day, what happened to each one, how it performs in each platform's own words, and suggestions from your own posts.
+---
+
+# Queue & results
+
+**Queue & results** (from **Scheduled posts** or any publish's results page) shows one week at a time, Monday first, in your computer's time zone.
+
+- **The calendar** has a card for each post on the day it went out or is planned: the platform, the format, the time, and a state word: _Published_, _Scheduled_, _Processing_, _Needs you_, _Failed_, _Private_, or _Removed_. The colour always comes with a word. Use the arrow keys to move between cards.
+- **The batch pane** on the right shows the batch of the selected card, with one card per post. A post that needs you is selected first.
+- **Filters** narrow the week by account and by state.
+
+## Each post's result
+
+A result card shows:
+
+- **What happened**, in plain language. For example: Instagram is still processing the Reel; TikTok posted it privately because the app's audit is pending; X refused the video's encoding.
+- **Only the actions that apply now.** For example: _Open in TikTok_, _Retry with re-encoded copy_, _Reconnect account_, _Allow results_, or _Refresh results_. Nothing is offered that cannot work.
+- **Metrics in the platform's own words**, such as YouTube's _Average percentage viewed_ or Instagram's _Accounts reached_. Qontent Tube does not rename them, convert them, or estimate missing values. A value the platform has not reported yet is shown as _—_.
+
+Qontent Tube checks each post again after it goes out. It tells you if the platform removed a post or made it private. Your publish history stays as it was. Checking a post never publishes it again.
+
+## How often results update
+
+| Post age | Checked |
+|---|---|
+| First 48 hours | about every 6 hours |
+| Until 7 days | daily |
+| Until 90 days | weekly |
+| After 90 days | no longer; what was read is kept |
+
+**Refresh results** checks one post right away, at most once every 15 minutes. If a platform asks Qontent Tube to slow down, the next check moves later.
+
+Checks run while Qontent Tube is open or background publishing is on. If you opted in to QT Cloud for a batch, the cloud reports the posts' states, and the newest observation wins. An older report never replaces a newer check.
+
+## What each platform shares
+
+Results are read **only for posts Qontent Tube created**, using the post ID it stored when publishing. Qontent Tube never lists or reads your account's other posts.
+
+Some platforms need an optional permission to share results. You grant it with **Allow results** on a card, or under **Connected accounts**: on the platform's consent screen, it is called **See how posts perform**. Declining it does not affect publishing.
+
+| Platform | Metrics (platform's words) | Optional permission |
+|---|---|---|
+| YouTube | Views, Likes, Comments. With the permission: Average percentage viewed, Watch time (minutes) | YouTube Analytics (read-only) |
+| Instagram | Views, Accounts reached, Likes, Comments, Shares, Saves | `instagram_manage_insights` |
+| Facebook Page | Video views, Reach, Average watch time, Reactions | `read_insights` |
+| TikTok | Views, Likes, Comments, Shares | `video.list` |
+| X | Impressions, Likes, Replies, Reposts, Quotes | none: they come with posting |
+| LinkedIn (member) | Impressions, Members reached, Reactions, Comments, Reposts | `r_member_postAnalytics` |
+| LinkedIn (organization) | Impressions, Unique impressions, Reactions, Comments, Reposts, Clicks | `r_organization_social` |
+
+When a platform does not share results, the card says so, for example: _TikTok does not share results for this post with apps._ If an account is disconnected, its results stop updating, and what was already read is kept.
+
+## What performs on your accounts
+
+Below the calendar, each account shows how your formats compare, measured by the median **views at 7 days** of posts Qontent Tube published in the last 90 days.
+
+- **Bars appear only with enough evidence.** An account needs at least **5 posts in each of two formats** with 7-day results. Until then, it shows the **platform default** and how many posts each format has. No bars are drawn from too little data.
+- **A posting-time suggestion** needs at least **10 posts**. They are grouped in two-hour windows in each post's own time zone, so daylight saving does not split a window. Below 10 posts, there is no time suggestion: there is no universal best time.
+- Every suggestion states what it was measured on (metric, posts, the 90-day window) and a confidence. Its wording only describes your past posts and never promises results.
+
+### Where suggestions appear
+
+- **Publish composer:** the post panel shows **★ Your posts** with the evidence when the account qualifies, or **Platform default** when it does not. The two labels are never mixed. Your chosen format stays your choice.
+- **At a time I choose:** accounts with a posting-window suggestion are listed under the time fields with **Use**. **Use** only fills in the date, time, and zone. You still see the exact instant and confirm it, and you can pick any other time.
+
+## Privacy and retention
+
+Results and summaries are stored on your computer, next to your publish history. They hold post IDs, states, metric values with their platform labels, and when each was read. They never hold tokens or the platform's raw responses. Disconnecting an account stops reading its results; what was read stays with the publish history. QT Cloud only handles results for batches you sent to it, and only within that batch's retention (see [Scheduled publishing](./scheduled-publishing.mdx)).

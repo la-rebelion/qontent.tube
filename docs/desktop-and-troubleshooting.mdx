@@ -6,7 +6,7 @@ sidebar_position: 6
 
 # Desktop app and troubleshooting
 
-The packaged Qontent Tube desktop application combines the local API and web workspace in one executable. It binds to a private loopback address and opens the authenticated workspace in your default browser. It does not require a separately installed Bun or Node.js runtime.
+The packaged Qontent Tube desktop application combines the local API and web workspace in one executable. It binds to a private loopback address, `http://127.0.0.1:8700`, and opens the authenticated workspace in your default browser. The address stays the same between launches, so your browser keeps its settings and the camera and microphone permissions you granted. If another program uses port 8700, Qontent Tube uses the first free port from 8701 to 8709 and remembers it. Set `QONTENT_TUBE_PORT` to choose a port yourself. It does not require a separately installed Bun or Node.js runtime.
 
 The private release currently provides a Windows x64 executable and a Linux x64 executable. macOS and ARM builds are not included. Review the [requirements before you buy](./requirements) before purchasing.
 

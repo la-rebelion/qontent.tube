@@ -47,6 +47,10 @@ Capture problems block a render with no override, and each render with captures 
 
 ## Queue
 
-Renders run in parallel chunks with progress and time remaining. **Cancel** and **Retry** resume from finished chunks. **Re-mix audio** updates the voice or music without rendering the picture again. Play finished videos right in the app.
+Renders run in parallel chunks with progress and time remaining. **Cancel** and **Retry** resume from finished chunks. **Remove** (the trash icon on a failed, cancelled, or interrupted render) deletes it from the list with its unfinished parts, after you confirm; finished videos are never removed this way. **Re-mix audio** updates the voice or music without rendering the picture again. Play finished videos right in the app.
+
+**Parallel chunks** sets how many parts of the video render at the same time: **Auto** (up to 4, chosen from your computer's cores and free memory), or 1 to 8. Choose fewer on a busy or slower computer, or more on a strong one; free memory and the video's length can lower it. If a render fails because a frame took too long, choose fewer and press **Retry**: the parts already rendered are kept.
+
+While a render runs, preparing your camera background pauses so the render gets the computer first. If a frame ever stops making progress, the render fails within about two minutes and says where in the video and what it was waiting for; **Retry** continues from the finished chunks.
 
 If the tools are missing, the setup checklist shows install commands for Windows, Ubuntu/Debian, and Fedora, or lets you point to custom paths.

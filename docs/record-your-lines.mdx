@@ -1,0 +1,95 @@
+---
+title: Record your lines
+description: Perform your own character's lines in the teleprompter, one at a time, with a cue, a countdown, and takes kept on your computer.
+sidebar_position: 4
+---
+
+# Record your lines
+
+When a roster character is **You · camera + mic** (see [Voice a character yourself](./rosters-and-voices#voice-a-character-yourself)), the teleprompter records that character's lines with your camera and microphone. It records one line at a time, so a stumble costs one line, not the whole video.
+
+## Open the teleprompter
+
+- **Record my lines · N left** in the script header opens your next line to record.
+- The **microphone button** beside a line in the outline opens that line.
+- **R** opens the line that is playing, when you are not typing in the editor.
+
+The teleprompter needs the script to be saved. It runs only in the Qontent Tube app on your computer.
+
+## Record a take
+
+1. The first time, your browser asks for the camera and microphone. Allow it. Qontent Tube always opens at the same address (`http://127.0.0.1:8700`), so the browser remembers your choice.
+2. Press **Record** or **Space**. The line before yours plays in your headphones as a cue. If it has no audio yet, it is shown above your line and you get a short beat instead.
+3. After **3, 2, 1**, read your line. It sits just under the camera mark, so your eyes stay near the lens. The next line waits below.
+4. Press **Space** again to stop. The take is saved, and its length appears under **Takes · this line**.
+
+Then choose **Retake · R**, **Next line**, or **Skip this line**. When nothing is left, **All lines recorded · review on stage** takes you back to the script where you were.
+
+Use headphones for the cue. Played through speakers, the cue can end up in your recording.
+
+## Controls
+
+- **Scroll:** **Manual** moves the text with the arrow keys or a foot pedal (it sends **Page Down** and **Page Up**). To use other keys, open **Settings › Camera & capture**, press **Change** beside **Foot pedal: next** or **back**, then press the pedal. Space, Esc, Enter, Tab, and R are already used by the teleprompter, so they can't be pedal keys. **Auto** scrolls at a fixed number of words per minute while you record. **Follow my voice** and **Pace only** arrive with on-device speech recognition.
+- **A− / A+** change the text size. **Mirror** flips the text for teleprompter glass.
+- **Pop out to 2nd screen** opens the prompt in another window you can move to a second display or a teleprompter monitor. That window only shows the prompt: recording stays in the main window. If it closes during a take, the take keeps recording.
+- **Capture:** **Camera + mic** or **Mic only**, and which camera and microphone to use. The meter shows your microphone level.
+- **Check your camera before recording:** in **Rosters & presets › Camera & capture**, press **Turn camera on**. You see the preview, can pick the camera (the teleprompter uses the same one), and see its resolution and frame rate. Press **Turn camera off** when done; closing Settings also turns it off.
+- **Self-view** shows you in the bubble shape. It is mirrored for you, like a mirror; the recording never is.
+
+## Your takes
+
+- **The first take of a line is used at once.** Later takes are added beside it, and you choose with **Use this take**. The line plays the take you choose everywhere at once (studio playback, the stage, and renders), with no need to generate audio again. A line whose words you changed after recording becomes _Outdated_; its next take is used at once, and the old one is kept.
+- **Play**, **Rename**, and **Remove** are on each take. A take that plays for its line cannot be removed: choose another first. Removing asks you to confirm, because it cannot be undone.
+- **Takes stay on your computer,** in your content folder, exactly as recorded. Qontent Tube also makes a playback copy with ffmpeg: a steady 30 frames per second, audio aligned with the picture, and loudness matched to the AI voices. If ffmpeg is not set up yet, takes show _Waiting for ffmpeg_ and are prepared once it is (see [Render](./rendering)).
+
+## Clean-up
+
+When a take has been checked (see **Speech on your computer** below), Qontent Tube cleans it automatically and shows what it did under the take, for example _1 filler, 1 false start removed · −1.6 s_. **Review cuts** opens the marked transcript:
+
+- **Filler words** (um, uh, you know), **false starts and repeats** (the last clean attempt is kept), and **long pauses** (over 0.8 s become 0.4 s; the breath on each side stays) are marked. Press any marked word to cut it or keep it. Your choice always wins over the rules.
+- The four rules (**Remove filler words**, **Remove false starts**, **Tighten long pauses**, **Hide jump cuts**) can be turned off; their cuts come back.
+- **Cleaned** and **Original** switch which version plays. Cuts are a list of edits on the raw take, so nothing is lost. Where a cut would jump your face, a 120 ms crossfade hides it.
+- **A wrong word can't be fixed by cutting.** When you said something different from the script, choose **Update the script to match my take** (the script is saved with your words, checked against its current version) or **Keep the script as written** (captions follow what you said). **Record a pickup** for one phrase arrives with the picture-in-picture screen; until then, re-record the line.
+- Several stumbles in one take? Saying the sentence again usually sounds better than many cuts.
+
+## Picture-in-picture
+
+**Takes & PiP** in the studio header opens **Your takes & picture-in-picture**: the stage, the scene, voice, and PiP tracks, the selected take's clean-up, and every line with its takes. Your camera appears on the stage only while you speak, easing in and out, and the same layout is used when you render.
+
+- **Shape:** **Circle**, **Rounded**, or **Full-frame** (you fill the picture during your line; the scene keeps playing underneath and the captions stay on top).
+- **Position:** **Auto** keeps you clear of the captions, the scene title, characters, and platform controls in each format; or choose a corner. When Auto finds no clear spot, that format asks for review and offers **Small** or **Full-frame** for it.
+- **Size:** **Small**, **Medium**, or **Large**. **Applies to** sets them for all formats or for one (16:9, 9:16, 4:5) without changing the others.
+- **Per scene:** **Scenes › This scene** changes the shape, size, or position for the scene at the playhead only (for example, full-frame for the hook and a small bubble elsewhere). Anything the scene does not set says *from all scenes* and keeps following your all-scene choices. **Use all-scene settings** undoes it. Scenes with their own layout are marked on the PiP track and in your lines, and keep it when you edit the script or regenerate their animation.
+- **Background:** **Keep** shows your camera as recorded, **Blur** softens what is behind you, and **Remove** replaces it with the theme's color. Previews use a quick matte; the render uses a finer one, so hair and hands stay clean. Green screen is not available yet. If your system blurred your background while recording, that blur is already part of the take.
+- **Your background is prepared once.** After you choose Blur or Remove, Qontent Tube prepares it on your computer while you keep working; each line shows its progress. Every render and format then reuses it. You can render before it finishes; that render just takes longer.
+- **Auto-frame** keeps your face centred in the bubble, using only the pixels your camera recorded.
+- Everything runs on your computer: the models ship with the app, and your video is never sent anywhere.
+- **Border** in the theme's accent color and a **Name label** under the picture.
+
+Choosing another take for a line updates the stage and the next render; your other takes stay. Your raw recording is never changed.
+
+## What is recorded
+
+- Browser voice processing (automatic gain, echo cancellation, noise suppression) is off, so your voice stays natural. Turn on **Reduce room noise** in **Settings › Camera & capture** if your room is noisy.
+- If your system blurs or replaces the background (for example Windows Studio Effects), the teleprompter says so: that effect is part of the recording. Turn it off in your system settings to keep the original picture.
+- A take cut off by a disconnected camera or microphone, or by closing the app, is never used. After a restart its session shows as interrupted.
+
+## Speech on your computer
+
+**Settings › Speech** (from **Rosters & presets**, or the teleprompter) sets up three jobs that run only on your computer:
+
+- **Voice activity** knows when you speak and when you pause. It drives **Pace only** scrolling and trims the silence before and after each take, without changing the recording.
+- **Live follow** matches what you say to the script while you speak, so **Follow my voice** keeps your place. It only moves forward and never changes the script.
+- **Take check** transcribes a finished take with word timings and shows how it compares with the line: _Matches the script word for word_, or how many words differ. Use **Check against the script** on a take.
+
+**Test your microphone** under **Try it**: start the test, pick the microphone from the list, and read a line aloud. The meter should move and the page names the microphone it is listening to. Your choice is used by the teleprompter too. If the meter stays still, the microphone may be muted or a different one may be the system default: choose another. When the browser asks, choose to allow access on every visit, so it remembers.
+
+**Voice activity is built in** and works offline, with nothing to download. **Everything else is downloaded only if you choose it.** In **Settings › Speech**, each model shows its size, license, and source; **Download** fetches it straight from its publisher, and Qontent Tube uses it only after checking that the file is exactly the one it expects. You can remove a model when it is not in use. In this version the models are still being reviewed, so they are listed but not yet downloadable.
+
+**Use my own:** if you already have [whisper.cpp](https://github.com/ggml-org/whisper.cpp) and a model, point **Settings › Speech** to them (or set `QONTENT_TUBE_WHISPER` and `QONTENT_TUBE_WHISPER_MODEL`). Take check then uses them on this computer; results say they came from your own installation.
+
+When a mode is not ready, the teleprompter uses the next one down (**Follow my voice** → **Pace only** → **Auto** → **Manual**) and says so. Recording never stops because of speech.
+
+## Privacy
+
+Only you can record, in Qontent Tube's own browser window. Automation, agents, and API keys cannot start the camera or microphone. Recordings, words, and transcripts are never sent to a voice, AI, or cloud service.

@@ -1,0 +1,74 @@
+---
+title: Publishing to Instagram, Facebook, TikTok, X, and LinkedIn
+description: Post one reviewed batch to several networks at once, see each platform's limits before you confirm, and know what to do when one network needs you.
+---
+
+# Publishing to Instagram, Facebook, TikTok, X, and LinkedIn
+
+One confirmed batch can post to every connected network at once. Each post goes up on its own: one network being slow, rate-limited, or refusing a post never stops the others, and posts that are already published are never sent again or deleted. YouTube works the same way; see [Publishing to YouTube](./publishing-to-youtube.mdx).
+
+Nothing is posted until a person chooses **Publish now** in the [publish composer](./publish-composer.mdx). Automation and agents cannot confirm or start a publish.
+
+## Before you confirm
+
+The composer shows each network's own choices, read from the platform when you open **Review and confirm…**:
+
+- **Who can see it**, in the platform's words: *Everyone*, *Followers*, *Only me* on TikTok; *Public* or *Connections only* for a LinkedIn member.
+- **Settings the account turned off stay off.** If comments, Duet, or Stitch are off in TikTok's settings, they are off here too.
+- **Required answers.** TikTok asks whether a post is a paid partnership (branded content), and branded content cannot be private.
+- **Who it posts as.** The confirmation says *the Page Ada Explains*, *the organization …*, or *you*.
+- **Limits that shape the result**, such as TikTok's private-only rule for apps it has not audited yet.
+
+If a platform changes something after you read the summary (a new required setting, a lost Page role, a private-only rule), confirming is refused and you review the new summary. A setting this version of Qontent Tube does not know how to answer blocks the post rather than being skipped.
+
+## What each network gets
+
+| Network | Posts as | Formats | Captions | Cover |
+| --- | --- | --- | --- | --- |
+| **Instagram** | Your professional (Business or Creator) account | Reel, 9:16 | Not sent: Instagram takes no caption file. Render captions into the picture if you need them. | The frame at your cover time |
+| **Facebook** | A Page you manage (never a personal profile) | Reel 9:16; Page video 16:9 or 4:5 | Page videos: the caption track | Your cover frame |
+| **TikTok** | Your creator account | 9:16 | Not sent | The frame at your cover time |
+| **X** | Your account | 16:9, 9:16, 4:5, up to 2 min 20 s | Not sent in this version | X chooses |
+| **LinkedIn** | You, or an organization where you have a posting role | 16:9, 9:16, 4:5 | The caption track | Your cover frame |
+
+Text is sent exactly as reviewed, with hashtags at the end. On LinkedIn, characters LinkedIn treats as formatting are escaped so they appear as written, and hashtags stay hashtags.
+
+## Results and what to do next
+
+The results page shows every post with its state and its next step:
+
+| You see | What it means | What to do |
+| --- | --- | --- |
+| **Open in TikTok** | The post exists, but the platform needs you: it was posted privately because TikTok has not audited Qontent Tube yet, or TikTok put it in your inbox to finish. | Open TikTok, review the post, and change who can see it there. Qontent Tube never reports such a post as published publicly. |
+| **Make a compatible copy** | X refused the video's encoding (bitrate, frame rate, or format). | Qontent Tube makes a copy with settings X accepts. Watch the copy, then **Send this copy**. Your render is not changed; the copy has its own hash, and the result records both. |
+| **Retry** after a role message | Your Page or organization role no longer allows posting. | Ask an admin to restore the role, check the destination in **Library → Accounts**, then **Retry** this post alone. |
+| **Retry N failed posts** | Several posts failed for reasons that can pass (quota, a dropped connection, a restored role). | Retries only those posts. Published ones are never selected. |
+
+### When a network asks to slow down
+
+If a platform rate-limits Qontent Tube, posts to that network wait and try again on their own, while posts to the other networks keep going.
+
+### When an answer is lost
+
+If the connection drops just as a post is created, Qontent Tube looks for that post on the platform before doing anything else (by its upload, media, or video ID) and continues with it. It creates a post again only if you choose **Create it again…** after it could not be found.
+
+## Networks that are not available
+
+**Threads** is not offered. Publishing to Threads needs the video at a public web address, and Qontent Tube sends your video directly from your computer without uploading it anywhere else first. Flows on other networks that need a public address are turned off for the same reason.
+
+## Privacy
+
+Authorizations stay on your computer. Every upload goes directly from your computer to the platform. Qontent Tube keeps the IDs, links, states, and attempt history it shows you, never credentials, upload sessions, or the platforms' raw responses.
+
+## For operators: before enabling each network
+
+Each network has its own readiness flag and certification record. A network that is turned off is skipped (its posts are recorded as not sent, with a **Retry** for later) and never blocks the others. Set `QONTENT_TUBE_PUBLISHING_DISABLED=tiktok,x` (any list) to turn networks off for an installation. The publishing API lists each network's state, adapter version, and certification status.
+
+Review each platform needs before public use:
+
+- **Meta (Instagram and Facebook)**: App Review with Advanced Access for `instagram_content_publish`, `pages_manage_posts`, and `publish_video`, and business verification. Instagram accounts must be Business or Creator accounts linked to a Facebook Page.
+- **TikTok**: the Content Posting API audit. Until it passes, every post is private (only the creator sees it), and the results page asks the creator to finish on TikTok.
+- **X**: an API plan that allows posting and media upload.
+- **LinkedIn**: *Share on LinkedIn* for members; Community Management API approval for organizations.
+
+**Certification**: connect a test account per network, prepare a draft with one post per account type, and run `bun run certify:publishing <draftId>` against the local API. It refuses public visibility where the platform offers a private choice, asks you to type `PUBLISH`, follows every post, and writes sanitized evidence (IDs, links, states, hashes; never a token) to `docs/certification/`. A network whose run fails stays turned off.

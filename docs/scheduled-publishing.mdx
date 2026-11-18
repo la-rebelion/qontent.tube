@@ -1,0 +1,49 @@
+---
+title: Scheduled publishing
+description: Post a confirmed batch at a time you choose, from this computer or, if you opt in, from QT Cloud while your computer is off.
+---
+
+# Scheduled publishing
+
+In **Review and confirm…**, choose **At a time I choose** instead of **Now**. You pick a date, a time, and a time zone; Qontent Tube shows the exact moment it resolves to (with its offset from UTC) before anything is scheduled. **Scheduled posts** (from the composer or a publish's results) lists every schedule by day.
+
+A schedule freezes exactly what you confirmed. To change the time, use **Reschedule…**: you confirm the new time, and the old schedule is replaced. To change anything else, cancel and confirm a new version of the draft.
+
+## Daylight saving
+
+- **A time that happens twice** (the night clocks go back): you choose the first or the second.
+- **A time that does not exist** (the night clocks go forward): Qontent Tube offers the first valid time after the gap. It never guesses.
+
+## Who posts it
+
+### This computer (default)
+
+Your computer posts it, with your videos and your authorizations as they are. At the scheduled time:
+
+- it must be **on and awake**, and you must be **signed in**;
+- the **drive with your videos** must be connected;
+- it must be **online**.
+
+**Background publishing** (in **Scheduled posts**) lets Qontent Tube post while it is closed: it registers a task for your user account that wakes every five minutes (Windows Task Scheduler, or a systemd user timer on Linux). No administrator rights are needed, and turning it off removes the task without touching your schedules or results. Without it, Qontent Tube must be open at the scheduled time, and the confirmation says reliability is reduced. If the app moves or updates, the page says so; turn background publishing on again to fix it.
+
+**If your computer could not run at the time**, the schedule becomes **Overdue**. Nothing is posted late on its own: choose **Publish now, late**, **Reschedule…**, or **Cancel…**.
+
+### QT Cloud (optional)
+
+QT Cloud can post a scheduled batch while your computer is off. It is off until you turn it on, and each batch asks for your consent.
+
+1. **Link this computer** in **Scheduled posts**: Qontent Tube shows a code; on qontent.tube you sign in with an email code and approve it.
+2. **Turn on QT Cloud scheduling** and accept its terms. Choose whether to get an email when a post is published (problems are always emailed).
+3. When you schedule a batch, choose **QT Cloud** and read what it receives: the exact videos, captions, and covers of that batch (with their size), the post text and settings you confirmed, and one authorization per destination. Agree, and schedule.
+
+Qontent Tube uploads the batch encrypted, QT Cloud checks every file, and only then does QT Cloud take over (this computer stops being able to run it). If anything in that hand-over is interrupted, it resumes; if it cannot finish, the schedule asks you instead of risking two posts.
+
+At the scheduled time QT Cloud posts with the same care as the app: interrupted uploads resume, and a post whose answer was lost is looked for before anything is sent again. Results appear in Qontent Tube the next time it runs.
+
+**Deletion:** everything staged for a batch (videos, captions, covers, post text, authorizations) is deleted within 24 hours after the batch ends or you cancel it, and no later than seven days after the scheduled time. QT Cloud keeps only IDs, results, and deletion records. **Turning QT Cloud off** cancels its schedules and deletes everything staged; scheduling on this computer keeps working.
+
+**Emails** go to your verified address when a post fails, an authorization expires, a platform needs you, or a schedule on this computer was missed. They name the network and link to the result, never your post text or any authorization.
+
+## Agents and automation
+
+Agents and CI can prepare and check drafts, but they cannot confirm, publish, or schedule: those always need a person in Qontent Tube.

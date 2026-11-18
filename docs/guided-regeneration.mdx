@@ -15,6 +15,10 @@ Every scene card has two buttons:
 
 Approved and locked scenes can't be regenerated; unapprove or unlock them first. Locked elements stay exactly as they are in every candidate.
 
+## Your theme's Skills
+
+Every AI task here also follows the [Skills](./themes#skills) of the script's theme: the sections that apply to that task, as a separate style guide that never overrides the app's own rules. Write a rule once there ("ease out, 300 ms, no bounce"; "diagrams flow left to right") instead of repeating it in each instruction. **Show what AI receives** on the theme's Skills tab shows the exact text each task gets, and each result's provenance records which Skills it received.
+
 ## Guide the result
 
 ![Regenerate with guidance: an instruction, Rich animation, and an SVG from Assets as inspiration](/img/v040/regenerate-guided.png)
@@ -28,10 +32,11 @@ Approved and locked scenes can't be regenerated; unapprove or unlock them first.
 
 ## Adjust an animation by hand
 
-**Adjust animation** on a scene with an accepted rich animation opens the editor:
+**Adjust animation** on a scene with an accepted rich animation opens the editor. On a wide screen the preview and the element settings sit side by side; on a narrow one the settings are below the preview.
 
 - Click an element in the preview to select it (Shift-click to add more, Alt-click for the element around it), or pick it from the list. Drag the time slider to see any moment.
 - Change its **text**, **color**, **position** (arrow keys move 1 px, Shift+arrows 10 px), **size**, **timing** (appears later or earlier, in ms), or **hide** it. **Words** edits the animation's texts. **Undo** and **Redo** (Ctrl/Cmd+Z) work throughout.
+- **Text contrast** lists text that is hard to read at the moment shown, for example dark text on a dark panel. **Fix…** previews the text color that belongs on that background, with its new ratio, and **Use it** applies it as an adjustment; **Undo** takes it back. Contrast problems are warnings: nothing changes unless you confirm.
 - Adjustments are stored on the scene, never in the animation's code, and saved with the storyboard.
 - **Change the selection with AI**: describe what should change (*"make it pulse on each step"*); the result is a candidate to review, and anything AI changed outside your selection is called out.
 - **Source** shows the HTML, CSS, and JavaScript. Edited code is checked and test-run in every format before it is used; editing a template's code detaches the scene from that template.
@@ -113,6 +118,8 @@ While it works, the dialog shows the step (writing the scene, test-running it in
 
 For a rich animation, **Check frames and let AI fix layout problems** adds a review step after the test run. Qontent Tube plays the animation in its sandbox, looks at the key moments of every format (the middle and end of each spoken line, and the end of the scene), and finds layout problems on its own: elements overlapping, text that doesn't fit its box, content in the area kept for captions and chrome, text too faint to read, and an empty frame while the narration speaks. When it finds any, it sends the problems and up to six small frames (480 px JPEG) to the same model to fix, at most twice, and keeps a fix only if it is still valid and has fewer problems. The review lists the rounds, the problems left with their format and time, and the extra tokens used.
 
+When the theme has **Don'ts**, the review also checks the frames against them and lists each one a frame breaks as a warning, quoting the rule. Like the other findings, these never block accepting the candidate.
+
 Review is off by default. It is on by default when the chosen model is a top-tier one; it sends images, so the consent step names the frames before anything is sent. A model that can't read images skips it and says why. Review needs the local runtime with a browser; elsewhere the review says it was skipped and why.
 
 **Model advice** appears before you generate: how demanding this scene is (template fill, standard elements, a rich animation, an edit), why (a dense scene, a reference image, several formats, review), roughly how many output tokens it needs, and a recommended model from your provider's live list. **Use recommended** switches to it; nothing switches on its own. Warnings say when the chosen model can't read the reference or review frames, may stop early, or is lighter than the scene needs.
@@ -125,7 +132,11 @@ The motion scorecard measures this on your own provider: `bun scripts/motion-sco
 
 ![Current and proposed scene at 50% and 90%, with the changes, validation, and provenance](/img/v040/regenerate-review.png)
 
-The review shows the current and proposed scene at 50% and 90% of its narration, what was added and removed, which locked elements were kept, how the reply validated, and which provider and model made it with its token use.
+The review plays the current and proposed scene side by side, in step, with the scene's narration when it is voiced. Use **Play**, **Restart**, and the position slider to compare any moment, choose **Current** or **Proposed** to watch one larger, or mute the narration. A scene without narration plays silently with estimated timing. **Key frames** shows both at 50% and 90% of the narration instead.
+
+The review also lists what was added and removed, which locked elements were kept, how the reply validated, and which provider and model made it with its token use.
+
+**Text contrast:** every rich animation is checked in your theme and the scene's light or dark mode, with or without AI review. Text below 4.5:1 (3:1 for large text) is listed as a warning, with the background it sits on. **Fix…** shows the text color that belongs on that background (for example *panel text* on a dark panel) and its new ratio; **Use it** applies it, **Undo** takes it back, and **Fix all** fixes every listed text after one confirmation. Fixes are adjustments sent with **Accept**; the animation's code is not changed. You can also accept without fixing; the warnings then show in **Adjust animation**. **Theme colors** lists colors written into the code that a theme change cannot restyle.
 
 - **Accept** makes the candidate the scene in one save.
 - **Discard** keeps the current scene.

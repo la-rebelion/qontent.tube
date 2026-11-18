@@ -56,3 +56,7 @@ visibly unavailable until the Worker reports a verified current release and
 - `static/img/roadmap/` contains rendered previews of the animation roadmap.
 
 Brand tokens and shared Docusaurus styling live in `src/css/custom.css`. The original `qontent.tube-landing-page.html` remains in the project root as a migration reference and is not included in the production build.
+
+## QT Cloud scheduling
+
+v0.5 adds optional hosted scheduling under `/scheduling/`: verified-email device linking, opt-in and per-batch consent, encrypted bundle storage in a private R2 bucket, a one-minute cron that claims due targets, one Workflow per target, and a queue for verification, attention email, and deletion. It is off by default (`CLOUD_SCHEDULING_ENABLED`). It runs the desktop's own publishing adapters from the monorepo, which must be checked out beside this repository (`../monorepo`). See [docs/cloud-scheduling.md](docs/cloud-scheduling.md) for what is stored where, the enabling checklist, operator runbooks, and the drills to run before enabling it.
