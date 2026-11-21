@@ -130,6 +130,16 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+  plugins: [
+    "docusaurus-plugin-copy-page-button",
+    [
+      "docusaurus-plugin-llms",
+      {
+        title: 'tie.md the SDD-first Documentation',
+        description: 'A local-first visual control plane for SDD-first projects',
+      },
+    ]
+  ],
   scripts: [
     {
       src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
