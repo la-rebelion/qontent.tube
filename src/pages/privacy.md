@@ -6,7 +6,7 @@ slug: /privacy
 
 # Privacy Policy
 
-**Last updated:** November 3, 2026
+**Last updated:** November 21, 2026
 
 Qontent Tube is a product of **La Rebelion Labs** (“**LRL**,” “**we**,” “**us**,” or “**our**”). This policy explains how we handle information when you visit [qontent.tube](https://qontent.tube), verify an email for a private-preview download, previously purchase a Qontent Tube license, use the desktop application, read its documentation, or contact us. Together, these are the “**Services**.”
 
@@ -76,6 +76,14 @@ The desktop application may open a private local browser session to provide its 
 
 You control your local files, backups, credentials, access permissions, and retention. Removing Qontent Tube does not necessarily remove project files you created outside the application.
 
+### Connected social accounts
+
+When you connect YouTube, Instagram, Facebook, TikTok, X, or LinkedIn, the network's own sign-in page asks for your approval. A short-lived relay on our servers completes the sign-in and hands the result to your computer encrypted; it deletes it as soon as it is collected, and within minutes at the latest. Access tokens, the accounts and Pages you connect, and your posts' text and results are stored only on your computer, protected for your user account. Videos are uploaded directly from your computer to the network. We do not receive your social media passwords or your posts.
+
+To remove this data, open Qontent Tube, go to **Library → Accounts**, and choose **Disconnect** on the account. Qontent Tube deletes the credentials from your computer and asks the network to revoke its access.
+
+**Data deletion requests from Meta.** If you remove Qontent Tube from your Facebook or Instagram account, or ask Meta to have your data deleted, Meta notifies our servers. We record the request with a confirmation code and a one-way keyed hash of the identifier Meta sends (never the identifier itself), confirm that we hold no account data for it, and give Meta a link to a status page where you can check the request with that code. These records are deleted after 180 days. Questions: hello@qontent.tube.
+
 ## 6. Voice and AI providers
 
 Voice generation may require credentials for a third-party provider. When you request generation, the text and settings needed for that request may be sent directly to the provider you selected.
@@ -112,6 +120,7 @@ We share information only as reasonably necessary with service providers such as
 - Stripe for payment processing.
 - Twilio for transactional verification and download email delivery.
 - Voice or AI providers you choose to connect.
+- Social networks you choose to connect (for example Google/YouTube, Meta, TikTok, X, and LinkedIn), which receive what you choose to publish directly from your computer.
 - Professional advisers or authorities when required by law.
 
 We may also disclose information in connection with a merger, acquisition, financing, reorganization, or sale of assets, subject to appropriate protections.

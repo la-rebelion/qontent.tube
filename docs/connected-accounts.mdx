@@ -13,6 +13,8 @@ description: Connect YouTube, Instagram, Facebook, TikTok, X, and LinkedIn desti
 2. Approve access there. Qontent Tube never sees or asks for your password.
 3. Back in Qontent Tube, the connection appears with every destination it found: each channel, Page, professional account, profile, or organization.
 
+The browser tab that finishes the sign-in shows whether the network said yes, then closes itself after 5 seconds. If your browser keeps it open, close it yourself; the result has already reached Qontent Tube.
+
 You can connect several destinations on the same network, for example two YouTube channels or many Facebook Pages.
 
 ## Privacy
@@ -21,6 +23,7 @@ You can connect several destinations on the same network, for example two YouTub
 - On your computer, credentials are protected for your user account: Windows Data Protection on Windows, and private owner-only files on Linux. If your system cannot protect them, Qontent Tube does not connect the account at all.
 - Credentials are never shown in the app, written to project files, exports, or logs, or sent to Qontent Tube's servers. The only exception is cloud scheduling, later in v0.5: it asks separately, says exactly what is uploaded, and for how long.
 - Connecting asks only for the permissions needed to identify your destinations and publish. Analytics permissions are requested later, only if you use insights.
+- If a network authorizes Qontent Tube but none of your destinations can publish (for example, no Page has a linked Instagram professional account), Qontent Tube hands the access back to the network immediately and tells you what is missing.
 
 ## What each card shows
 
@@ -44,9 +47,28 @@ A YouTube channel. Each authorization connects the channel you choose on Google'
 
 An Instagram **professional** (Business or Creator) account, linked to a Facebook Page you manage. Personal Instagram accounts cannot publish through Instagram's API. When a Page has no linked professional account, Qontent Tube tells you which Page and what to change. Instagram accepts Reels (9:16).
 
+Instagram is connected through your Facebook login. On Meta's consent screens, select the Page the Instagram account is linked to, then the Instagram account itself.
+
 ### Facebook
 
 A **Page** you manage, with a role that can create content. Personal profiles cannot be destinations: Facebook allows app publishing only to Pages. A Page where your role cannot post is listed as **Cannot publish**, with the reason.
+
+Qontent Tube lists both kinds of Pages:
+
+- Pages you manage **directly** with your own Facebook profile;
+- Pages owned by, or shared with, a **business portfolio** you belong to. Listing these needs Meta's *business management* permission, which Meta asks you to approve on the consent screen. Qontent Tube uses it only to find those Pages and their Instagram accounts. A Page that appears in both ways is listed once.
+
+A business-portfolio Page can publish only if your access to it includes **Content** or **Full control**; otherwise it is listed as **Cannot publish**.
+
+### Missing Pages or Instagram accounts
+
+If a Page you manage does not appear:
+
+1. **Check what you allowed.** Meta only shares the Pages and businesses you ticked on its consent screens, and remembers that choice. On Facebook, go to **Settings → Business integrations**, open **QontentTube**, and add the missing Pages, or remove QontentTube and connect again, choosing to opt in to all current and future Pages and businesses.
+2. **Check your role.** In Meta Business Suite, open the business portfolio, then **Settings → Accounts → Pages → (the Page) → People**, and make sure you have Content or Full control.
+3. **For Instagram**, check that the account is Business or Creator and linked to that Page (in Instagram: **Settings → Accounts Center**).
+
+Then choose **Check now** or **Reconnect**.
 
 ### TikTok
 
@@ -71,6 +93,13 @@ Your LinkedIn member profile. To post as an organization you administer, choose 
 - **Disconnect** on a connection removes its credentials from your computer first, then asks the platform to revoke Qontent Tube's access. If the platform does not confirm, the card says where to remove access yourself.
 - **Disconnect this Page** (or organization) removes one destination and keeps its siblings. Platforms revoke whole authorizations, not single Pages, so this removes it from Qontent Tube only.
 - Posts already published are not affected. Past results keep their labels and links.
+- Removing Qontent Tube on the platform itself (for example, Facebook's **Business integrations**) works too: the next check shows the connection as **Needs reconnection**.
+
+## Deleting your data
+
+Qontent Tube's servers keep no account data for your connections: credentials, destinations, and your posts' text and results are stored only on your computer. To remove them, **Disconnect** the account.
+
+If you ask Facebook or Instagram to delete the data an app holds about you, or you remove Qontent Tube from your Meta account, Meta tells Qontent Tube's servers. Qontent Tube records the request with a confirmation code (never your Meta user ID) and Meta shows you a link to its status page. See the [Privacy Policy](/privacy).
 
 ## Networks not in this version
 

@@ -12,6 +12,9 @@ Open it from **RENDER**: on a completed render, choose **Publish…**. A draft i
 ## The three panes
 
 - **Rendered videos** (left): the completed renders and cuts in the draft's language. A video that can't be used says why, for example *Replaced by a newer render*. Formats that have never been rendered get a **Render 9:16** (or 16:9, 4:5) button.
+  - The highlighted video is the one shown in **Post details**. A video chosen for at least one post is tagged **In a post**.
+  - Choosing a video that no post can take (say, a 16:9 render when every post is a 9:16 Reel) explains it right under that video, and names the formats on your connected accounts that would take it.
+  - **Render** is the newest render of a format. **Earlier render** is an older one that a post still uses, kept so that post keeps the exact file you reviewed. **Cut** is a shorter version you made from chapters, and says which scenes it leaves out.
 - **Destinations** (center): every connected channel, Page, or profile, with its formats. Choose a format to add a post; choose it again to remove it. You can add several formats to one destination, for example a YouTube video and a YouTube vertical.
 - **Post details** (right): the selected post's video, text, visibility, disclosures, options, and checks. Below 1280 pixels wide this becomes a drawer; open it with **Post details** or by choosing a post.
 
@@ -33,6 +36,10 @@ The exact file you chose is kept for the post, by its content hash. If you rende
 
 Cuts never trim inside a scene, speed up speech, or generate replacement footage. If a cut is too long for a destination, the check says by how much, and you choose which chapters to drop. Captions are rebuilt from the scene timings, so they stay in sync. Making the same cut twice gives the same file.
 
+A cut is encoded on your computer and can take a few minutes for a long video. You can keep editing meanwhile: the button shows **Making the cut…**, and a message names the new cut when it is ready. Edits you make in the meantime are kept.
+
+Each cut lists the scenes it leaves out of its source, for example *Leaves out: Scene 9 — Where MCP and AI Tools Fit* (or *Keeps only: …* when that is shorter). Cuts are stored with the other files Qontent Tube keeps for publishing, under `<content-directory>/renders/.publish/media/`, named by their content hash, not in the project's render folder.
+
 ## Missing formats: render, then resume
 
 If a post needs a format you haven't rendered (say, 9:16 for a TikTok), choose **Render 9:16** in the left pane or in the post's checks. The render runs like any other render in **RENDER**. The draft remembers it, and when it finishes, **Show it** brings it back here. You still preview and choose it yourself.
@@ -49,6 +56,8 @@ If a post needs a format you haven't rendered (say, 9:16 for a TikTok), choose *
 **Suggest text with AI** (one post) or **Suggest text for all posts** asks the assistant for platform-fitting text (`social-post-copy@1`). Without a configured provider, a dialog gives you a prompt to paste into any chat assistant and a box for its reply.
 
 Suggestions never replace your text. Each one appears as a difference beside your text, and you choose **Use suggestion** or **Keep my text**. You can't mark a post reviewed while a suggestion is pending.
+
+You don't have to wait while the assistant writes. Keep choosing videos, destinations, and text: the button shows **Writing a suggestion…**, and when it finishes, the suggestion lands on the posts you asked for without undoing anything you did meanwhile. A message says how many posts have a suggestion to review.
 
 ## Formats and limits
 
@@ -81,13 +90,21 @@ Every post is checked as you work. **Needs attention** posts have at least one b
 
 ## Confirming
 
-**Review and confirm…** opens a summary of exactly what would be posted: each destination, video, text, and setting. It belongs to this version of the draft; any change afterwards means a new summary. Only a person can confirm it; automation and agents cannot.
+**Review and confirm…** opens a summary of exactly what would be posted: each destination, video, text, and setting. It belongs to this version of the draft; any change afterwards means a new summary. Only a person can confirm it; automation and agents cannot. However many posts it lists, the summary fits the window: the list of posts scrolls, and the title and **Publish now** stay in view.
+
+Opening the summary checks every destination again, live with the platforms (for example, that an authorization is still valid). If that live check finds a problem the composer had not shown, the summary is not opened. Instead, a notice lists each blocking problem as *destination · format: reason*, and the affected posts are marked **Needs attention**.
 
 **Publish now** posts exactly what the summary lists and opens the publishing results. The summary says who each post goes out as (a channel, a Page, an organization, or you) and any platform limit that shapes it, such as TikTok's private-only rule. If a network is turned off for this installation, its posts are marked *Will not be sent* and recorded that way; the rest are not affected. See [Publishing to YouTube](./publishing-to-youtube.mdx) and [Publishing to Instagram, Facebook, TikTok, X, and LinkedIn](./publishing-to-social-networks.mdx).
 
+## Messages
+
+Messages appear in one area under the title, so they never push the bottom bar off screen; long ones scroll. Information and *Not ready to publish* messages have an **✕** to close them.
+
 ## Several people or windows
 
-If the draft changed in another window since you opened it, the composer says so and keeps your edits on screen. Choose **Load the newer version** or **Keep my edits**. Nothing is merged silently.
+Results that take a while (cuts, renders, AI suggestions) are added to the draft as it is when they finish, so they never conflict with your own edits.
+
+If the draft was saved elsewhere while you were editing, for example in another window, the composer says so and keeps your edits on screen. Choose **Load the newer version** or **Keep my edits**. Nothing is merged silently.
 
 ## API
 

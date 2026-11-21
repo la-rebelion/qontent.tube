@@ -23,6 +23,12 @@ The desktop and local Bun runtimes default to `<user-home>/.qontent-tube`:
 
 Choose another absolute directory under **Rosters & presets → Local content storage**. Qontent Tube validates and creates it immediately, but the local API must restart before the new location becomes active. Existing files are not moved automatically.
 
+## Publishing files
+
+Renders are written under `<content-directory>/renders/<project-slug>/`. When you choose a video for a post, Qontent Tube keeps that exact file in `<content-directory>/renders/.publish/media/`, named by its SHA-256 hash, so a later render cannot change what you reviewed. Cuts from chapters and compatible copies (for X or Instagram) are stored there too, each with a `.json` description (a cut's lists the scenes it kept) and, when there are captions, an `.srt` file.
+
+Connected-account credentials are kept apart from these files, protected for your user account. See [Connected accounts](./connected-accounts.mdx).
+
 ## Capture files
 
 A script can have a `<script>.capture.yaml` sidecar beside it. If you use AI adaptation, `adaptations/` keeps the review history and `compositions/` keeps animations, inside the project. Imported media stays private in your content folder. Media files inside a project folder are listed in **Assets** as read-only, and change only on disk.

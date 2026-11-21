@@ -31,6 +31,8 @@ If a platform changes something after you read the summary (a new required setti
 | **X** | Your account | 16:9, 9:16, 4:5, up to 2 min 20 s | Not sent in this version | X chooses |
 | **LinkedIn** | You, or an organization where you have a posting role | 16:9, 9:16, 4:5 | The caption track | Your cover frame |
 
+Facebook caption tracks are sent with Meta's language code for the post's language (for example `en` → `en_US`, `es` → `es_LA`, `es-ES` → `es_ES`, `pt` → `pt_BR`).
+
 Text is sent exactly as reviewed, with hashtags at the end. On LinkedIn, characters LinkedIn treats as formatting are escaped so they appear as written, and hashtags stay hashtags.
 
 ## Results and what to do next
@@ -41,6 +43,8 @@ The results page shows every post with its state and its next step:
 | --- | --- | --- |
 | **Open in TikTok** | The post exists, but the platform needs you: it was posted privately because TikTok has not audited Qontent Tube yet, or TikTok put it in your inbox to finish. | Open TikTok, review the post, and change who can see it there. Qontent Tube never reports such a post as published publicly. |
 | **Make a compatible copy** | X refused the video's encoding (bitrate, frame rate, or format). | Qontent Tube makes a copy with settings X accepts. Watch the copy, then **Send this copy**. Your render is not changed; the copy has its own hash, and the result records both. |
+| **Make an Instagram-compatible copy** | The video's file doesn't meet Instagram's Reel specification: it has an MP4 edit list, its index is at the end, or it is over 300 MB. Qontent Tube checks this before contacting Instagram, so nothing is created there. | A video that fits in size is only rewrapped: the same picture and sound, without the edit list, in a few seconds. A larger one is re-encoded to fit. Watch the copy, then **Send this copy**. |
+| **Add what is missing** | The video is published, but adding captions or the cover failed. | Retries only the missing step; the video is never posted again. |
 | **Retry** after a role message | Your Page or organization role no longer allows posting. | Ask an admin to restore the role, check the destination in **Library → Accounts**, then **Retry** this post alone. |
 | **Retry N failed posts** | Several posts failed for reasons that can pass (quota, a dropped connection, a restored role). | Retries only those posts. Published ones are never selected. |
 
@@ -51,6 +55,21 @@ If a platform rate-limits Qontent Tube, posts to that network wait and try again
 ### When an answer is lost
 
 If the connection drops just as a post is created, Qontent Tube looks for that post on the platform before doing anything else (by its upload, media, or video ID) and continues with it. It creates a post again only if you choose **Create it again…** after it could not be found.
+
+## Instagram's video requirements
+
+Instagram checks Reels more strictly than the other networks. Its API takes:
+
+| | Requirement |
+| --- | --- |
+| Length | 3 seconds to 15 minutes. Reels over 3 minutes are not recommended to people who don't follow you. |
+| File | MP4 or MOV, at most 300 MB, index (`moov`) at the start, no edit lists |
+| Video | H.264 or HEVC, progressive, closed GOP, 4:2:0, 23–60 fps, at most 1920 px wide |
+| Audio | AAC, at most 48 kHz, mono or stereo |
+
+Cuts made in the composer already meet the file requirements. Full renders include an MP4 edit list, so sending one to Instagram offers **Make an Instagram-compatible copy** first.
+
+If Instagram accepts the upload but then fails while processing it, the result says *Instagram refused the upload (ProcessingFailedError)*. This has been seen with long Reels even when the file meets every requirement above. Try a shorter cut (under 3 minutes also reaches more people), or check whether the Instagram app itself accepts the same video for that account.
 
 ## Networks that are not available
 
@@ -66,9 +85,11 @@ Each network has its own readiness flag and certification record. A network that
 
 Review each platform needs before public use:
 
-- **Meta (Instagram and Facebook)**: App Review with Advanced Access for `instagram_content_publish`, `pages_manage_posts`, and `publish_video`, and business verification. Instagram accounts must be Business or Creator accounts linked to a Facebook Page.
+- **Meta (Instagram and Facebook)**: App Review with Advanced Access for `instagram_content_publish`, `pages_manage_posts`, `pages_show_list`, `pages_read_engagement`, `instagram_basic`, and `business_management` (to list Pages owned by business portfolios), plus business verification. Until then, only people with a role on the Meta app can connect. Instagram accounts must be Business or Creator accounts linked to a Facebook Page, and Instagram posts are made with the person's user token, never a Page token. Register the data deletion callback (`/social/data/meta/deletion`) and deauthorize callback (`/social/data/meta/deauthorization`) on Qontent Tube's API host in the Meta app's settings. Qontent Tube uses Graph API `v26.0`; `META_GRAPH_VERSION` overrides it. Move it before the pinned version expires (Meta supports each version for about two years).
 - **TikTok**: the Content Posting API audit. Until it passes, every post is private (only the creator sees it), and the results page asks the creator to finish on TikTok.
 - **X**: an API plan that allows posting and media upload.
 - **LinkedIn**: *Share on LinkedIn* for members; Community Management API approval for organizations.
+
+**Diagnosing refusals**: when Meta refuses a step, the local API prints Meta's answer (credentials removed) as a `[publishing] … refused …` line, and for an Instagram upload also the container's status. These lines are never stored with the post or shown in the app. Set `QONTENT_TUBE_QUIET_PROVIDER_ERRORS=1` to turn them off.
 
 **Certification**: connect a test account per network, prepare a draft with one post per account type, and run `bun run certify:publishing <draftId>` against the local API. It refuses public visibility where the platform offers a private choice, asks you to type `PUBLISH`, follows every post, and writes sanitized evidence (IDs, links, states, hashes; never a token) to `docs/certification/`. A network whose run fails stays turned off.
